@@ -8,8 +8,22 @@
 
 :root {
   color-scheme: dark;
-  --royal: #2563eb;
-  --royal-2: #3b82f6;
+  /* Brand gradient — sampled from the Ferryte mark. */
+  --brand-deep: #0d3d4e;
+  --brand-mid: #5a8a96;
+  --brand-light: #9bb8b8;
+  --brand-haze: #bfd1ce;
+  --brand-gradient: linear-gradient(
+    135deg,
+    var(--brand-deep) 0%,
+    var(--brand-mid) 52%,
+    var(--brand-haze) 100%
+  );
+
+  /* `royal` is the historical alias — preserved so every existing utility
+     keeps working. Points to the recognisable mid tone of the brand. */
+  --royal: var(--brand-mid);
+  --royal-2: #7ea7b0;
   --ease: cubic-bezier(0.22, 1, 0.36, 1);
 }
 
@@ -35,9 +49,9 @@ body {
   text-rendering: geometricPrecision;
 }
 
-/* Cooler, calmer selection in royal */
+/* Cooler, calmer selection in brand */
 ::selection {
-  background: rgba(37, 99, 235, 0.32);
+  background: rgba(90, 138, 150, 0.38);
   color: #fff;
 }
 
@@ -60,11 +74,26 @@ body {
   background-clip: padding-box;
 }
 
-/* Precise focus ring in royal */
+/* Precise focus ring in brand */
 :focus-visible {
   outline: none;
   box-shadow: 0 0 0 2px #000, 0 0 0 3.5px var(--royal);
   border-radius: 8px;
+}
+
+/* --- Brand gradient utilities ---------------------------------------- */
+
+.bg-brand-gradient {
+  background: var(--brand-gradient);
+}
+.text-brand-gradient {
+  background: var(--brand-gradient);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.border-brand-gradient {
+  border-image: var(--brand-gradient) 1;
 }
 
 a {
@@ -113,13 +142,13 @@ a {
 
 .dot-live {
   position: relative;
-  box-shadow: 0 0 0 0 rgba(37, 99, 235, 0.45);
+  box-shadow: 0 0 0 0 rgba(126, 167, 176, 0.55);
   animation: dot-pulse 1.8s var(--ease) infinite;
 }
 @keyframes dot-pulse {
-  0% { box-shadow: 0 0 0 0 rgba(37, 99, 235, 0.45); }
-  70% { box-shadow: 0 0 0 9px rgba(37, 99, 235, 0); }
-  100% { box-shadow: 0 0 0 0 rgba(37, 99, 235, 0); }
+  0% { box-shadow: 0 0 0 0 rgba(126, 167, 176, 0.55); }
+  70% { box-shadow: 0 0 0 9px rgba(126, 167, 176, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(126, 167, 176, 0); }
 }
 
 /* --- Tiny entrances ---------------------------------------------------- */
@@ -168,9 +197,11 @@ a {
   background: linear-gradient(
     90deg,
     transparent 0%,
-    rgba(37, 99, 235, 0) 8%,
-    rgba(37, 99, 235, 0.55) 48%,
-    rgba(37, 99, 235, 0) 92%,
+    rgba(13, 61, 78, 0) 6%,
+    rgba(90, 138, 150, 0.55) 38%,
+    rgba(191, 209, 206, 0.85) 50%,
+    rgba(90, 138, 150, 0.55) 62%,
+    rgba(13, 61, 78, 0) 94%,
     transparent 100%
   );
   pointer-events: none;

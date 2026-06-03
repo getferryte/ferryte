@@ -54,12 +54,7 @@ export const metadata: Metadata = {
     images: ["/og"],
     creator: "@ferryte",
   },
-  icons: {
-    icon: [
-      { url: "/favicon.svg", type: "image/svg+xml" },
-    ],
-    apple: "/apple-touch-icon.png",
-  },
+  // Icons are auto-generated from src/app/icon.png + src/app/apple-icon.png.
   robots: {
     index: true,
     follow: true,

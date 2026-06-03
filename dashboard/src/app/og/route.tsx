@@ -5,17 +5,19 @@ export const runtime = "edge";
 const SIZE = { width: 1200, height: 630 };
 
 /**
- * OG image — what people see when ferryte.dev is shared anywhere.
+ * OG image — what people see when ferryte.dev is shared.
  *
- * Pure black canvas. Royal-blue accent on the wordmark dot only.
- * next/og only supports a limited CSS subset: every element with children
- * MUST set display: flex (or block / none). No inline-block.
+ * Pure black canvas. The brand teal-steel gradient is reused as both:
+ *   1. The colour applied to the second line of the headline.
+ *   2. A thin top hairline acting as a brand stripe.
  *
- * Note: route.tsx (Route Handlers) does NOT allow `size` / `contentType`
- * exports — those are for the convention-based opengraph-image.tsx file.
- * We use a local SIZE constant instead.
+ * The mark itself is fetched as a static asset from the same origin and
+ * embedded as an <img>. next/og supports inline <img> with absolute URLs.
  */
-export async function GET() {
+export async function GET(req: Request) {
+  const origin = new URL(req.url).origin;
+  const markUrl = `${origin}/brand/icon-64.png`;
+
   return new ImageResponse(
     (
       <div
@@ -29,9 +31,24 @@ export async function GET() {
           padding: "72px 88px",
           fontFamily:
             "ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif",
+          position: "relative",
         }}
       >
-        {/* top row — wordmark + status pip */}
+        {/* brand hairline at top */}
+        <div
+          style={{
+            position: "absolute",
+            top: 0,
+            left: 0,
+            right: 0,
+            height: 2,
+            backgroundImage:
+              "linear-gradient(90deg, rgba(13,61,78,0) 0%, #0d3d4e 22%, #5a8a96 50%, #bfd1ce 65%, #5a8a96 78%, rgba(13,61,78,0) 100%)",
+            display: "flex",
+          }}
+        />
+
+        {/* top row — mark + wordmark, status pip on right */}
         <div
           style={{
             display: "flex",
@@ -41,18 +58,25 @@ export async function GET() {
             fontSize: 22,
           }}
         >
-          <div style={{ display: "flex", alignItems: "baseline", gap: 6 }}>
-            <span style={{ color: "#fafafa", fontWeight: 600, fontSize: 32 }}>
-              ferryte
-            </span>
-            <div
-              style={{
-                width: 10,
-                height: 10,
-                borderRadius: 999,
-                backgroundColor: "#2563eb",
-              }}
+          <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={markUrl}
+              alt=""
+              width={56}
+              height={56}
+              style={{ display: "flex" }}
             />
+            <span
+              style={{
+                color: "#fafafa",
+                fontWeight: 500,
+                fontSize: 34,
+                letterSpacing: "-0.02em",
+              }}
+            >
+              Ferryte
+            </span>
           </div>
           <div
             style={{
@@ -62,7 +86,7 @@ export async function GET() {
               letterSpacing: 2,
               textTransform: "uppercase",
               fontSize: 16,
-              color: "#666",
+              color: "#9bb8b8",
             }}
           >
             <div
@@ -70,29 +94,48 @@ export async function GET() {
                 width: 8,
                 height: 8,
                 borderRadius: 999,
-                backgroundColor: "#2563eb",
+                backgroundColor: "#5a8a96",
+                display: "flex",
               }}
             />
             OPEN-CORE · MIT
           </div>
         </div>
 
-        {/* hero — big two-line headline */}
+        {/* hero — two-line headline; second line wears the brand gradient */}
         <div
           style={{
             display: "flex",
             flexDirection: "column",
-            marginTop: 96,
-            lineHeight: 0.98,
+            marginTop: 72,
+            lineHeight: 1.04,
             letterSpacing: "-0.035em",
             fontWeight: 300,
+            gap: 4,
           }}
         >
-          <div style={{ display: "flex", fontSize: 96, color: "#fafafa" }}>
+          <div
+            style={{
+              display: "flex",
+              fontSize: 76,
+              color: "#fafafa",
+              whiteSpace: "nowrap",
+            }}
+          >
             Your AI deleted the data.
           </div>
-          <div style={{ display: "flex", fontSize: 96, color: "#666" }}>
-            The derived memories didn&rsquo;t.
+          <div
+            style={{
+              display: "flex",
+              fontSize: 76,
+              whiteSpace: "nowrap",
+              backgroundImage:
+                "linear-gradient(135deg, #0d3d4e 0%, #5a8a96 45%, #bfd1ce 100%)",
+              backgroundClip: "text",
+              color: "transparent",
+            }}
+          >
+            The derived memories didn’t.
           </div>
         </div>
 

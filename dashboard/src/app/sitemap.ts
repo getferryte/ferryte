@@ -12,22 +12,22 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 1.0,
     },
     {
-      url: `${siteUrl}/#how`,
+      url: `${siteUrl}/manifesto`,
       lastModified: now,
       changeFrequency: "monthly",
-      priority: 0.8,
+      priority: 0.9,
     },
     {
-      url: `${siteUrl}/#open-core`,
+      url: `${siteUrl}/product`,
       lastModified: now,
       changeFrequency: "monthly",
-      priority: 0.8,
+      priority: 0.9,
     },
     {
-      url: `${siteUrl}/#waitlist`,
+      url: `${siteUrl}/pricing`,
       lastModified: now,
-      changeFrequency: "weekly",
-      priority: 0.7,
+      changeFrequency: "monthly",
+      priority: 0.85,
     },
   ];
 }

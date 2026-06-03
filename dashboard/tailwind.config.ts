@@ -3,8 +3,13 @@ import type { Config } from "tailwindcss";
 /**
  * Ferryte — tokens
  *
- * Black canvas. Geist sans + Geist mono. Single royal-blue accent (#2563eb).
- * Everything else is grey, weight, and space.
+ * Black canvas. Geist sans + Geist mono. Brand teal-steel gradient drawn
+ * from the Ferryte mark itself: a deep cyan-slate, a calm steel-blue mid,
+ * and a foggy near-white highlight.
+ *
+ * The semantic name `royal` is preserved across the codebase but now points
+ * to the mid-tone of the brand gradient — every existing `bg-royal`,
+ * `text-royal`, `dot-royal` instance picks up the new identity for free.
  */
 const config: Config = {
   content: ["./src/**/*.{ts,tsx}"],
@@ -23,8 +28,15 @@ const config: Config = {
         rule: "#1a1a1a",
         "rule-2": "#262626",
 
-        royal: "#2563eb",
-        "royal-2": "#3b82f6",
+        // Brand gradient stops sampled from the Ferryte mark.
+        "brand-deep": "#0d3d4e",   // darkest cyan-slate
+        "brand-mid": "#5a8a96",    // calm steel-blue (recognisable mid)
+        "brand-light": "#9bb8b8",  // foggy upper highlight
+        "brand-haze": "#bfd1ce",   // near-white tip
+
+        // Semantic alias — `royal` keeps every existing class working.
+        royal: "#5a8a96",
+        "royal-2": "#7ea7b0",
         ok: "#10b981",
         pending: "#d97706",
         issue: "#dc2626",

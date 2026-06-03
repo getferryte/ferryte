@@ -1,6 +1,7 @@
 import Link from "next/link";
 
 import { BrandLink } from "@/components/Brand";
+import { MarketingNav } from "@/components/MarketingNav";
 
 export default function MarketingLayout({
   children,
@@ -12,32 +13,7 @@ export default function MarketingLayout({
       <header className="sticky top-0 z-30 border-b border-rule/40 bg-black/70 backdrop-blur-xl">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-8 py-5">
           <BrandLink href="/" showVersion={false} />
-          <nav className="flex items-center gap-7 text-[13.5px]">
-            <Link
-              href="#how"
-              className="hidden text-ink-2 transition-colors duration-fast ease-out hover:text-ink sm:inline"
-            >
-              How it works
-            </Link>
-            <Link
-              href="#open-core"
-              className="hidden text-ink-2 transition-colors duration-fast ease-out hover:text-ink sm:inline"
-            >
-              Open core
-            </Link>
-            <a
-              href="https://github.com/getferryte/ferryte"
-              className="text-ink-2 transition-colors duration-fast ease-out hover:text-ink"
-            >
-              GitHub →
-            </a>
-            <Link
-              href="/app"
-              className="rounded-full bg-royal px-4 py-1.5 text-[13px] font-medium text-white transition-colors duration-fast ease-out hover:bg-royal-2"
-            >
-              Open dashboard
-            </Link>
-          </nav>
+          <MarketingNav />
         </div>
       </header>
 
@@ -56,9 +32,10 @@ export default function MarketingLayout({
 
             <div className="grid grid-cols-2 gap-x-12 gap-y-3 text-[13.5px]">
               <FooterCol title="Product">
+                <FooterLink href="/manifesto">Manifesto</FooterLink>
+                <FooterLink href="/product">How it works</FooterLink>
+                <FooterLink href="/pricing">Pricing</FooterLink>
                 <FooterLink href="/app">Dashboard</FooterLink>
-                <FooterLink href="#how">How it works</FooterLink>
-                <FooterLink href="#open-core">Open core</FooterLink>
               </FooterCol>
               <FooterCol title="Code">
                 <FooterLink href="https://github.com/getferryte/ferryte">
