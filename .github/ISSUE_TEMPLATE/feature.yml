@@ -1,0 +1,35 @@
+name: Feature request
+description: Propose a new scenario, adapter, or capability
+labels: ["enhancement"]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: What problem does this solve?
+      description: |
+        Lead with the user/customer pain. We are deliberately narrow — Ferryte is for agent
+        memory forgetting, not generic AI security. If the request is "make Ferryte do X",
+        explain why X is in scope for forgetting verification.
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposed
+    attributes:
+      label: Proposed approach
+      description: Sketch the API or the user-facing surface, if you have one in mind.
+
+  - type: dropdown
+    id: scope
+    attributes:
+      label: Is this Core (MIT) or Cloud / Enterprise scope?
+      description: |
+        See LICENSING.md. Premium adapters, runtime enforcement, hosted features, and
+        compliance attestations are commercial scope.
+      options:
+        - Core (MIT)
+        - Cloud
+        - Enterprise
+        - Not sure — needs discussion
+    validations:
+      required: true

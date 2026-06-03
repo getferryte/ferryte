@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1500 500" role="img" aria-label="Ferryte  verification for agent forgetting">
+  <defs>
+    <radialGradient id="glow" cx="80%" cy="40%" r="60%">
+      <stop offset="0%" stop-color="#2563eb" stop-opacity="0.18"/>
+      <stop offset="60%" stop-color="#2563eb" stop-opacity="0.02"/>
+      <stop offset="100%" stop-color="#000" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <rect width="1500" height="500" fill="#000"/>
+  <rect width="1500" height="500" fill="url(#glow)"/>
+
+  <g font-family="ui-sans-serif, -apple-system, 'Segoe UI', sans-serif">
+    <!-- eyebrow -->
+    <g transform="translate(120 132)">
+      <circle cx="6" cy="-6" r="6" fill="#2563eb"/>
+      <text x="22" y="0" font-size="20" font-weight="500" fill="#a0a0a0" letter-spacing="3" text-rendering="geometricPrecision">
+        FERRYTE · OPEN-CORE · MIT
+      </text>
+    </g>
+
+    <!-- headline -->
+    <text x="120" y="240" font-size="84" font-weight="300" fill="#fafafa" letter-spacing="-3" text-rendering="geometricPrecision">
+      Your AI deleted the data.
+    </text>
+    <text x="120" y="340" font-size="84" font-weight="300" fill="#666666" letter-spacing="-3" text-rendering="geometricPrecision">
+      The derived memories didnt.
+    </text>
+
+    <!-- footer -->
+    <text x="120" y="430" font-size="22" font-weight="500" fill="#666666" letter-spacing="2">
+      VERIFICATION FOR AGENT FORGETTING · FERRYTE.DEV
+    </text>
+  </g>
+</svg>

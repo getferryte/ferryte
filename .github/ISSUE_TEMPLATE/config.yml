@@ -1,0 +1,11 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Design-partner application (Ferryte Cloud)
+    url: mailto:hello@ferryte.dev?subject=Ferryte%20design%20partner
+    about: Get hosted continuous verification + first six months free.
+  - name: Security disclosure
+    url: https://github.com/getferryte/ferryte/security/advisories/new
+    about: Privately report a vulnerability — see SECURITY.md.
+  - name: Discussions
+    url: https://github.com/getferryte/ferryte/discussions
+    about: Questions about usage, integrations, or adapters.

@@ -1,0 +1,93 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "ferryte"
+version = "0.1.0"
+description = "Verification for agent forgetting: prove your AI agent stops acting on revoked, stale, poisoned, or cross-tenant data."
+readme = "README.md"
+license = { file = "LICENSE" }
+requires-python = ">=3.9"
+authors = [{ name = "Ferryte contributors" }]
+keywords = [
+    "ai",
+    "agents",
+    "memory",
+    "testing",
+    "verification",
+    "owasp",
+    "lineage",
+    "provenance",
+    "deletion",
+    "forgetting",
+]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Software Development :: Testing",
+    "Topic :: Security",
+]
+dependencies = [
+    "typer>=0.12",
+    "rich>=13.7",
+    "pydantic>=2.6",
+    "numpy>=1.26",
+]
+
+[project.optional-dependencies]
+mem0 = ["mem0ai>=0.1.0"]
+api = ["fastapi>=0.110", "uvicorn>=0.29"]
+dev = [
+    "pytest>=8.0",
+    "pytest-cov>=5.0",
+    "ruff>=0.4",
+    "mypy>=1.10",
+]
+
+[project.scripts]
+ferryte = "ferryte.cli:app"
+
+[project.urls]
+Homepage = "https://ferryte.dev"
+Documentation = "https://github.com/getferryte/ferryte#readme"
+Repository = "https://github.com/getferryte/ferryte"
+Issues = "https://github.com/getferryte/ferryte/issues"
+Changelog = "https://github.com/getferryte/ferryte/blob/main/CHANGELOG.md"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/ferryte"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py39"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "W", "UP", "B", "SIM"]
+ignore = [
+    "E501",
+    "B008",
+]
+
+[tool.ruff.lint.per-file-ignores]
+# Typer evaluates annotations at runtime via `typing.get_type_hints()` to build
+# the CLI. On Python 3.9 this breaks for PEP 604 `X | None` syntax, even with
+# `from __future__ import annotations`. The CLI therefore uses `Optional[X]`
+# and `List[X]` deliberately — silence the UP rules just for that file.
+"src/ferryte/cli.py" = ["UP006", "UP007", "UP035", "UP045"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-ra -q"
+
+[tool.mypy]
+python_version = "3.9"
+strict_optional = true
+ignore_missing_imports = true

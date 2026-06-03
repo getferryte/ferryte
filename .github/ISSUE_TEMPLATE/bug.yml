@@ -1,0 +1,65 @@
+name: Bug report
+description: A bug, regression, or unexpected behaviour in Ferryte Core
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for filing a bug. Please include enough detail that a maintainer can reproduce it.
+
+  - type: input
+    id: version
+    attributes:
+      label: Ferryte version
+      description: Output of `ferryte --version`
+      placeholder: ferryte 0.1.0
+    validations:
+      required: true
+
+  - type: input
+    id: python
+    attributes:
+      label: Python version
+      placeholder: "3.12.2"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: backend
+    attributes:
+      label: Memory backend(s) in use
+      multiple: true
+      options:
+        - Mem0
+        - pgvector
+        - Chroma
+        - Pinecone
+        - Zep
+        - AWS Bedrock AgentCore
+        - generic in-memory vector store
+        - other (please describe in "Steps to reproduce")
+    validations:
+      required: true
+
+  - type: textarea
+    id: repro
+    attributes:
+      label: Steps to reproduce
+      description: A minimal code snippet, or the exact CLI invocations.
+      render: shell
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected vs actual behaviour
+    validations:
+      required: true
+
+  - type: textarea
+    id: report
+    attributes:
+      label: Coverage report (optional)
+      description: Paste the relevant section of `.ferryte/reports/latest.json` if helpful.
+      render: json
