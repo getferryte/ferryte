@@ -1,8 +1,8 @@
 import { ImageResponse } from "next/og";
 
 export const runtime = "edge";
-export const contentType = "image/png";
-export const size = { width: 1200, height: 630 };
+
+const SIZE = { width: 1200, height: 630 };
 
 /**
  * OG image — what people see when ferryte.dev is shared anywhere.
@@ -10,6 +10,10 @@ export const size = { width: 1200, height: 630 };
  * Pure black canvas. Royal-blue accent on the wordmark dot only.
  * next/og only supports a limited CSS subset: every element with children
  * MUST set display: flex (or block / none). No inline-block.
+ *
+ * Note: route.tsx (Route Handlers) does NOT allow `size` / `contentType`
+ * exports — those are for the convention-based opengraph-image.tsx file.
+ * We use a local SIZE constant instead.
  */
 export async function GET() {
   return new ImageResponse(
@@ -111,7 +115,7 @@ export async function GET() {
       </div>
     ),
     {
-      ...size,
+      ...SIZE,
       headers: {
         "Cache-Control": "public, immutable, no-transform, max-age=31536000",
       },
