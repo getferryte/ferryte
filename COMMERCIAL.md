@@ -25,21 +25,22 @@ dashboard.
 - **Best for:** individual developers and small teams who want to verify
   agent forgetting in their own CI without involving procurement.
 
-## Cloud — private beta
+## Cloud — pre-release
 
-The hosted forgetting oracle. You point your adapters at Ferryte Cloud
-instead of running the CI gate locally; we run continuous verification,
-retain history, alert on regressions, and integrate with the rest of your
-incident-response stack.
+The hosted forgetting oracle. **Not built yet.** We are building Cloud with
+the first five design partners, not before. When it ships, you will point
+your adapters at Ferryte Cloud instead of running the CI gate locally; we
+will run continuous verification, retain history, alert on regressions, and
+integrate with the rest of your incident-response stack.
 
 - **Price:** TBD at GA. Free for design partners through 2026.
 - **License:** commercial SaaS.
-- **Status:** private beta. Limited to five design partners in 2026.
+- **Status:** pre-release — five design-partner seats, building together.
 - **Best for:** companies running multi-tenant memory in production who want
   continuous verification rather than periodic CI runs, and who need
   regression alerts on memory drift across deploys.
 
-**What's included beyond Core:**
+**What it will include beyond Core (once built):**
 
 - Continuous, scheduled verification runs across multiple environments
   (dev, staging, prod).
@@ -58,10 +59,11 @@ incident-response stack.
 3. The specific leak shape you're worried about.
 
 We reply within 24 hours. We say no to most candidates. The ones we say yes
-to get the first six months free, an engineer paired with their team for the
-first integration, and a direct line to the roadmap.
+to get the first six months of Cloud free **when Cloud ships**, the
+founding engineer paired with their team for the first Core integration, and
+a direct line to the roadmap.
 
-## Enterprise — annual contract
+## Enterprise — roadmap
 
 The self-hosted, hardened distribution. This is where the trust plane lives:
 the things AppSec, CISO, and Compliance teams sign off on.
@@ -70,7 +72,8 @@ the things AppSec, CISO, and Compliance teams sign off on.
   ingested write volume. Mid-five to mid-six figures for typical mid-market
   customers. Contact sales for a quote.
 - **License:** commercial enterprise agreement.
-- **Status:** in development; first contracts ship alongside Cloud GA.
+- **Status:** roadmap. Not in development yet. First contracts ship after
+  Cloud has been in design-partner hands for at least two quarters.
 - **Best for:** enterprise companies that cannot put a third party between
   their agent and their memory layer, that need attestation evidence for
   regulators, or that need premium adapters for regulated environments.
@@ -93,7 +96,7 @@ the things AppSec, CISO, and Compliance teams sign off on.
 - **Runtime retrieval enforcement (v2):** inline filtering of tainted
   retrievals before they reach the prompt, on the agent's hot path. Opt-in,
   per-tenant, latency-budgeted.
-- Customer-named engineering point of contact, named Slack channel, SLA on
+- Dedicated engineering point of contact, dedicated Slack channel, SLA on
   response and resolution.
 
 **How to get in:** email `hello@ferryte.dev` with subject `Ferryte Enterprise`.

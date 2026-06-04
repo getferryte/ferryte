@@ -35,19 +35,7 @@ export default function Landing() {
 
 function Hero() {
   return (
-    <section className="relative flex min-h-[calc(100vh-73px)] flex-col items-start justify-center px-8 sm:px-12 lg:px-20">
-      <motion.div
-        aria-hidden
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 2.6, ease: EASE }}
-        className="pointer-events-none absolute -top-32 left-1/4 -z-10 h-[640px] w-[640px] rounded-full"
-        style={{
-          background:
-            "radial-gradient(circle, rgba(126,167,176,0.18) 0%, rgba(13,61,78,0.08) 45%, rgba(13,61,78,0) 72%)",
-        }}
-      />
-
+    <section className="relative flex min-h-[calc(100vh-73px)] flex-col items-stretch justify-center px-8 sm:px-12 lg:px-20">
       <div className="mx-auto w-full max-w-6xl">
         <Reveal delay={0.1} className="mb-10 flex items-center gap-2.5">
           <span className="dot dot-royal dot-live" />
@@ -71,7 +59,7 @@ function Hero() {
           className="font-display -mt-1 block max-w-[18ch] text-[56px] font-light leading-[0.98] tracking-tightest text-royal sm:text-[92px] lg:text-[120px]"
         />
 
-        <Reveal delay={1.65} className="mt-12 max-w-2xl">
+        <Reveal delay={1.65} className="mt-10 max-w-xl">
           <p className="text-lede text-ink-2 sm:text-[20px]">
             Plants canaries. Calls your real delete API. Breaks CI when the
             leak survives.
@@ -153,19 +141,34 @@ function ScrollCue() {
 /* =================================================== COMPATIBILITY */
 
 function Compatibility() {
-  const items = ["Mem0", "pgvector", "Zep", "AWS AgentCore", "LangGraph", "custom stores"];
+  const items: Array<{ name: string; status: "stable" | "beta" | "planned" }> = [
+    { name: "Mem0", status: "stable" },
+    { name: "in-memory vector", status: "stable" },
+    { name: "pgvector / Chroma / Qdrant via subclass", status: "stable" },
+    { name: "Zep", status: "beta" },
+    { name: "AWS AgentCore", status: "beta" },
+    { name: "LangGraph", status: "planned" },
+  ];
+  const tone = {
+    stable: "text-ink-2",
+    beta: "text-ink-3",
+    planned: "text-ink-3/70",
+  } as const;
   return (
     <section className="border-t border-rule/40 px-8 py-7 sm:px-12 lg:px-20">
       <RevealOnScroll>
         <div className="mx-auto flex max-w-6xl flex-wrap items-center gap-x-8 gap-y-3 text-caption">
           <span className="font-mono text-[10.5px] uppercase tracking-[0.22em] text-ink-3">
-            Ships with adapters for
+            Adapters
           </span>
-          {items.map((it, i) => (
-            <span key={it} className="flex items-center gap-3">
-              <span className={i === items.length - 1 ? "text-ink-3" : "text-ink-2"}>
-                {it}
-              </span>
+          {items.map((it) => (
+            <span key={it.name} className={`flex items-center gap-2 ${tone[it.status]}`}>
+              <span>{it.name}</span>
+              {it.status !== "stable" && (
+                <span className="font-mono text-[9.5px] uppercase tracking-[0.18em] text-ink-3/80">
+                  · {it.status}
+                </span>
+              )}
             </span>
           ))}
         </div>
@@ -379,14 +382,17 @@ const QUOTES = [
   {
     vendor: "AWS Bedrock AgentCore",
     line: "Deleting an event doesn’t remove the structured information derived out of it from the long term memory.",
+    href: "https://docs.aws.amazon.com/bedrock-agentcore/latest/devguide/short-term-delete-event.html",
   },
   {
     vendor: "Zep documentation",
-    line: "Deleting an episode does not regenerate the shared node summaries that already absorbed it.",
+    line: "Deleting an episode does not regenerate the names or summaries of nodes shared with other episodes.",
+    href: "https://help.getzep.com/deleting-data-from-the-graph",
   },
   {
-    vendor: "OWASP Agentic Top 10 · Dec 2025",
-    line: "ASI06 — Memory poisoning. Persistent agent memory can absorb adversarial writes that survive normal cleanup.",
+    vendor: "OWASP Top 10 for Agentic AI · ASI06:2026",
+    line: "Adversaries corrupt or seed this context with malicious or misleading data, causing future reasoning, planning, or tool use to become biased, unsafe, or aid exfiltration.",
+    href: "https://genai.owasp.org/2025/12/09/owasp-top-10-for-agentic-applications-the-benchmark-for-agentic-security-in-the-age-of-autonomous-ai/",
   },
 ];
 
@@ -416,9 +422,14 @@ function Authority() {
                 <p className="font-display text-[19px] font-light leading-[1.38] tracking-[-0.012em] text-ink sm:text-[21px]">
                   &ldquo;{q.line}&rdquo;
                 </p>
-                <p className="mt-auto pt-6 font-mono text-[10.5px] uppercase tracking-[0.18em] text-ink-3">
-                  — {q.vendor}
-                </p>
+                <a
+                  href={q.href}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="mt-auto pt-6 font-mono text-[10.5px] uppercase tracking-[0.18em] text-ink-3 transition-colors duration-fast ease-out hover:text-ink-2"
+                >
+                  — {q.vendor} ↗
+                </a>
               </article>
             </StaggerItem>
           ))}
@@ -504,7 +515,7 @@ function Ask() {
       <div className="mx-auto max-w-6xl">
         <RevealOnScroll>
           <span className="font-mono text-[10.5px] uppercase tracking-[0.22em] text-royal">
-            Five seats · six months free · named engineer
+            Five seats · paired with the founder · six months of Cloud free
           </span>
         </RevealOnScroll>
 
@@ -518,8 +529,8 @@ function Ask() {
 
         <RevealOnScroll delay={0.25} className="mt-10 max-w-xl">
           <p className="text-lede text-ink-2">
-            Five teams running multi-tenant agents in production. We pair an
-            engineer with you and ship the first integration in a day.
+            Five teams running multi-tenant agents in production. Paired with the
+            founding engineer for the first integration. You shape the roadmap.
           </p>
         </RevealOnScroll>
 

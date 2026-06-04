@@ -63,15 +63,16 @@ function Header() {
 const TIERS = [
   {
     name: "Core",
-    badge: "Available",
+    badge: "Available today",
     badgeTone: "ok" as const,
     price: "MIT · free",
     blurb: "The library, the CLI, and the four scenarios. Ship it in your CI today.",
+    featuresNote: null as string | null,
     features: [
       "ferryte.instrument() one-line auto-patch",
       "source-revocation · cross-tenant-isolation · stale-fact · memory-poisoning",
       "Lineage graph + blast radius (SQLite)",
-      "Mem0 + generic vector adapters",
+      "Mem0 adapter + generic vector base (subclass for pgvector / Chroma / Qdrant)",
       "JSON + HTML coverage reports",
       "Local Next.js dashboard",
       "CI gate: non-zero exit on leak",
@@ -81,10 +82,11 @@ const TIERS = [
   },
   {
     name: "Cloud",
-    badge: "Private beta",
+    badge: "Pre-release",
     badgeTone: "royal" as const,
-    price: "Design-partner waitlist",
-    blurb: "The hosted oracle. Continuous verification, regression alerts, full history.",
+    price: "Free for design partners · pricing TBD",
+    blurb: "Not built yet — five design partners are shaping it. When it ships, the hosted oracle for continuous verification.",
+    featuresNote: "What it will do once we ship it",
     features: [
       "Everything in Core",
       "Hosted continuous verification",
@@ -94,15 +96,16 @@ const TIERS = [
       "Per-tenant blast-radius dashboards",
       "Public status badges for the repo",
     ],
-    cta: { label: "Join waitlist", href: "mailto:hello@ferryte.dev?subject=Ferryte%20Cloud%20waitlist", copyable: null },
+    cta: { label: "Join design-partner cohort", href: "mailto:hello@ferryte.dev?subject=Ferryte%20Cloud%20design%20partner", copyable: null },
     accent: true,
   },
   {
     name: "Enterprise",
-    badge: "Private beta",
+    badge: "Roadmap",
     badgeTone: "pending" as const,
-    price: "Annual · contact us",
-    blurb: "Self-hosted, hardened, and where compliance receipts and runtime enforcement live.",
+    price: "TBD · talk to us",
+    blurb: "Direction, not product yet. Self-hosted hardening + signed compliance — built once Cloud is mature.",
+    featuresNote: "What we plan to build, once Cloud is in hands",
     features: [
       "Everything in Cloud",
       "Self-hosted with SSO + RBAC",
@@ -142,7 +145,19 @@ function Tiers() {
 
               <p className="mt-6 text-body text-ink-2">{t.blurb}</p>
 
-              <ul className="mt-7 flex flex-col gap-3 border-t border-rule/60 pt-6 text-body text-ink-2">
+              {t.featuresNote && (
+                <p className="mt-7 border-t border-rule/60 pt-6 font-mono text-[10.5px] uppercase tracking-[0.18em] text-ink-3">
+                  {t.featuresNote}
+                </p>
+              )}
+              <ul
+                className={[
+                  "flex flex-col gap-3 text-body text-ink-2",
+                  t.featuresNote
+                    ? "mt-5"
+                    : "mt-7 border-t border-rule/60 pt-6",
+                ].join(" ")}
+              >
                 {t.features.map((f) => (
                   <li
                     key={f}
@@ -238,7 +253,7 @@ function BadgePill({
 const COMPARE_ROWS = [
   { feature: "Local CLI + dashboard", core: true, cloud: true, ent: true },
   { feature: "Four canary scenarios", core: true, cloud: true, ent: true },
-  { feature: "Mem0 + pgvector adapters", core: true, cloud: true, ent: true },
+  { feature: "Mem0 adapter + generic vector base", core: true, cloud: true, ent: true },
   { feature: "Hosted continuous verification", core: false, cloud: true, ent: true },
   { feature: "Historical reports + regression alerts", core: false, cloud: true, ent: true },
   { feature: "Slack / PagerDuty / Linear", core: false, cloud: true, ent: true },
@@ -264,7 +279,15 @@ function Compare() {
         </h2>
       </RevealOnScroll>
 
-      <RevealOnScroll delay={0.2} className="mt-12 overflow-x-auto">
+      <RevealOnScroll delay={0.15} className="mt-6 max-w-2xl">
+        <p className="text-caption text-ink-3">
+          ●&nbsp; in Core = ships today.&nbsp;&nbsp;
+          ●&nbsp; in Cloud = building it with the first five design partners.&nbsp;&nbsp;
+          ●&nbsp; in Enterprise = roadmap, once Cloud is mature.
+        </p>
+      </RevealOnScroll>
+
+      <RevealOnScroll delay={0.2} className="mt-10 overflow-x-auto">
         <table className="w-full min-w-[640px] border-separate border-spacing-0 text-[14px]">
           <thead>
             <tr className="text-left">
@@ -329,18 +352,18 @@ function Waitlist() {
 
       <RevealOnScroll delay={0.1} className="mt-8 max-w-4xl">
         <h2 className="font-display text-[40px] font-light leading-[1.04] tracking-[-0.03em] text-ink sm:text-[64px] lg:text-[80px]">
-          Six months free.
+          Paired with the founder.
           <br />
-          <span className="text-ink-3">Named engineer. Shape the roadmap.</span>
+          <span className="text-ink-3">Six months of Cloud free. Shape the roadmap.</span>
         </h2>
       </RevealOnScroll>
 
       <RevealOnScroll delay={0.2} className="mt-10 max-w-2xl">
         <p className="text-lede text-ink-2">
-          Ferryte Cloud goes private beta with five companies running multi-tenant
-          memory in production. We pair an engineer with your team and wire the
-          first integration in a day. We say no to most. The few we say yes to get
-          the first six months free and a direct line to engineering.
+          Ferryte Cloud isn&rsquo;t built yet — five design partners will shape it
+          before we ship. Today: the founding engineer paired with your team for
+          the first Core integration. When Cloud ships: six months free for
+          design partners.
         </p>
       </RevealOnScroll>
 

@@ -10,10 +10,13 @@
 
 Hi HN — we're open-sourcing Ferryte, a forgetting oracle for AI agents.
 
-The premise, in one quote from AWS Bedrock AgentCore's own documentation:
+The premise, in one quote from AWS Bedrock AgentCore's own documentation
+(https://docs.aws.amazon.com/bedrock-agentcore/latest/devguide/short-term-delete-event.html):
 *"Deleting an event doesn't remove the structured information derived out of
-it from the long term memory."* Zep says the same about shared node summaries.
-OWASP added memory poisoning (ASI06) to the Agentic Top 10 in December 2025.
+it from the long term memory."* Zep says the same:
+*"Deleting an episode does not regenerate the names or summaries of nodes
+shared with other episodes."* OWASP added Memory & Context Poisoning
+(ASI06:2026) to the Agentic AI Top 10 on December 9, 2025.
 
 The leak shape: an AI agent with persistent memory stores a fact, derives
 summaries / embeddings / rollups from it, then the source gets deleted by the
@@ -37,9 +40,10 @@ What Ferryte does:
 
 It's MIT, in Python. Engine + CLI + lineage graph + four scenarios
 (source-revocation, cross-tenant-isolation, stale-fact, memory-poisoning) +
-a local Next.js dashboard. Cloud and Enterprise tiers (hosted, signed
-compliance attestations, runtime enforcement) come later — same open-core
-shape as Sentry/PostHog/Supabase.
+a local Next.js dashboard — all shipping today. Cloud (hosted, alerts,
+history) is being built with the first five design partners, not before.
+Enterprise (SSO, signed compliance attestations, runtime enforcement) is on
+the roadmap after Cloud. Same open-core shape as Sentry/PostHog/Supabase.
 
 Try the leak demo, no API keys:
 
@@ -51,8 +55,9 @@ when the seeded canary survives delete. Real Mem0 / pgvector behave the same
 way — swap the adapter, the demo is identical.
 
 We're looking for five design partners running multi-tenant AI memory in
-production. First six months free, named engineer on call, you shape the
-roadmap. hello@ferryte.dev.
+production. First six months of Cloud free (when it ships), paired with the
+founding engineer for the Core integration, and you shape the roadmap.
+hello@ferryte.dev.
 
 I'd love feedback on:
 

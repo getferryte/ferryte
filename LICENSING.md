@@ -63,11 +63,11 @@ present in this repository:
   - Multi-tenant management of Ferryte itself (orgs, projects, RBAC).
   - Public status badges for OSS repos.
 
-- **Ferryte Enterprise** — the self-hosted hardened distribution.
+- **Ferryte Enterprise** — the self-hosted hardened distribution (roadmap).
   - SSO (SAML / OIDC), SCIM, and RBAC.
   - Tamper-evident audit logs.
   - SOC2-ready posture and customer support SLA.
-  - Premium support, dedicated channel, named engineer.
+  - Premium support, dedicated Slack channel, dedicated engineering point of contact.
 
 - **Premium adapters** — closed-source connectors for systems with proprietary
   delete semantics, regulated environments, or commercial source code. As of

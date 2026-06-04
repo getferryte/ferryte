@@ -90,18 +90,21 @@ const ADMISSIONS = [
     source: "AWS Bedrock AgentCore",
     quote:
       "Deleting an event doesn’t remove the structured information derived out of it from the long term memory.",
+    href: "https://docs.aws.amazon.com/bedrock-agentcore/latest/devguide/short-term-delete-event.html",
     note: "Translation: rows go, summaries stay.",
   },
   {
     source: "Zep documentation",
     quote:
-      "Deleting an episode does not regenerate the shared node summaries that already absorbed it.",
+      "Deleting an episode does not regenerate the names or summaries of nodes shared with other episodes.",
+    href: "https://help.getzep.com/deleting-data-from-the-graph",
     note: "Translation: revocation does not propagate through the graph.",
   },
   {
-    source: "OWASP Agentic Top 10 — December 2025",
+    source: "OWASP Top 10 for Agentic AI · ASI06:2026 (Dec 9, 2025)",
     quote:
-      "ASI06 — Memory poisoning. Persistent agent memory can absorb adversarial writes that survive normal cleanup.",
+      "Adversaries corrupt or seed this context with malicious or misleading data, causing future reasoning, planning, or tool use to become biased, unsafe, or aid exfiltration.",
+    href: "https://genai.owasp.org/2025/12/09/owasp-top-10-for-agentic-applications-the-benchmark-for-agentic-security-in-the-age-of-autonomous-ai/",
     note: "Translation: the industry standard already names this risk.",
   },
 ];
@@ -123,9 +126,14 @@ function Quotes() {
                 “{a.quote}”
               </p>
               <footer className="mt-5 flex flex-col gap-1">
-                <cite className="font-mono text-[11px] not-italic uppercase tracking-[0.18em] text-ink-2">
-                  — {a.source}
-                </cite>
+                <a
+                  href={a.href}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="font-mono text-[11px] not-italic uppercase tracking-[0.18em] text-ink-2 transition-colors duration-fast ease-out hover:text-ink"
+                >
+                  — {a.source} ↗
+                </a>
                 <span className="text-caption text-ink-3">{a.note}</span>
               </footer>
             </blockquote>

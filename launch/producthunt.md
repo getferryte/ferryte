@@ -41,9 +41,10 @@ happened.
 - **Honest:** every report has a blind-spot section listing what we
   couldn't see. A passing test means something.
 
-MIT engine ships today. Hosted Cloud + Enterprise (SSO, compliance
-attestations, premium adapters, runtime enforcement) gate behind design
-partners through 2026.
+MIT engine ships today: four scenarios, CLI gate, JSON + HTML reports, local
+dashboard. Hosted Cloud is being built **with** the first five design
+partners — it doesn't exist yet. Enterprise (SSO, compliance attestations,
+premium adapters, runtime enforcement) is on the roadmap after Cloud.
 
 Looking for feedback on:
 
@@ -60,7 +61,7 @@ python demo/multi_tenant_leak.py
 
 Code: github.com/getferryte/ferryte
 Marketing: ferryte.dev
-Design partners (first 5, six months free): hello@ferryte.dev
+Design partners (first 5, six months of Cloud free when it ships, paired with the founder): hello@ferryte.dev
 
 ## Topics (pick 3, max)
 

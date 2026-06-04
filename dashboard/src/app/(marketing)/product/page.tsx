@@ -70,7 +70,7 @@ const STEPS = [
   {
     num: "01",
     title: "Instrument",
-    body: "One line — ferryte.instrument(). Auto-patches Mem0, pgvector, and custom stores at construction time. Your agent code does not change.",
+    body: "One line — ferryte.instrument(). Auto-patches Mem0 and the generic vector base at construction time. Subclass it for pgvector, Chroma, Qdrant. Your agent code does not change.",
     code: `import ferryte
 ferryte.instrument()
 
@@ -334,11 +334,11 @@ function WhatItProves() {
 
 const STACK = [
   { name: "Mem0", status: "stable", body: "First-class adapter. Auto-patch on construction." },
-  { name: "pgvector", status: "stable", body: "Generic vector adapter via SQLAlchemy session." },
+  { name: "Vector stores", status: "stable", body: "Generic vector base ships today. Subclass for pgvector, Chroma, Qdrant." },
   { name: "Custom stores", status: "stable", body: "Implement the 80-line MemoryAdapter protocol." },
-  { name: "Zep", status: "beta", body: "Adapter in design-partner preview." },
-  { name: "AWS AgentCore", status: "beta", body: "Adapter in design-partner preview." },
-  { name: "LangGraph", status: "planned", body: "Tracing hooks landing next." },
+  { name: "Zep", status: "planned", body: "Built with the design-partner cohort." },
+  { name: "AWS AgentCore", status: "planned", body: "Built with the design-partner cohort." },
+  { name: "LangGraph", status: "planned", body: "Tracing hooks on the roadmap." },
 ];
 
 function Stack() {

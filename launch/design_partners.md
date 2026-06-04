@@ -2,9 +2,22 @@
 
 ## What it is
 
-Five paid pilots in 2026. First six months of Ferryte Cloud free. A named
-Ferryte engineer paired with your team for the first integration. Direct
+Five paid pilots in 2026. First six months of Ferryte Cloud free **once Cloud
+ships** (we're building it with this cohort — Cloud does not exist yet). The
+founding engineer paired with your team for the first Core integration. Direct
 input on the roadmap. Public credit if you want it; quiet pilot if you don't.
+
+What exists today:
+
+- `ferryte` on PyPI — MIT, four scenarios, CLI gate, JSON + HTML reports.
+- A local Next.js dashboard you can self-host.
+- A Mem0 adapter and a generic vector base class.
+
+What gets built in the design-partner cohort:
+
+- The hosted Cloud surface (continuous verification, regression alerts, history).
+- Zep / AgentCore adapters (pulled in by partner stack).
+- Multi-environment management + integrations.
 
 ## ICP — who we are looking for
 
@@ -52,8 +65,9 @@ input on the roadmap. Public credit if you want it; quiet pilot if you don't.
 > a Mem0 / pgvector stack like yours, and you tell me whether the bottom-up
 > "drop into CI" framing maps to how ${COMPANY} thinks about memory testing.
 > If we both want to continue, the design-partner offer is: first six months
-> of Ferryte Cloud free, a named Ferryte engineer paired with your team for
-> the first integration, and you shape the roadmap.
+> of Ferryte Cloud free **when it ships** (we're building it with this cohort),
+> the founding engineer paired with your team for the first Core integration,
+> and you shape the roadmap.
 >
 > Worst case for you: fifteen minutes and a tool you can `pip install`
 > for free.
@@ -63,7 +77,7 @@ input on the roadmap. Public credit if you want it; quiet pilot if you don't.
 > Best,
 > ${YOUR_NAME}
 >
-> ferryte.dev · github.com/getferryte/ferryte
+> ferryte.dev · github.com/getferryte/ferryte · hello@ferryte.dev
 
 ## Follow-up cadence
 

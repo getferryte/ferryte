@@ -42,8 +42,8 @@ Tweets are numbered. Character counts in `[brackets]` at the end of each.
 > Every major memory vendor admits delete is fire-and-forget at the source layer:
 >
 > — AWS Bedrock AgentCore (above)
-> — Zep: deleting an episode does not regenerate the shared node summaries
-> — OWASP added "memory poisoning" (ASI06) to the Agentic Top 10 in Dec 2025
+> — Zep: deleting an episode does not regenerate the names or summaries of nodes shared with other episodes
+> — OWASP added "Memory & Context Poisoning" (ASI06:2026) to the Agentic AI Top 10 on Dec 9, 2025
 >
 > Almost nobody tests for the leak in CI.
 
@@ -55,7 +55,7 @@ Tweets are numbered. Character counts in `[brackets]` at the end of each.
 
 > Ferryte is the open-core forgetting oracle.
 >
-> One line: `ferryte.instrument()`. Auto-patches Mem0, pgvector, AgentCore, your custom store.
+> One line: `ferryte.instrument()`. Auto-patches Mem0 and the generic vector base (subclass for pgvector / Chroma / Qdrant). Zep + AgentCore adapters land with the design-partner cohort.
 >
 > One command: `ferryte test`. Plants canary memories, calls your delete API, inspects both store contents AND retrieval traces. Fails CI on leak.
 
@@ -104,7 +104,7 @@ Tweets are numbered. Character counts in `[brackets]` at the end of each.
 
 > Engine is MIT. Forever.
 >
-> Ferryte Cloud (hosted, alerts, history) and Enterprise (SSO, signed compliance receipts, premium adapters, runtime enforcement) ship after design partners.
+> Cloud (hosted, alerts, history) ships *with* the first five design partners, not before. Enterprise (SSO, signed compliance receipts, premium adapters, runtime enforcement) is on the roadmap once Cloud is mature.
 >
 > Same playbook as Sentry, PostHog, Supabase.
 
@@ -147,7 +147,7 @@ that works in the tweet.
 
 > Star: github.com/getferryte/ferryte
 > Read: ferryte.dev
-> Design partners (first 5, six months free, named engineer): hello@ferryte.dev
+> Design partners (first 5, six months of Cloud free when it ships, paired with the founder): hello@ferryte.dev
 >
 > If you find a real leak with Ferryte in the next two weeks, I'll add you to the launch board and ship the next adapter you ask for. Reply or DM.
 
