@@ -4,6 +4,7 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 
 import { CopyableCommand } from "@/components/CopyableCommand";
+import { Terminal, type TerminalLine } from "@/components/Terminal";
 import {
   Magnetic,
   Reveal,
@@ -19,25 +20,28 @@ export default function Landing() {
   return (
     <main>
       <Hero />
-      <ProofStrip />
-      <CommandStrip />
-      <ApplyStrip />
+      <Compatibility />
+      <LeakProof />
+      <Recognition />
+      <HowItWorks />
+      <Authority />
+      <BuiltFor />
+      <Ask />
     </main>
   );
 }
 
-/* ---------------------------------------------------------------- Hero */
+/* ============================================================ HERO */
 
 function Hero() {
   return (
     <section className="relative flex min-h-[calc(100vh-73px)] flex-col items-start justify-center px-8 sm:px-12 lg:px-20">
-      {/* ambient royal glow behind the headline */}
       <motion.div
         aria-hidden
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ duration: 2.4, ease: EASE }}
-        className="pointer-events-none absolute -top-32 left-1/4 -z-10 h-[600px] w-[600px] rounded-full"
+        transition={{ duration: 2.6, ease: EASE }}
+        className="pointer-events-none absolute -top-32 left-1/4 -z-10 h-[640px] w-[640px] rounded-full"
         style={{
           background:
             "radial-gradient(circle, rgba(126,167,176,0.18) 0%, rgba(13,61,78,0.08) 45%, rgba(13,61,78,0) 72%)",
@@ -45,43 +49,47 @@ function Hero() {
       />
 
       <div className="mx-auto w-full max-w-6xl">
-        <Reveal delay={0.1} className="mb-12 flex items-center gap-2.5">
+        <Reveal delay={0.1} className="mb-10 flex items-center gap-2.5">
           <span className="dot dot-royal dot-live" />
           <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-royal">
-            Open beta · MIT
+            For teams shipping multi-tenant AI agents
           </span>
         </Reveal>
 
         <WordReveal
           as="h1"
-          text="Forgetting,"
-          delay={0.25}
-          staggerDelay={0.08}
-          className="font-display block max-w-[14ch] text-[64px] font-light leading-[0.96] tracking-tightest text-ink sm:text-[96px] lg:text-[128px]"
+          text="You deleted the data."
+          delay={0.28}
+          staggerDelay={0.07}
+          className="font-display block max-w-[18ch] text-[56px] font-light leading-[0.98] tracking-tightest text-ink sm:text-[92px] lg:text-[120px]"
         />
         <WordReveal
           as="h1"
-          text="verified."
-          delay={0.55}
-          staggerDelay={0.08}
-          className="font-display -mt-2 block max-w-[14ch] text-[64px] font-light leading-[0.96] tracking-tightest text-ink-3 sm:text-[96px] lg:text-[128px]"
+          text="Your agent kept it."
+          delay={0.92}
+          staggerDelay={0.07}
+          className="font-display -mt-1 block max-w-[18ch] text-[56px] font-light leading-[0.98] tracking-tightest text-royal sm:text-[92px] lg:text-[120px]"
         />
 
-        <Reveal delay={1.1} className="mt-12 max-w-xl">
+        <Reveal delay={1.65} className="mt-12 max-w-2xl">
           <p className="text-lede text-ink-2 sm:text-[20px]">
-            The deterministic verification layer for AI agent memory.
+            Plants canaries. Calls your real delete API. Breaks CI when the
+            leak survives.
           </p>
         </Reveal>
 
-        <Reveal delay={1.35} className="mt-10 flex flex-wrap items-center gap-4">
+        <Reveal
+          delay={1.9}
+          className="mt-10 flex flex-wrap items-center gap-4"
+        >
           <Magnetic>
-            <Link
-              href="/manifesto"
+            <a
+              href="#leak"
               className="inline-flex items-center gap-1.5 rounded-full bg-royal px-5 py-3 text-[14px] font-medium text-white shadow-[0_8px_36px_-12px_rgba(90,138,150,0.55)] transition-colors duration-fast ease-out hover:bg-royal-2"
             >
-              Read the manifesto
-              <span aria-hidden>→</span>
-            </Link>
+              Watch it leak (30s)
+              <span aria-hidden>↓</span>
+            </a>
           </Magnetic>
           <CopyableCommand command="pip install ferryte" />
           <Link
@@ -93,9 +101,8 @@ function Hero() {
         </Reveal>
       </div>
 
-      {/* scroll cue */}
       <Reveal
-        delay={1.9}
+        delay={2.4}
         duration={1.2}
         className="absolute bottom-10 left-1/2 -translate-x-1/2"
       >
@@ -113,7 +120,7 @@ function ScrollCue() {
       className="flex flex-col items-center gap-2 text-ink-3"
     >
       <span className="font-mono text-[10px] uppercase tracking-[0.22em]">
-        Scroll for proof
+        See it leak
       </span>
       <svg
         width="14"
@@ -122,7 +129,14 @@ function ScrollCue() {
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
       >
-        <rect x="0.5" y="0.5" width="13" height="21" rx="6.5" stroke="currentColor" />
+        <rect
+          x="0.5"
+          y="0.5"
+          width="13"
+          height="21"
+          rx="6.5"
+          stroke="currentColor"
+        />
         <motion.circle
           cx="7"
           cy="7"
@@ -136,100 +150,221 @@ function ScrollCue() {
   );
 }
 
-/* --------------------------------------------------------- Proof strip */
+/* =================================================== COMPATIBILITY */
 
-const QUOTES = [
-  { vendor: "AWS Bedrock AgentCore", line: "Deletion does not propagate to derivations." },
-  { vendor: "Zep documentation", line: "Episode deletion leaves shared summaries intact." },
-  { vendor: "OWASP Agentic Top 10", line: "Memory poisoning · ASI06 · Dec 2025." },
+function Compatibility() {
+  const items = ["Mem0", "pgvector", "Zep", "AWS AgentCore", "LangGraph", "custom stores"];
+  return (
+    <section className="border-t border-rule/40 px-8 py-7 sm:px-12 lg:px-20">
+      <RevealOnScroll>
+        <div className="mx-auto flex max-w-6xl flex-wrap items-center gap-x-8 gap-y-3 text-caption">
+          <span className="font-mono text-[10.5px] uppercase tracking-[0.22em] text-ink-3">
+            Ships with adapters for
+          </span>
+          {items.map((it, i) => (
+            <span key={it} className="flex items-center gap-3">
+              <span className={i === items.length - 1 ? "text-ink-3" : "text-ink-2"}>
+                {it}
+              </span>
+            </span>
+          ))}
+        </div>
+      </RevealOnScroll>
+    </section>
+  );
+}
+
+/* ==================================================== LEAK PROOF */
+
+const LEAK_BAD: TerminalLine[] = [
+  { kind: "command", text: 'store.delete_by_source("acme-doc-1")' },
+  { kind: "output", text: "# returns 1 — primary record removed", tone: "muted" },
+  { kind: "spacer" },
+  { kind: "command", text: 'agent.ask("acme", "what is the launch code?")' },
+  { kind: "output", text: "Based on what I remember:" },
+  { kind: "output", text: "the launch code is ORION-DELTA-77.", tone: "issue" },
+  { kind: "spacer" },
+  { kind: "output", text: "# the per-tenant summary absorbed it.", tone: "muted" },
+  { kind: "output", text: "# nothing flagged.", tone: "muted" },
 ];
 
-function ProofStrip() {
+const LEAK_GOOD: TerminalLine[] = [
+  { kind: "command", text: "ferryte test --scenario source-revocation" },
+  {
+    kind: "output",
+    text: "source-revocation       FAIL    3 findings",
+    tone: "issue",
+  },
+  { kind: "spacer" },
+  { kind: "output", text: "FAIL revoked_marker_in_probe", tone: "issue" },
+  { kind: "output", text: "  Revoked source 'acme-doc-1' still surfaces" },
+  { kind: "output", text: "  marker 'ORION-DELTA-77' via retrieval on" },
+  { kind: "output", text: "  tenant 'acme' (kind=summary, id=27dea877…)." },
+  { kind: "spacer" },
+  { kind: "output", text: "exit code 1 — build break", tone: "brand" },
+];
+
+function LeakProof() {
   return (
-    <section className="border-t border-rule/70 px-8 py-32 sm:px-12 lg:px-20 lg:py-40">
+    <section
+      id="leak"
+      className="border-t border-rule/70 px-8 py-32 sm:px-12 lg:px-20 lg:py-40"
+    >
       <div className="mx-auto max-w-6xl">
         <RevealOnScroll>
-          <span className="font-mono text-[10.5px] uppercase tracking-[0.22em] text-ink-3">
-            The platform vendors said it themselves
+          <span className="font-mono text-[10.5px] uppercase tracking-[0.22em] text-royal">
+            The leak, in thirty seconds
           </span>
         </RevealOnScroll>
 
         <RevealOnScroll delay={0.1} className="mt-8 max-w-3xl">
-          <h2 className="font-display text-[36px] font-light leading-[1.1] tracking-[-0.028em] text-ink sm:text-[52px] lg:text-[64px]">
-            Almost nobody tests for the leak in CI.
+          <h2 className="font-display text-[36px] font-light leading-[1.06] tracking-[-0.028em] text-ink sm:text-[56px] lg:text-[64px]">
+            You delete the row.
             <br />
-            <span className="text-ink-3">You find out from a customer.</span>
+            <span className="text-ink-3">The agent answers from it anyway.</span>
           </h2>
         </RevealOnScroll>
 
-        <Stagger
-          className="mt-16 grid gap-4 sm:grid-cols-3"
-          delay={0.2}
-          staggerDelay={0.1}
-        >
-          {QUOTES.map((q) => (
-            <StaggerItem key={q.vendor}>
-              <div className="rounded-lg border border-rule bg-surface p-6 transition-colors duration-base ease-out hover:border-rule-2">
-                <p className="font-display text-[18px] font-light leading-[1.35] tracking-[-0.012em] text-ink">
-                  {q.line}
-                </p>
-                <p className="mt-5 font-mono text-[10.5px] uppercase tracking-[0.18em] text-ink-3">
-                  {q.vendor}
-                </p>
-              </div>
-            </StaggerItem>
-          ))}
-        </Stagger>
-
-        <RevealOnScroll delay={0.3} className="mt-12">
-          <Link
-            href="/manifesto"
-            className="inline-flex items-center gap-1.5 text-[14px] text-ink-2 transition-colors duration-fast ease-out hover:text-ink"
-          >
-            Read why this matters
-            <span aria-hidden className="transition-transform duration-base ease-out group-hover:translate-x-0.5">
-              →
-            </span>
-          </Link>
+        <RevealOnScroll delay={0.25} className="mt-14 grid gap-5 lg:grid-cols-2">
+          <Terminal
+            tone="bad"
+            title="Without Ferryte"
+            tag="silent leak"
+            lines={LEAK_BAD}
+          />
+          <Terminal
+            tone="good"
+            title="With Ferryte in CI"
+            tag="caught in pre-prod"
+            lines={LEAK_GOOD}
+          />
         </RevealOnScroll>
       </div>
     </section>
   );
 }
 
-/* ----------------------------------------------------- Command strip */
+/* ===================================================== RECOGNITION */
 
-function CommandStrip() {
+const SCENARIOS = [
+  "A customer revoked their document. Your agent still cites it.",
+  "Tenant A's prompt surfaced something only Tenant B was meant to see.",
+  "Legal asked for GDPR / CCPA delete evidence. You had to mumble.",
+];
+
+function Recognition() {
   return (
     <section className="border-t border-rule/70 px-8 py-32 sm:px-12 lg:px-20 lg:py-40">
       <div className="mx-auto max-w-6xl">
         <RevealOnScroll>
           <span className="font-mono text-[10.5px] uppercase tracking-[0.22em] text-ink-3">
-            Run it
+            If any of these landed
           </span>
         </RevealOnScroll>
 
         <RevealOnScroll delay={0.1} className="mt-8 max-w-3xl">
-          <h2 className="font-display text-[36px] font-light leading-[1.1] tracking-[-0.028em] text-ink sm:text-[52px] lg:text-[64px]">
-            One line. Zero accounts.
+          <h2 className="font-display text-[36px] font-light leading-[1.06] tracking-[-0.028em] text-ink sm:text-[56px] lg:text-[64px]">
+            You&rsquo;ve already had this incident.
             <br />
-            <span className="text-ink-3">Catch the leak in thirty seconds.</span>
+            <span className="text-ink-3">
+              You just haven&rsquo;t seen the ticket yet.
+            </span>
           </h2>
         </RevealOnScroll>
 
-        <RevealOnScroll delay={0.25} className="mt-12">
-          <div className="flex flex-wrap items-center gap-3">
-            <CopyableCommand command="pip install ferryte" />
-            <CopyableCommand command="ferryte test" />
-          </div>
+        <Stagger className="mt-14 flex flex-col gap-4" staggerDelay={0.1}>
+          {SCENARIOS.map((s) => (
+            <StaggerItem key={s}>
+              <article className="group flex items-center gap-5 rounded-lg border border-rule bg-surface px-7 py-6 transition-colors duration-base ease-out hover:border-royal/40">
+                <span
+                  className="dot dot-royal shrink-0 transition-transform duration-base ease-out group-hover:scale-110"
+                  aria-hidden
+                />
+                <h3 className="font-display text-[20px] font-light leading-[1.32] tracking-[-0.015em] text-ink sm:text-[24px]">
+                  {s}
+                </h3>
+              </article>
+            </StaggerItem>
+          ))}
+        </Stagger>
+      </div>
+    </section>
+  );
+}
+
+/* ===================================================== HOW IT WORKS */
+
+const STEPS = [
+  {
+    num: "01",
+    title: "Instrument",
+    body: "One line. Auto-patches your memory client.",
+    code: `import ferryte
+ferryte.instrument()`,
+  },
+  {
+    num: "02",
+    title: "Probe",
+    body: "Plant canaries your data can’t produce.",
+    code: `oracle.plant(
+  tenant="acme",
+  source="acme-doc-1",
+  marker="ORION-DELTA-77",
+)`,
+  },
+  {
+    num: "03",
+    title: "Verify",
+    body: "Call your real delete. Break the build on survivors.",
+    code: `$ ferryte test
+FAIL revoked_marker_in_probe
+exit 1 — build break`,
+  },
+];
+
+function HowItWorks() {
+  return (
+    <section className="border-t border-rule/70 px-8 py-32 sm:px-12 lg:px-20 lg:py-40">
+      <div className="mx-auto max-w-6xl">
+        <RevealOnScroll>
+          <span className="font-mono text-[10.5px] uppercase tracking-[0.22em] text-ink-3">
+            How it works
+          </span>
         </RevealOnScroll>
 
-        <RevealOnScroll delay={0.4} className="mt-12">
+        <RevealOnScroll delay={0.1} className="mt-8 max-w-3xl">
+          <h2 className="font-display text-[36px] font-light leading-[1.06] tracking-[-0.028em] text-ink sm:text-[56px] lg:text-[64px]">
+            One line in.
+            <br />
+            <span className="text-ink-3">A broken build out.</span>
+          </h2>
+        </RevealOnScroll>
+
+        <Stagger className="mt-14 grid gap-10 md:grid-cols-3" staggerDelay={0.1}>
+          {STEPS.map((s) => (
+            <StaggerItem key={s.num}>
+              <article>
+                <div className="font-mono text-[11px] uppercase tracking-[0.22em] text-royal">
+                  Step {s.num}
+                </div>
+                <h3 className="mt-4 font-display text-[24px] font-light leading-[1.18] tracking-[-0.02em] text-ink sm:text-[28px]">
+                  {s.title}
+                </h3>
+                <p className="mt-3 text-caption text-ink-3">{s.body}</p>
+                <pre className="mt-5 overflow-x-auto rounded-md border border-rule bg-surface p-4 font-mono text-[12.5px] leading-[1.6] text-ink-2">
+                  <code>{s.code}</code>
+                </pre>
+              </article>
+            </StaggerItem>
+          ))}
+        </Stagger>
+
+        <RevealOnScroll delay={0.35} className="mt-12">
           <Link
             href="/product"
             className="inline-flex items-center gap-1.5 text-[14px] text-ink-2 transition-colors duration-fast ease-out hover:text-ink"
           >
-            See exactly how it works
+            See the full pipeline
             <span aria-hidden>→</span>
           </Link>
         </RevealOnScroll>
@@ -238,35 +373,160 @@ function CommandStrip() {
   );
 }
 
-/* ------------------------------------------------------- Apply strip */
+/* ======================================================= AUTHORITY */
 
-function ApplyStrip() {
+const QUOTES = [
+  {
+    vendor: "AWS Bedrock AgentCore",
+    line: "Deleting an event doesn’t remove the structured information derived out of it from the long term memory.",
+  },
+  {
+    vendor: "Zep documentation",
+    line: "Deleting an episode does not regenerate the shared node summaries that already absorbed it.",
+  },
+  {
+    vendor: "OWASP Agentic Top 10 · Dec 2025",
+    line: "ASI06 — Memory poisoning. Persistent agent memory can absorb adversarial writes that survive normal cleanup.",
+  },
+];
+
+function Authority() {
+  return (
+    <section className="border-t border-rule/70 px-8 py-32 sm:px-12 lg:px-20 lg:py-40">
+      <div className="mx-auto max-w-6xl">
+        <RevealOnScroll>
+          <span className="font-mono text-[10.5px] uppercase tracking-[0.22em] text-ink-3">
+            You&rsquo;re not paranoid
+          </span>
+        </RevealOnScroll>
+
+        <RevealOnScroll delay={0.1} className="mt-8 max-w-3xl">
+          <h2 className="font-display text-[36px] font-light leading-[1.06] tracking-[-0.028em] text-ink sm:text-[56px] lg:text-[64px]">
+            The platform vendors said it themselves.
+          </h2>
+        </RevealOnScroll>
+
+        <Stagger
+          className="mt-12 grid gap-4 sm:grid-cols-3"
+          staggerDelay={0.1}
+        >
+          {QUOTES.map((q) => (
+            <StaggerItem key={q.vendor}>
+              <article className="flex h-full flex-col rounded-lg border border-rule bg-surface p-7 transition-colors duration-base ease-out hover:border-rule-2">
+                <p className="font-display text-[19px] font-light leading-[1.38] tracking-[-0.012em] text-ink sm:text-[21px]">
+                  &ldquo;{q.line}&rdquo;
+                </p>
+                <p className="mt-auto pt-6 font-mono text-[10.5px] uppercase tracking-[0.18em] text-ink-3">
+                  — {q.vendor}
+                </p>
+              </article>
+            </StaggerItem>
+          ))}
+        </Stagger>
+
+        <RevealOnScroll delay={0.35} className="mt-10">
+          <Link
+            href="/manifesto"
+            className="inline-flex items-center gap-1.5 text-[14px] text-ink-2 transition-colors duration-fast ease-out hover:text-ink"
+          >
+            Read the full case
+            <span aria-hidden>→</span>
+          </Link>
+        </RevealOnScroll>
+      </div>
+    </section>
+  );
+}
+
+/* ======================================================= BUILT FOR */
+
+const PERSONAS = [
+  {
+    tag: "engineering",
+    title: "The lead who owns the agent.",
+    body: "Drop ferryte test in CI. Stop debugging leaks at midnight.",
+  },
+  {
+    tag: "appsec",
+    title: "The reviewer who unblocks the deal.",
+    body: "Trade “trust us” for a coverage number and a signed report.",
+  },
+  {
+    tag: "compliance",
+    title: "The team that signs the receipt.",
+    body: "GDPR / CCPA evidence that propagates past the row.",
+  },
+];
+
+function BuiltFor() {
+  return (
+    <section className="border-t border-rule/70 px-8 py-32 sm:px-12 lg:px-20 lg:py-40">
+      <div className="mx-auto max-w-6xl">
+        <RevealOnScroll>
+          <span className="font-mono text-[10.5px] uppercase tracking-[0.22em] text-ink-3">
+            Built for
+          </span>
+        </RevealOnScroll>
+
+        <RevealOnScroll delay={0.1} className="mt-8 max-w-3xl">
+          <h2 className="font-display text-[36px] font-light leading-[1.06] tracking-[-0.028em] text-ink sm:text-[56px] lg:text-[64px]">
+            Three buyers.
+            <br />
+            <span className="text-ink-3">One report they all sign.</span>
+          </h2>
+        </RevealOnScroll>
+
+        <Stagger className="mt-14 grid gap-12 md:grid-cols-3" staggerDelay={0.1}>
+          {PERSONAS.map((p) => (
+            <StaggerItem key={p.tag}>
+              <article className="border-l-2 border-rule pl-6 transition-colors duration-base ease-out hover:border-royal">
+                <span className="font-mono text-[10.5px] uppercase tracking-[0.22em] text-royal">
+                  {p.tag}
+                </span>
+                <h3 className="mt-4 font-display text-[22px] font-light leading-[1.22] tracking-[-0.016em] text-ink sm:text-[26px]">
+                  {p.title}
+                </h3>
+                <p className="mt-4 text-body text-ink-2">{p.body}</p>
+              </article>
+            </StaggerItem>
+          ))}
+        </Stagger>
+      </div>
+    </section>
+  );
+}
+
+/* ============================================================ ASK */
+
+function Ask() {
   return (
     <section className="brand-hairline relative border-t border-rule/70 px-8 py-32 sm:px-12 lg:px-20 lg:py-44">
       <div className="mx-auto max-w-6xl">
         <RevealOnScroll>
           <span className="font-mono text-[10.5px] uppercase tracking-[0.22em] text-royal">
-            Design partners · five seats
+            Five seats · six months free · named engineer
           </span>
         </RevealOnScroll>
 
-        <RevealOnScroll delay={0.1} className="mt-8 max-w-4xl">
+        <RevealOnScroll delay={0.1} className="mt-8 max-w-5xl">
           <h2 className="font-display text-[40px] font-light leading-[1.04] tracking-[-0.03em] text-ink sm:text-[64px] lg:text-[80px]">
-            Six months free.
+            Be the team that
             <br />
-            <span className="text-ink-3">Named engineer. Shape the roadmap.</span>
+            <span className="text-ink-3">caught the leak first.</span>
           </h2>
         </RevealOnScroll>
 
         <RevealOnScroll delay={0.25} className="mt-10 max-w-xl">
           <p className="text-lede text-ink-2">
-            Ferryte Cloud goes private beta with five companies running multi-tenant
-            memory in production. We pair an engineer with your team and wire the
-            first integration in a day.
+            Five teams running multi-tenant agents in production. We pair an
+            engineer with you and ship the first integration in a day.
           </p>
         </RevealOnScroll>
 
-        <RevealOnScroll delay={0.4} className="mt-10 flex flex-wrap items-center gap-4">
+        <RevealOnScroll
+          delay={0.4}
+          className="mt-10 flex flex-wrap items-center gap-4"
+        >
           <Magnetic>
             <a
               href="mailto:hello@ferryte.dev?subject=Ferryte%20design%20partner&body=Stack%3A%20%0ATenants%3A%20%0AMemory%20backend(s)%3A%20%0ALeak%20you%E2%80%99re%20worried%20about%3A%20"
@@ -282,6 +542,12 @@ function ApplyStrip() {
           >
             See Core, Cloud, Enterprise →
           </Link>
+          <a
+            href="#leak"
+            className="text-[14px] text-ink-3 transition-colors duration-fast ease-out hover:text-ink-2"
+          >
+            Or watch it leak again ↑
+          </a>
         </RevealOnScroll>
       </div>
     </section>
