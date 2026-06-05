@@ -2,7 +2,7 @@
 
 All notable changes to Ferryte will be documented in this file.
 
-## [0.2.0] — unreleased
+## [0.2.0] — 2026-06-05
 
 ### Changed
 
