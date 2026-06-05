@@ -53,7 +53,7 @@ Tweets are numbered. Character counts in `[brackets]` at the end of each.
 
 ## 3 · The product
 
-> Ferryte is the open-core forgetting oracle.
+> Ferryte is the source-available forgetting oracle.
 >
 > One line: `ferryte.instrument()`. Auto-patches Mem0 and the generic vector base (subclass for pgvector / Chroma / Qdrant). Zep + AgentCore adapters land with the design-partner cohort.
 >
@@ -100,13 +100,13 @@ Tweets are numbered. Character counts in `[brackets]` at the end of each.
 
 ---
 
-## 7 · Open-core (the model)
+## 7 · Source-available (the model)
 
-> Engine is MIT. Forever.
+> Engine is source-available under BSL 1.1 — read it, self-host it, run it in production free. Every version converts to Apache 2.0 after three years.
 >
 > Cloud (hosted, alerts, history) ships *with* the first five design partners, not before. Enterprise (SSO, signed compliance receipts, premium adapters, runtime enforcement) is on the roadmap once Cloud is mature.
 >
-> Same playbook as Sentry, PostHog, Supabase.
+> Same playbook as Sentry, CockroachDB, HashiCorp.
 
 `[≈ 270 chars]`
 

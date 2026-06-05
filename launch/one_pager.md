@@ -36,7 +36,7 @@ The defensible wedge is **cross-system source-to-descendant verification** — e
 
 ## Distribution
 
-Open core. `pip install ferryte`. Hosted dashboard and team features are the expansion.
+Source-available (BSL 1.1). `pip install ferryte`. Hosted dashboard and team features are the expansion.
 
 ## Land / expand
 

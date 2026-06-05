@@ -14,13 +14,13 @@ Ferryte
 
 ## Tagline (≤ 60 chars)
 
-> The forgetting oracle for AI agents. Open-core.
+> The forgetting oracle for AI agents. Source-available.
 
 ## Description (≤ 260 chars)
 
 > Verify your AI agent actually forgot deleted data. Plant canary memories,
 > call the real delete API, inspect store contents AND retrieval traces.
-> CI breaks on leak. Open-core (MIT engine). Built for multi-tenant memory.
+> CI breaks on leak. Source-available (BSL 1.1). Built for multi-tenant memory.
 
 ## First comment (post immediately as the maker, sets the tone)
 
@@ -30,7 +30,7 @@ record doesn't always remove the summaries, embeddings, or rollups that
 absorbed it. Multi-tenant AI products keep leaking deleted data and finding
 out from customers.
 
-Ferryte is the open-source layer that proves whether forgetting actually
+Ferryte is the source-available layer that proves whether forgetting actually
 happened.
 
 - **One line install:** `ferryte.instrument()` auto-patches detected memory
@@ -41,7 +41,8 @@ happened.
 - **Honest:** every report has a blind-spot section listing what we
   couldn't see. A passing test means something.
 
-MIT engine ships today: four scenarios, CLI gate, JSON + HTML reports, local
+Source-available engine ships today (BSL 1.1, converts to Apache 2.0 after
+three years): four scenarios, CLI gate, JSON + HTML reports, local
 dashboard. Hosted Cloud is being built **with** the first five design
 partners — it doesn't exist yet. Enterprise (SSO, compliance attestations,
 premium adapters, runtime enforcement) is on the roadmap after Cloud.

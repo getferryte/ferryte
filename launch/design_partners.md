@@ -9,7 +9,7 @@ input on the roadmap. Public credit if you want it; quiet pilot if you don't.
 
 What exists today:
 
-- `ferryte` on PyPI — MIT, four scenarios, CLI gate, JSON + HTML reports.
+- `ferryte` on PyPI — source-available (BSL 1.1), four scenarios, CLI gate, JSON + HTML reports.
 - A local Next.js dashboard you can self-host.
 - A Mem0 adapter and a generic vector base class.
 
@@ -46,8 +46,8 @@ What gets built in the design-partner cohort:
 
 > Hi ${FIRST_NAME},
 >
-> I'm ${YOUR_NAME}, building Ferryte — an open-core forgetting oracle for AI
-> agents.
+> I'm ${YOUR_NAME}, building Ferryte — a source-available forgetting oracle
+> for AI agents.
 >
 > AWS's own AgentCore docs admit it: *"deleting an event doesn't remove the
 > structured information derived out of it from the long term memory."*

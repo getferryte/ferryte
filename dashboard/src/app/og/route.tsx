@@ -98,7 +98,7 @@ export async function GET(req: Request) {
                 display: "flex",
               }}
             />
-            OPEN-CORE · MIT
+            SOURCE-AVAILABLE · BSL 1.1
           </div>
         </div>
 

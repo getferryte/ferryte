@@ -1,12 +1,12 @@
 # Contributing to Ferryte
 
-Ferryte is open-core. The MIT-licensed engine in this repository accepts
-contributions; the closed-source Cloud and Enterprise tiers do not. See
-[LICENSING.md](LICENSING.md) for the precise boundary and the contributor
-license terms.
+Ferryte is source-available under the Business Source License 1.1. The engine
+in this repository accepts contributions; the closed-source Cloud and
+Enterprise tiers do not. See [LICENSING.md](LICENSING.md) for the precise
+boundary and the contributor license terms.
 
-We deeply value contributions that make the open core more useful to more
-teams. We also keep a tight bar on scope so the product stays sharp.
+We deeply value contributions that make the source-available core more useful
+to more teams. We also keep a tight bar on scope so the product stays sharp.
 
 ## What we eagerly accept
 
@@ -70,10 +70,10 @@ ping the PR — sometimes notifications fall on the floor.
 
 By contributing, you grant Ferryte the dual-license terms described in
 [LICENSING.md § Contributor License Agreement](LICENSING.md). This is the
-standard open-core pattern: contributions flow into the MIT core *and* may be
-incorporated into the closed-source Cloud / Enterprise tiers. We do not ask
-this lightly — it is the structural prerequisite for the company to fund
-full-time work on the OSS core.
+standard BSL pattern: contributions flow into the source-available core (BSL
+1.1, converting to Apache 2.0) *and* may be incorporated into the
+closed-source Cloud / Enterprise tiers. We do not ask this lightly — it is the
+structural prerequisite for the company to fund full-time work on the core.
 
 If you cannot accept these terms, please do not submit contributions.
 

@@ -25,8 +25,9 @@ export default function MarketingLayout({
             <div className="max-w-md">
               <BrandLink href="/" showVersion={false} />
               <p className="mt-5 text-body text-ink-3">
-                Open-core verification for AI agent memory. MIT-licensed engine,
-                commercial Cloud + Enterprise tiers.
+                Source-available verification for AI agent memory. BSL 1.1
+                engine (converts to Apache 2.0), commercial Cloud + Enterprise
+                tiers.
               </p>
             </div>
 
@@ -45,14 +46,14 @@ export default function MarketingLayout({
                   PyPI
                 </FooterLink>
                 <FooterLink href="https://github.com/getferryte/ferryte/blob/main/LICENSE">
-                  License (MIT)
+                  License (BSL 1.1)
                 </FooterLink>
               </FooterCol>
             </div>
           </div>
 
           <div className="mt-14 flex flex-wrap items-center justify-between gap-3 border-t border-rule/70 pt-8 text-caption text-ink-3">
-            <span>© {new Date().getFullYear()} Ferryte · MIT-licensed core</span>
+            <span>© {new Date().getFullYear()} Ferryte · source-available core (BSL 1.1)</span>
             <span className="font-mono text-[11px] tracking-[0.06em]">
               Designed for catching the leak before your customer does.
             </span>

@@ -38,12 +38,14 @@ What Ferryte does:
    is dangerous.
 4. Non-zero exit on leak. Drop into CI.
 
-It's MIT, in Python. Engine + CLI + lineage graph + four scenarios
-(source-revocation, cross-tenant-isolation, stale-fact, memory-poisoning) +
-a local Next.js dashboard — all shipping today. Cloud (hosted, alerts,
-history) is being built with the first five design partners, not before.
-Enterprise (SSO, signed compliance attestations, runtime enforcement) is on
-the roadmap after Cloud. Same open-core shape as Sentry/PostHog/Supabase.
+It's source-available (BSL 1.1, converts to Apache 2.0 after three years), in
+Python. Engine + CLI + lineage graph + four scenarios (source-revocation,
+cross-tenant-isolation, stale-fact, memory-poisoning) + a local Next.js
+dashboard — all shipping today, free to run in production. Cloud (hosted,
+alerts, history) is being built with the first five design partners, not
+before. Enterprise (SSO, signed compliance attestations, runtime enforcement)
+is on the roadmap after Cloud. Same source-available shape as
+Sentry/CockroachDB/HashiCorp.
 
 Try the leak demo, no API keys:
 
@@ -69,7 +71,7 @@ I'd love feedback on:
 
 Code: https://github.com/getferryte/ferryte
 Marketing: https://ferryte.dev
-Open-core boundary: https://github.com/getferryte/ferryte/blob/main/LICENSING.md
+License boundary (BSL 1.1): https://github.com/getferryte/ferryte/blob/main/LICENSING.md
 
 ---
 

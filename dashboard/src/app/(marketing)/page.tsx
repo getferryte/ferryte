@@ -145,8 +145,8 @@ function Compatibility() {
     { name: "Mem0", status: "stable" },
     { name: "in-memory vector", status: "stable" },
     { name: "pgvector / Chroma / Qdrant via subclass", status: "stable" },
-    { name: "Zep", status: "beta" },
-    { name: "AWS AgentCore", status: "beta" },
+    { name: "Zep", status: "planned" },
+    { name: "AWS AgentCore", status: "planned" },
     { name: "LangGraph", status: "planned" },
   ];
   const tone = {

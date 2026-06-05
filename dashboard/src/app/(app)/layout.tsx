@@ -48,7 +48,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
 
       <footer className="border-t border-rule/70">
         <div className="mx-auto flex max-w-5xl flex-wrap items-center justify-between gap-3 px-8 py-8 text-caption text-ink-3">
-          <span>Ferryte · open-core · MIT</span>
+          <span>Ferryte · source-available · BSL 1.1</span>
           <span className="font-mono text-[11px] tracking-[0.06em]">
             Designed for catching the leak before your customer does.
           </span>

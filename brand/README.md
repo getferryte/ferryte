@@ -59,13 +59,13 @@ Or open the SVGs in Figma / Sketch / browser, screenshot, done.
 
 Pick one based on field length:
 
-- **80 chars:** `Verification for agent forgetting. Open-core. MIT engine.`
-- **120 chars:** `Open-core forgetting oracle for AI agents. We prove your delete actually deleted. MIT engine. Cloud + Enterprise coming.`
-- **160 chars (max):** `Open-core forgetting oracle for AI agents. We prove your delete actually deleted — across memory, summaries, embeddings, retrievals. MIT engine. Cloud soon.`
+- **80 chars:** `Verification for agent forgetting. Source-available. BSL 1.1.`
+- **120 chars:** `Source-available forgetting oracle for AI agents. We prove your delete actually deleted. BSL 1.1. Cloud + Enterprise coming.`
+- **160 chars (max):** `Source-available forgetting oracle for AI agents. We prove your delete actually deleted — across memory, summaries, embeddings, retrievals. BSL 1.1. Cloud soon.`
 
 ## One-liners (for press / one-pagers / cold emails)
 
 - 8 words: **Verification for agent forgetting.**
 - 15 words: **We prove your AI agent stops acting on revoked, stale, or cross-tenant data.**
-- 25 words: **Ferryte is the open-core forgetting oracle for AI agents — one line, and your CI breaks the moment a revoked memory still influences output.**
-- 50 words: **Ferryte is the open-core forgetting oracle for AI agents. One line — `ferryte.instrument()` — and your memory layer is wired to a canary-based verification engine that plants markers, calls the real delete API, and inspects both store contents and retrieval traces. CI breaks on leak. Cloud and Enterprise tiers handle scale.**
+- 25 words: **Ferryte is the source-available forgetting oracle for AI agents — one line, and your CI breaks the moment a revoked memory still influences output.**
+- 50 words: **Ferryte is the source-available forgetting oracle for AI agents. One line — `ferryte.instrument()` — and your memory layer is wired to a canary-based verification engine that plants markers, calls the real delete API, and inspects both store contents and retrieval traces. CI breaks on leak. Cloud and Enterprise tiers handle scale.**

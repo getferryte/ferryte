@@ -59,7 +59,7 @@ export function BrandLink({
       <Wordmark size={19} />
       {showVersion ? (
         <span className="ml-1 font-mono text-[10px] uppercase tracking-[0.18em] text-ink-3 transition-colors duration-fast group-hover:text-ink-2">
-          v0.1
+          v0.2
         </span>
       ) : null}
     </Link>

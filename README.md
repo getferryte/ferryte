@@ -1,7 +1,7 @@
 # Ferryte
 
 **Verification for agent forgetting.**
-**Open-core · MIT engine · commercial Cloud + Enterprise tiers.**
+**Source-available (BSL 1.1 → Apache 2.0) · commercial Cloud + Enterprise tiers.**
 
 [Marketing site](https://ferryte.dev) · [Live dashboard demo](https://ferryte.dev/app) · [LICENSING](LICENSING.md) · [COMMERCIAL](COMMERCIAL.md)
 
@@ -119,24 +119,26 @@ ferryte/
 └── tests/
 ```
 
-## Open core
+## Source-available
 
-Ferryte is **open-core**.
+Ferryte is **source-available** under the Business Source License 1.1.
 
-- **Core (MIT, free)** — the library, CLI, four scenarios, lineage graph, Mem0 + vector adapters, local Next.js dashboard. Everything you need to verify forgetting in your own CI, forever.
+- **Core (BSL 1.1, free to read / run / self-host)** — the library, CLI, four scenarios, lineage graph, Mem0 + vector adapters, local Next.js dashboard. Everything you need to verify forgetting in your own CI, in production, for free. Each version converts to Apache 2.0 three years after release.
 - **Cloud (private beta)** — hosted continuous verification, regression alerts, multi-environment, Slack/PagerDuty integrations. Design partners only through 2026.
 - **Enterprise (annual contract)** — self-hosted with SSO/RBAC/audit logs, premium adapters (AgentCore, Zep, GovCloud), signed compliance attestations (GDPR / CCPA), runtime retrieval enforcement (v2), support SLA.
 
-The exact open-source / closed-source boundary, contributor license, and trademark policy are in [LICENSING.md](LICENSING.md). The commercial-tier scope and how to apply are in [COMMERCIAL.md](COMMERCIAL.md).
+The one thing BSL does not permit: reselling Ferryte as a hosted/embedded service that competes with Ferryte Cloud. Everything else — read, run, modify, self-host in production — is free. The exact boundary, contributor license, and trademark policy are in [LICENSING.md](LICENSING.md). The commercial-tier scope and how to apply are in [COMMERCIAL.md](COMMERCIAL.md).
 
-Same model as Sentry, PostHog, Supabase, and — in our own category — LangChain → LangSmith.
+Same model as Sentry, CockroachDB, HashiCorp, and MariaDB.
 
 ## Status
 
-Pre-launch. MIT engine ships now; Cloud and Enterprise gate behind design partners. Looking for B2B SaaS companies running multi-tenant AI agents in production with persistent memory.
+Pre-launch. The source-available engine ships now; Cloud and Enterprise gate behind design partners. Looking for B2B SaaS companies running multi-tenant AI agents in production with persistent memory.
 
 If that is you: open an issue, email `hello@ferryte.dev`, or sign up via the marketing site.
 
 ## License
 
-MIT for the Core surface — see [LICENSE](LICENSE). Closed-source for Cloud and Enterprise — see [LICENSING.md](LICENSING.md) for the precise boundary.
+**v0.2.0 and later:** Business Source License 1.1, converting to Apache 2.0 three years after each release — see [LICENSE](LICENSE).
+**v0.1.0 and earlier:** MIT (a published release cannot be relicensed) — see [LICENSE-MIT.txt](LICENSE-MIT.txt).
+Commercial Cloud / Enterprise tiers are closed-source — see [LICENSING.md](LICENSING.md) for the precise boundary.

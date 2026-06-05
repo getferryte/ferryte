@@ -12,7 +12,7 @@ export const metadata: Metadata = {
     template: "%s · Ferryte",
   },
   description:
-    "Open-core forgetting oracle for AI agents. Plant canary memories, call the real delete API, prove the leak is gone — or admit what you can't see.",
+    "Source-available forgetting oracle for AI agents. Plant canary memories, call the real delete API, prove the leak is gone — or admit what you can't see.",
   keywords: [
     "agent memory",
     "AI agents",
@@ -36,7 +36,7 @@ export const metadata: Metadata = {
     siteName: "Ferryte",
     title: "Ferryte — verification for agent forgetting",
     description:
-      "Plant canary memories, call the real delete API, prove the leak is gone. Open-core. MIT engine. Catch the leak before your customer does.",
+      "Plant canary memories, call the real delete API, prove the leak is gone. Source-available. BSL 1.1 engine. Catch the leak before your customer does.",
     images: [
       {
         url: "/og",
@@ -50,7 +50,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Ferryte — verification for agent forgetting",
     description:
-      "Open-core forgetting oracle for AI agents. Catch the leak before your customer does.",
+      "Source-available forgetting oracle for AI agents. Catch the leak before your customer does.",
     images: ["/og"],
     creator: "@ferryte",
   },

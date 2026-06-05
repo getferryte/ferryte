@@ -2,9 +2,23 @@
 
 All notable changes to Ferryte will be documented in this file.
 
-## [0.1.0] — unreleased
+## [0.2.0] — unreleased
 
-Initial public release.
+### Changed
+
+- **License: MIT → Business Source License 1.1.** Ferryte v0.2.0 and later are
+  source-available under BSL 1.1 and convert to the Apache License 2.0 three
+  years after each release. You may read, modify, self-host, and run Ferryte
+  in production for free; the only restriction is reselling it as a hosted or
+  embedded service that competes with Ferryte Cloud. v0.1.0 remains MIT in
+  perpetuity (a published release cannot be retroactively relicensed). See
+  `LICENSE`, `LICENSE-MIT.txt`, and `LICENSING.md`.
+- Marketing site, README, and docs updated from "open-core / MIT" to
+  "source-available / BSL 1.1" language throughout.
+
+## [0.1.0] — 2026-06-04
+
+Initial public release (published to PyPI under the MIT License).
 
 ### Added
 

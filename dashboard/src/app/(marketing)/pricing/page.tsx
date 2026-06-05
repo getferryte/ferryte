@@ -34,7 +34,7 @@ function Header() {
         <div className="flex items-center gap-2.5">
           <span className="dot dot-royal dot-live" />
           <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-royal">
-            Open core · MIT engine
+            Source-available · BSL 1.1
           </span>
         </div>
       </Reveal>
@@ -49,9 +49,11 @@ function Header() {
 
       <Reveal delay={0.4} className="mt-8 max-w-2xl">
         <p className="text-lede text-ink-2">
-          Same model as Sentry, PostHog, Supabase. The detection engine is MIT
-          because nobody adopts un-auditable security tooling. The trust plane —
-          hosted, hardened, attested — is where the revenue lives.
+          Same model as Sentry, CockroachDB, and HashiCorp. The detection
+          engine is source-available (BSL 1.1) because nobody adopts
+          un-auditable security tooling — read every line, self-host it, run it
+          in production free. The trust plane — hosted, hardened, attested — is
+          where the revenue lives.
         </p>
       </Reveal>
     </section>
@@ -65,8 +67,8 @@ const TIERS = [
     name: "Core",
     badge: "Available today",
     badgeTone: "ok" as const,
-    price: "MIT · free",
-    blurb: "The library, the CLI, and the four scenarios. Ship it in your CI today.",
+    price: "BSL 1.1 · free",
+    blurb: "The library, the CLI, and the four scenarios. Read it, self-host it, ship it in your CI today. Free in production.",
     featuresNote: null as string | null,
     features: [
       "ferryte.instrument() one-line auto-patch",
@@ -211,7 +213,7 @@ function Tiers() {
           >
             COMMERCIAL.md
           </a>{" "}
-          in the repo for the exact open-core boundary, contributor policy, and commercial-tier scope.
+          in the repo for the exact source-available boundary, contributor policy, and commercial-tier scope.
         </p>
       </RevealOnScroll>
     </section>
@@ -392,16 +394,16 @@ function Waitlist() {
 
 const FAQ_ITEMS = [
   {
-    q: "Why open-core and not fully closed?",
-    a: "Nobody adopts un-auditable security tooling. Putting the detection engine under MIT means appsec teams can read the source on a Friday afternoon and ship a CI gate on Monday. The trust plane — hosted, hardened, attested — is where the revenue lives.",
+    q: "Why source-available (BSL) and not MIT or fully closed?",
+    a: "Nobody adopts un-auditable security tooling, so the engine stays readable and self-hostable — appsec teams can read the source on a Friday afternoon and ship a CI gate on Monday. BSL adds exactly one restriction over MIT: you can't resell Ferryte as a competing hosted service. That closes the hyperscaler-clone risk that hit Elastic, Redis, and HashiCorp, without locking anything away — every version converts to Apache 2.0 after three years.",
   },
   {
     q: "Can I self-host the dashboard without paying?",
-    a: "Yes. The local Next.js dashboard is MIT-licensed and ships in the repo. Run it against the JSON reports the CLI produces. Enterprise adds SSO, audit logs, multi-environment management, and signed compliance receipts on top of the same surface.",
+    a: "Yes. The local Next.js dashboard is source-available (BSL 1.1) and ships in the repo. Run it against the JSON reports the CLI produces, in production, for free. Enterprise adds SSO, audit logs, multi-environment management, and signed compliance receipts on top of the same surface.",
   },
   {
-    q: "Do contributions to the core stay MIT?",
-    a: "Yes — contributors sign a CLA that grants us a license to relicense their changes, but the core repository remains MIT in perpetuity. See LICENSING.md and CONTRIBUTING.md.",
+    q: "What license do contributions fall under?",
+    a: "Contributors sign a CLA that grants us a license to incorporate their changes into both the source-available core (BSL 1.1, converting to Apache 2.0) and the commercial tiers. The core repository stays source-available in perpetuity, and every version becomes Apache 2.0 three years after release. See LICENSING.md and CONTRIBUTING.md.",
   },
   {
     q: "When does Cloud GA?",

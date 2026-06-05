@@ -257,7 +257,7 @@ function Close() {
           href="/pricing"
           className="text-[14px] text-ink-2 transition-colors duration-fast ease-out hover:text-ink"
         >
-          Open core breakdown →
+          Pricing breakdown →
         </Link>
         <a
           href="https://github.com/getferryte/ferryte"

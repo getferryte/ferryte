@@ -15,7 +15,7 @@
     <g transform="translate(120 132)">
       <circle cx="6" cy="-6" r="6" fill="#2563eb"/>
       <text x="22" y="0" font-size="20" font-weight="500" fill="#a0a0a0" letter-spacing="3" text-rendering="geometricPrecision">
-        FERRYTE · OPEN-CORE · MIT
+        FERRYTE · SOURCE-AVAILABLE · BSL 1.1
       </text>
     </g>
 

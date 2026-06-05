@@ -22,12 +22,12 @@ body:
   - type: dropdown
     id: scope
     attributes:
-      label: Is this Core (MIT) or Cloud / Enterprise scope?
+      label: Is this Core (BSL 1.1) or Cloud / Enterprise scope?
       description: |
         See LICENSING.md. Premium adapters, runtime enforcement, hosted features, and
         compliance attestations are commercial scope.
       options:
-        - Core (MIT)
+        - Core (BSL 1.1)
         - Cloud
         - Enterprise
         - Not sure — needs discussion

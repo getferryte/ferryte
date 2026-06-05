@@ -1,8 +1,8 @@
 # Commercial tiers
 
-Ferryte is open-core. The MIT-licensed engine in this repository is enough to
-run scenarios in your CI pipeline against your own infrastructure, forever,
-for free.
+Ferryte is source-available under the Business Source License 1.1. The engine
+in this repository is enough to run scenarios in your CI pipeline against your
+own infrastructure, in production, forever, for free.
 
 This document describes the closed-source commercial products built on top of
 that engine, and how to get access to them.
@@ -12,13 +12,16 @@ For the precise open-source / closed-source boundary, see
 
 ---
 
-## Core (MIT) — available today
+## Core (BSL 1.1) — available today
 
 The library, the CLI, the four scenarios, the lineage graph, and the local
 dashboard.
 
 - **Price:** free, forever.
-- **License:** MIT.
+- **License:** Business Source License 1.1 — read, run, modify, and self-host
+  in production for free. Converts to Apache 2.0 three years after each
+  release. The only restriction: you can't resell it as a competing hosted
+  service. (v0.1.0 remains MIT.)
 - **Install:** `pip install ferryte`
 - **Run:** `ferryte test`
 - **Support:** community via GitHub issues and discussions.
@@ -105,27 +108,36 @@ the things AppSec, CISO, and Compliance teams sign off on.
 
 ## Open questions, answered
 
-**Will MIT-licensed features ever be re-licensed?**
-Not without 90 days' notice and an explicit final MIT-tagged release. We will
-not pull a Redis / Elastic / HashiCorp on the community. See LICENSING.md.
+**Will the license ever change again?**
+Not without 90 days' notice and an explicit tagged release. Every BSL version
+already converts to Apache 2.0 automatically after three years, so the
+community's long-term access is guaranteed in the license itself. See
+LICENSING.md.
 
 **Can I self-host the closed-source bits?**
 The Enterprise tier is self-hosted. The Cloud tier is not — it is a hosted
-SaaS by definition.
+SaaS by definition. The Core engine is, of course, self-hostable for free
+under BSL.
+
+**Can I use Core in production for free?**
+Yes. Running Ferryte to verify your own agents — in CI or production — is
+explicitly permitted by the BSL Additional Use Grant. The only thing you
+can't do is resell it as a competing hosted/embedded verification service.
 
 **Can I contribute to the closed-source bits?**
-No. Contributions are accepted into the MIT-licensed Core only. The
+No. Contributions are accepted into the source-available Core only. The
 contributor license (in LICENSING.md) covers our right to incorporate
 contributions into the closed-source tiers.
 
 **What happens if Ferryte (the company) is acquired or shuts down?**
-The MIT-licensed Core is, by definition, irrevocable. You can always fork and
-maintain your own copy. The closed-source tiers are subject to the terms of
-their commercial agreements; we will publish a public commitment to a
-reasonable wind-down or escrow path before taking customer money for them.
+Every published BSL version converts to Apache 2.0 three years after its
+release, and that conversion is irrevocable and baked into the license. You
+can always fork and maintain your own copy. The closed-source tiers are
+subject to their commercial agreements; we will publish a public commitment to
+a reasonable wind-down or escrow path before taking customer money for them.
 
 **Do you offer non-commercial / academic discounts?**
-Yes for Cloud. Email us. Core is already MIT.
+Yes for Cloud. Email us. Core is already free under BSL.
 
 ---
 
