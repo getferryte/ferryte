@@ -10,6 +10,9 @@ Public API:
 
 from __future__ import annotations
 
+from importlib.metadata import PackageNotFoundError
+from importlib.metadata import version as _pkg_version
+
 from .config import FerryteConfig, get_config
 from .context import current_context, tag
 from .instrument import instrument, uninstrument
@@ -28,4 +31,9 @@ __all__ = [
     "register_adapter",
 ]
 
-__version__ = "0.1.0"
+# Single source of truth is the installed package metadata (pyproject `version`),
+# so the CLI/API can never drift from the published version again.
+try:
+    __version__ = _pkg_version("ferryte")
+except PackageNotFoundError:  # running from a source tree without an install
+    __version__ = "0.0.0+local"

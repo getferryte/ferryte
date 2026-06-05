@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "ferryte"
-version = "0.2.0"
+version = "0.2.1"
 description = "Verification for agent forgetting: prove your AI agent stops acting on revoked, stale, poisoned, or cross-tenant data."
 readme = "README.md"
 license = { file = "LICENSE" }

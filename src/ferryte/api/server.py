@@ -11,6 +11,7 @@ import json
 from pathlib import Path
 from typing import Any
 
+from .. import __version__
 from ..config import get_config
 from ..lineage import compute_blast_radius, get_lineage
 
@@ -24,7 +25,7 @@ def build_app() -> Any:
             "FastAPI is not installed. Install with `pip install ferryte-test[api]`."
         ) from exc
 
-    app = FastAPI(title="Ferryte", version="0.1.0")
+    app = FastAPI(title="Ferryte", version=__version__)
     app.add_middleware(
         CORSMiddleware,
         allow_origins=["*"],

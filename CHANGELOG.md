@@ -2,6 +2,15 @@
 
 All notable changes to Ferryte will be documented in this file.
 
+## [0.2.1] — 2026-06-05
+
+### Fixed
+
+- `ferryte --version` (and the FastAPI server version) reported `0.1.0` because
+  the version string was hardcoded. The version is now derived from installed
+  package metadata, so the CLI/API can never drift from the published release
+  again.
+
 ## [0.2.0] — 2026-06-05
 
 ### Changed
