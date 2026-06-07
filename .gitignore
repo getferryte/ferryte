@@ -47,3 +47,11 @@ next-env.d.ts
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+# Confidential internal docs — NEVER push to the public repo
+# (business strategy, pricing, target accounts, competitor/gap analysis, internal dev notes)
+/OFFLINE_DEV.md
+/launch/strategy_and_todo.md
+/launch/cloud_enterprise_plan.md
+/launch/memory_landscape.md
+/launch/report_launch_kit.md

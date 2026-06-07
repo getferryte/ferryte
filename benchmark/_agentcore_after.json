@@ -1,0 +1,19 @@
+{
+  "generated_at": "2026-06-06T08:13:22.668619+00:00",
+  "embedder": "openai",
+  "summarizer": "openai",
+  "scenarios": [
+    "source-revocation"
+  ],
+  "matrix": {
+    "agentcore": {
+      "cells": {
+        "source-revocation": {
+          "severity": "pass",
+          "findings": 0
+        }
+      },
+      "score": 100.0
+    }
+  }
+}

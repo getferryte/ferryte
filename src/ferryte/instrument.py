@@ -30,6 +30,9 @@ from .registry import get_registered, register_adapter
 _BUILTIN_ADAPTERS: list[str] = [
     "ferryte.adapters.vector:VectorAdapter",
     "ferryte.adapters.mem0:Mem0Adapter",
+    "ferryte.adapters.zep:ZepAdapter",
+    "ferryte.adapters.letta:LettaAdapter",
+    "ferryte.adapters.cloudflare:CloudflareAdapter",
 ]
 
 _lock = threading.RLock()
@@ -110,6 +113,11 @@ def _install_constructor_hooks(handle: Instrumentation) -> None:
         module_path="ferryte.adapters.vector",
         class_names=("InMemoryVectorStore",),
         adapter_name="vector",
+    )
+    _wrap_constructor(
+        module_path="zep_cloud.client",
+        class_names=("Zep", "AsyncZep"),
+        adapter_name="zep",
     )
 
 
@@ -199,6 +207,26 @@ def _pick_adapter(client: Any, adapters: list[Adapter]) -> Adapter | None:
         return next((a for a in adapters if a.name == "mem0"), None)
     if module.startswith("ferryte.adapters.vector") or type(client).__name__ == "InMemoryVectorStore":
         return next((a for a in adapters if a.name == "vector"), None)
+    if module.startswith("zep_cloud") or type(client).__name__ in {"Zep", "AsyncZep"}:
+        return next((a for a in adapters if a.name == "zep"), None)
+    cname = type(client).__name__
+    if (
+        module.startswith("letta")
+        or cname in {"Letta", "LettaClient"}
+        or hasattr(client, "insert_archival_memory")
+        or (getattr(getattr(client, "agents", None), "passages", None) is not None)
+    ):
+        return next((a for a in adapters if a.name == "letta"), None)
+    if (
+        module.startswith(("cloudflare", "workers"))
+        or "Vectorize" in cname
+        or (
+            callable(getattr(client, "query", None))
+            and (callable(getattr(client, "insert", None)) or callable(getattr(client, "upsert", None)))
+            and (callable(getattr(client, "deleteByIds", None)) or callable(getattr(client, "delete", None)))
+        )
+    ):
+        return next((a for a in adapters if a.name == "cloudflare"), None)
     return None
 
 

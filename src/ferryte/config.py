@@ -38,6 +38,17 @@ class FerryteConfig:
     capture_writes: bool = True
     auto_discover: bool = True
     strict: bool = False
+    # J3 privacy-preserving lineage: when True, the local lineage DB stores only
+    # salted fingerprints of artifact/retrieval content + queries, never the raw
+    # text — so Ferryte itself never becomes a second copy of the sensitive data.
+    # (Same principle as the Cloud PII boundary, applied locally.)
+    fingerprint_mode: bool = field(
+        default_factory=lambda: os.environ.get("FERRYTE_FINGERPRINT_MODE", "").lower()
+        in ("1", "true", "yes", "on")
+    )
+    fingerprint_salt: str | None = field(
+        default_factory=lambda: os.environ.get("FERRYTE_FINGERPRINT_SALT") or None
+    )
 
     def resolved_db_path(self) -> Path:
         if self.db_path is not None:

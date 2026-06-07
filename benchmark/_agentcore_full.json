@@ -1,0 +1,34 @@
+{
+  "generated_at": "2026-06-06T07:52:23.317520+00:00",
+  "embedder": "openai",
+  "summarizer": "openai",
+  "scenarios": [
+    "source-revocation",
+    "cross-tenant-isolation",
+    "stale-fact",
+    "memory-poisoning"
+  ],
+  "matrix": {
+    "agentcore": {
+      "cells": {
+        "source-revocation": {
+          "severity": "fail",
+          "findings": 2
+        },
+        "cross-tenant-isolation": {
+          "severity": "pass",
+          "findings": 0
+        },
+        "stale-fact": {
+          "severity": "fail",
+          "findings": 1
+        },
+        "memory-poisoning": {
+          "severity": "pass",
+          "findings": 0
+        }
+      },
+      "score": 50.0
+    }
+  }
+}

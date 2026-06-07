@@ -67,8 +67,8 @@ const TIERS = [
     name: "Core",
     badge: "Available today",
     badgeTone: "ok" as const,
-    price: "BSL 1.1 · free",
-    blurb: "The library, the CLI, and the four scenarios. Read it, self-host it, ship it in your CI today. Free in production.",
+    price: "BSL 1.1 · free forever (self-hosted)",
+    blurb: "The library, the CLI, and the four scenarios. Read it, self-host it, ship it in your CI today. Free in production — and free forever for self-hosted use.",
     featuresNote: null as string | null,
     features: [
       "ferryte.instrument() one-line auto-patch",
@@ -86,8 +86,8 @@ const TIERS = [
     name: "Cloud",
     badge: "Pre-release",
     badgeTone: "royal" as const,
-    price: "Free for design partners · pricing TBD",
-    blurb: "Not built yet — five design partners are shaping it. When it ships, the hosted oracle for continuous verification.",
+    price: "Free for design partners · paid after · pricing TBD",
+    blurb: "Not built yet — five design partners are shaping it. Free during the design-partner window, then a paid product. When it ships, the hosted oracle for continuous verification.",
     featuresNote: "What it will do once we ship it",
     features: [
       "Everything in Core",
@@ -98,7 +98,7 @@ const TIERS = [
       "Per-tenant blast-radius dashboards",
       "Public status badges for the repo",
     ],
-    cta: { label: "Join design-partner cohort", href: "mailto:hello@ferryte.dev?subject=Ferryte%20Cloud%20design%20partner", copyable: null },
+    cta: { label: "Join design-partner cohort", href: "/cloud#waitlist", copyable: null },
     accent: true,
   },
   {
@@ -117,7 +117,7 @@ const TIERS = [
       "Runtime retrieval enforcement (v2)",
       "Support SLA + dedicated channel",
     ],
-    cta: { label: "Talk to us", href: "mailto:hello@ferryte.dev?subject=Ferryte%20Enterprise", copyable: null },
+    cta: { label: "Talk to us", href: "/cloud#book-a-call", copyable: null },
     accent: false,
   },
 ];
@@ -371,19 +371,19 @@ function Waitlist() {
 
       <RevealOnScroll delay={0.32} className="mt-10 flex flex-wrap items-center gap-4">
         <Magnetic>
-          <a
-            href="mailto:hello@ferryte.dev?subject=Ferryte%20design%20partner&body=Stack%3A%20%0ATenants%3A%20%0AMemory%20backend(s)%3A%20%0ALeak%20you%E2%80%99re%20worried%20about%3A%20"
+          <Link
+            href="/cloud#waitlist"
             className="inline-flex items-center gap-1.5 rounded-full bg-royal px-5 py-3 text-[14px] font-medium text-white shadow-[0_8px_36px_-12px_rgba(90,138,150,0.55)] transition-colors duration-fast ease-out hover:bg-royal-2"
           >
-            Email hello@ferryte.dev
+            Join the waitlist
             <span aria-hidden>→</span>
-          </a>
+          </Link>
         </Magnetic>
         <Link
-          href="/product"
+          href="/cloud#book-a-call"
           className="text-[14px] text-ink-2 transition-colors duration-fast ease-out hover:text-ink"
         >
-          See how it works first →
+          Or book a call →
         </Link>
       </RevealOnScroll>
     </section>
@@ -400,6 +400,10 @@ const FAQ_ITEMS = [
   {
     q: "Can I self-host the dashboard without paying?",
     a: "Yes. The local Next.js dashboard is source-available (BSL 1.1) and ships in the repo. Run it against the JSON reports the CLI produces, in production, for free. Enterprise adds SSO, audit logs, multi-environment management, and signed compliance receipts on top of the same surface.",
+  },
+  {
+    q: "Will Core ever become paid, or get features clawed back into Cloud?",
+    a: "No. Core is free forever for self-hosted use — we never paywall something Core already does. Cloud and Enterprise are net-new surface (continuous hosted verification, alerts, signed attestations) sold to a different buyer. The design-partner cohort gets Cloud free during the build window; after that Cloud is a paid product, while Core stays free.",
   },
   {
     q: "What license do contributions fall under?",
@@ -422,7 +426,7 @@ function FAQ() {
 
       <RevealOnScroll delay={0.1} className="mt-8 max-w-3xl">
         <h2 className="font-display text-[34px] font-light leading-[1.06] tracking-[-0.028em] text-ink sm:text-[44px]">
-          The four questions everyone asks.
+          The questions everyone asks.
         </h2>
       </RevealOnScroll>
 

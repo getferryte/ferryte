@@ -1,0 +1,39 @@
+{
+  "generated_at": "2026-06-07T16:07:42.255996+00:00",
+  "embedder": "hash",
+  "summarizer": "concat",
+  "scenarios": [
+    "source-revocation",
+    "cross-tenant-isolation",
+    "stale-fact",
+    "memory-poisoning",
+    "mosaic"
+  ],
+  "matrix": {
+    "lancedb": {
+      "cells": {
+        "source-revocation": {
+          "severity": "pass",
+          "findings": 0
+        },
+        "cross-tenant-isolation": {
+          "severity": "pass",
+          "findings": 0
+        },
+        "stale-fact": {
+          "severity": "warn",
+          "findings": 1
+        },
+        "memory-poisoning": {
+          "severity": "fail",
+          "findings": 2
+        },
+        "mosaic": {
+          "severity": "pass",
+          "findings": 0
+        }
+      },
+      "score": 60.0
+    }
+  }
+}

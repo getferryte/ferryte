@@ -1,0 +1,19 @@
+# Benchmark-only dependencies (kept out of the core `ferryte` package so the
+# library install stays lean). Versions are loose for now; pin exact versions
+# before the public launch for reproducibility.
+
+# LLM + embeddings (the summarization layer that creates the derived leak)
+openai>=1.40
+
+# Memory stacks under test
+chromadb>=0.5
+qdrant-client>=1.11
+psycopg[binary]>=3.2
+pgvector>=0.3
+mem0ai>=0.1.0
+lancedb>=0.20
+pinecone>=5.0
+zep-cloud>=2.0
+
+# AWS (only used by the AgentCore backend)
+boto3>=1.34

@@ -33,8 +33,15 @@ class Mem0Adapter:
             AdapterCapability.READ_CAPTURE,
             AdapterCapability.SOURCE_DELETE,
             AdapterCapability.TENANT_SCOPING,
+            AdapterCapability.DERIVED_ENUMERATION,
         }
     )
+
+    # When True (the product default), delete_source uses the lineage graph to
+    # cascade-delete every derived fact Mem0 extracted from the revoked source.
+    # The benchmark flips this to False to model the naive baseline: without
+    # lineage you have no source→fact mapping, so Mem0's derived facts leak.
+    cascade_derived: bool = True
 
     def patch(self, client: Any) -> Any:
         if getattr(client, "_ferryte_patched", False):
@@ -163,30 +170,50 @@ class Mem0Adapter:
         self, client: Any, *, source_id: str, tenant_id: str | None = None
     ) -> int:
         lineage = get_lineage()
-        ids = [a["artifact_id"] for a in lineage.artifacts_for_source(source_id)]
-        n = 0
+        lineage.mark_source_revoked(source_id)
+
+        # Naive baseline: without the lineage-driven cascade there is no
+        # source→derived-fact mapping, so Mem0's extracted facts can't be
+        # targeted and survive the delete (the leak Ferryte exists to close).
+        if not getattr(self, "cascade_derived", True):
+            return 0
+
         delete = getattr(client, "delete", None)
+        # De-dupe; a source can fan out into several derived facts.
+        ids = list(dict.fromkeys(a["artifact_id"] for a in lineage.artifacts_for_source(source_id)))
+        n = 0
         for aid in ids:
             if delete is None:
                 lineage.mark_artifact_deleted(aid)
                 n += 1
                 continue
-            try:
-                delete(memory_id=aid)
-            except TypeError:
-                try:
-                    delete(aid)
-                except Exception:
-                    lineage.record_blindspot(
-                        backend=self.backend.value,
-                        kind="delete_failed",
-                        detail=f"Mem0 delete() rejected artifact id {aid}",
-                    )
-                    continue
-            lineage.mark_artifact_deleted(aid)
-            n += 1
-        lineage.mark_source_revoked(source_id)
+            if self._delete_one(delete, aid, lineage):
+                lineage.mark_artifact_deleted(aid)
+                n += 1
         return n
+
+    def _delete_one(self, delete: Any, aid: str, lineage: Any) -> bool:
+        """Delete one Mem0 memory, tolerating signature differences and
+        already-gone ids (forgetting is idempotent — a missing id is success)."""
+        last_exc: Exception | None = None
+        for call in (lambda: delete(memory_id=aid), lambda: delete(aid)):
+            try:
+                call()
+                return True
+            except TypeError as exc:  # wrong signature — try the next form
+                last_exc = exc
+                continue
+            except Exception as exc:  # noqa: BLE001
+                if "not found" in str(exc).lower() or "does not exist" in str(exc).lower():
+                    return True  # already deleted in a prior pass / run
+                last_exc = exc
+                break
+        lineage.record_blindspot(
+            backend=self.backend.value,
+            kind="delete_failed",
+            detail=f"Mem0 delete() failed for artifact id {aid}: {last_exc}",
+        )
+        return False
 
     def list_artifacts_for_source(
         self,

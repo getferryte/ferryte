@@ -1,0 +1,34 @@
+{
+  "generated_at": "2026-06-07T11:44:39.110511+00:00",
+  "embedder": "hash",
+  "summarizer": "concat",
+  "scenarios": [
+    "source-revocation",
+    "cross-tenant-isolation",
+    "stale-fact",
+    "memory-poisoning"
+  ],
+  "matrix": {
+    "mem0": {
+      "cells": {
+        "source-revocation": {
+          "severity": "fail",
+          "findings": 1
+        },
+        "cross-tenant-isolation": {
+          "severity": "pass",
+          "findings": 0
+        },
+        "stale-fact": {
+          "severity": "fail",
+          "findings": 1
+        },
+        "memory-poisoning": {
+          "severity": "pass",
+          "findings": 0
+        }
+      },
+      "score": 50.0
+    }
+  }
+}

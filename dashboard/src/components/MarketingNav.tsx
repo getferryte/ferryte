@@ -4,9 +4,11 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 const ITEMS = [
+  { href: "/benchmark", label: "Benchmark" },
   { href: "/manifesto", label: "Manifesto" },
   { href: "/product", label: "Product" },
   { href: "/pricing", label: "Pricing" },
+  { href: "/cloud", label: "Cloud" },
 ];
 
 export function MarketingNav() {

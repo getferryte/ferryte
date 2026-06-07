@@ -123,7 +123,7 @@ ferryte/
 
 Ferryte is **source-available** under the Business Source License 1.1.
 
-- **Core (BSL 1.1, free to read / run / self-host)** — the library, CLI, four scenarios, lineage graph, Mem0 + vector adapters, local Next.js dashboard. Everything you need to verify forgetting in your own CI, in production, for free. Each version converts to Apache 2.0 three years after release.
+- **Core (BSL 1.1, free to read / run / self-host)** — the library, CLI, four scenarios, lineage graph, Mem0 + vector adapters, local Next.js dashboard. Everything you need to verify forgetting in your own CI, in production, for free — **free forever for self-hosted use.** We never paywall something Core already does. Each version converts to Apache 2.0 three years after release.
 - **Cloud (private beta)** — hosted continuous verification, regression alerts, multi-environment, Slack/PagerDuty integrations. Design partners only through 2026.
 - **Enterprise (annual contract)** — self-hosted with SSO/RBAC/audit logs, premium adapters (AgentCore, Zep, GovCloud), signed compliance attestations (GDPR / CCPA), runtime retrieval enforcement (v2), support SLA.
 

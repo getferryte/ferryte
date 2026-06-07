@@ -20,6 +20,9 @@ class BlastRadius:
     artifacts: list[dict[str, Any]] = field(default_factory=list)
     retrievals: list[dict[str, Any]] = field(default_factory=list)
     blindspots: list[dict[str, Any]] = field(default_factory=list)
+    # J2: actions that already consumed artifacts derived from this source.
+    # These are *propagated* consequences — deletion cannot undo them.
+    propagated_actions: list[dict[str, Any]] = field(default_factory=list)
 
     @property
     def artifact_count(self) -> int:
@@ -28,6 +31,15 @@ class BlastRadius:
     @property
     def retrieval_count(self) -> int:
         return len(self.retrievals)
+
+    @property
+    def propagated_count(self) -> int:
+        return len(self.propagated_actions)
+
+    @property
+    def propagated(self) -> bool:
+        """True if the secret already drove an action — a leak deletion can't reverse."""
+        return bool(self.propagated_actions)
 
     @property
     def min_confidence(self) -> float:
@@ -40,10 +52,13 @@ class BlastRadius:
             "source_id": self.source_id,
             "artifact_count": self.artifact_count,
             "retrieval_count": self.retrieval_count,
+            "propagated_count": self.propagated_count,
+            "propagated": self.propagated,
             "min_confidence": self.min_confidence,
             "artifacts": self.artifacts,
             "retrievals": self.retrievals,
             "blindspots": self.blindspots,
+            "propagated_actions": self.propagated_actions,
         }
 
 
@@ -67,4 +82,5 @@ def compute_blast_radius(
         artifacts=artifacts,
         retrievals=retrievals,
         blindspots=lineage.blindspots(),
+        propagated_actions=lineage.actions_consuming_source(source_id),
     )

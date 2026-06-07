@@ -6,7 +6,10 @@ DuckDB can be swapped in later for the hosted product; the schema stays the same
 
 from __future__ import annotations
 
+import hashlib
+import hmac
 import json
+import secrets
 import sqlite3
 import threading
 import time
@@ -65,6 +68,24 @@ CREATE TABLE IF NOT EXISTS blindspots (
     detail       TEXT NOT NULL,
     observed_at  REAL NOT NULL
 );
+
+-- J2: actions the agent took using retrieved memory. A leak that drove an action
+-- (sent an email, signed a contract) is *propagated* — deleting the source can't
+-- undo it. This is a second kind of blast radius beyond the recallable store.
+CREATE TABLE IF NOT EXISTS actions (
+    action_id    TEXT PRIMARY KEY,
+    kind         TEXT NOT NULL,
+    tenant_id    TEXT,
+    detail       TEXT,
+    occurred_at  REAL NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS action_inputs (
+    action_id    TEXT NOT NULL,
+    artifact_id  TEXT NOT NULL,
+    PRIMARY KEY (action_id, artifact_id)
+);
+CREATE INDEX IF NOT EXISTS idx_action_inputs_artifact ON action_inputs(artifact_id);
 """
 
 
@@ -90,9 +111,19 @@ def _loads(value: str | None) -> dict[str, Any]:
 class LineageStore:
     """Thread-safe SQLite wrapper around the lineage schema."""
 
-    def __init__(self, path: Path | str) -> None:
+    def __init__(
+        self,
+        path: Path | str,
+        *,
+        fingerprint_mode: bool = False,
+        fingerprint_salt: str | None = None,
+    ) -> None:
         self.path = Path(path)
         self.path.parent.mkdir(parents=True, exist_ok=True)
+        self.fingerprint_mode = fingerprint_mode
+        # a per-store salt makes fingerprints non-reversible (no rainbow tables)
+        # and uncorrelatable across deployments; explicit salt enables reproducibility.
+        self._salt = (fingerprint_salt or secrets.token_hex(16)).encode("utf-8")
         self._lock = threading.RLock()
         self._conn = sqlite3.connect(str(self.path), check_same_thread=False, isolation_level=None)
         self._conn.execute("PRAGMA journal_mode=WAL;")
@@ -100,6 +131,14 @@ class LineageStore:
         self._conn.row_factory = sqlite3.Row
         with self._lock:
             self._conn.executescript(_SCHEMA)
+
+    def _fp(self, text: str | None) -> str | None:
+        """In fingerprint mode, replace raw text with a salted HMAC-SHA256 digest
+        so the local DB never persists the sensitive content itself."""
+        if not self.fingerprint_mode or text is None:
+            return text
+        digest = hmac.new(self._salt, text.encode("utf-8"), hashlib.sha256).hexdigest()[:32]
+        return f"fp:sha256:{digest}"
 
     @contextmanager
     def _cursor(self) -> Iterator[sqlite3.Cursor]:
@@ -159,7 +198,7 @@ class LineageStore:
                     content   = COALESCE(excluded.content,   artifacts.content),
                     metadata  = COALESCE(excluded.metadata,  artifacts.metadata);
                 """,
-                (artifact_id, backend, kind, tenant_id, content, _now(), _dumps(metadata)),
+                (artifact_id, backend, kind, tenant_id, self._fp(content), _now(), _dumps(metadata)),
             )
 
     def record_derivation(
@@ -205,8 +244,68 @@ class LineageStore:
                 INSERT INTO retrievals (backend, query, artifact_id, content, score, tenant_id, occurred_at, metadata)
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?);
                 """,
-                (backend, query, artifact_id, content, score, tenant_id, _now(), _dumps(metadata)),
+                (
+                    backend,
+                    self._fp(query),
+                    artifact_id,
+                    self._fp(content),
+                    score,
+                    tenant_id,
+                    _now(),
+                    _dumps(metadata),
+                ),
             )
+
+    def record_action(
+        self,
+        *,
+        action_id: str,
+        kind: str,
+        artifact_ids: Iterable[str],
+        tenant_id: str | None = None,
+        detail: dict[str, Any] | None = None,
+    ) -> None:
+        with self._cursor() as cur:
+            cur.execute(
+                """
+                INSERT INTO actions (action_id, kind, tenant_id, detail, occurred_at)
+                VALUES (?, ?, ?, ?, ?)
+                ON CONFLICT(action_id) DO UPDATE SET
+                    kind = excluded.kind, detail = excluded.detail;
+                """,
+                (action_id, kind, tenant_id, _dumps(detail), _now()),
+            )
+            for aid in dict.fromkeys(artifact_ids):
+                cur.execute(
+                    "INSERT OR IGNORE INTO action_inputs (action_id, artifact_id) VALUES (?, ?);",
+                    (action_id, aid),
+                )
+
+    def actions_consuming_source(self, source_id: str) -> list[dict[str, Any]]:
+        """Actions that consumed *any* artifact derived from this source — i.e.
+        propagated consequences that deleting the source cannot undo."""
+        with self._cursor() as cur:
+            cur.execute(
+                """
+                SELECT DISTINCT ac.action_id, ac.kind, ac.tenant_id, ac.detail, ac.occurred_at
+                FROM actions ac
+                JOIN action_inputs ai ON ai.action_id = ac.action_id
+                JOIN derivations d    ON d.artifact_id = ai.artifact_id
+                WHERE d.source_id = ?
+                ORDER BY ac.occurred_at;
+                """,
+                (source_id,),
+            )
+            return [
+                {
+                    "action_id": r["action_id"],
+                    "kind": r["kind"],
+                    "tenant_id": r["tenant_id"],
+                    "detail": _loads(r["detail"]),
+                    "occurred_at": r["occurred_at"],
+                }
+                for r in cur.fetchall()
+            ]
 
     def record_blindspot(self, *, backend: str, kind: str, detail: str) -> None:
         with self._cursor() as cur:
@@ -315,14 +414,30 @@ class LineageStore:
     def counts(self) -> dict[str, int]:
         with self._cursor() as cur:
             out: dict[str, int] = {}
-            for table in ("sources", "artifacts", "derivations", "retrievals", "blindspots"):
+            for table in (
+                "sources",
+                "artifacts",
+                "derivations",
+                "retrievals",
+                "blindspots",
+                "actions",
+                "action_inputs",
+            ):
                 cur.execute(f"SELECT COUNT(*) AS n FROM {table};")
                 out[table] = int(cur.fetchone()["n"])
             return out
 
     def clear(self) -> None:
         with self._cursor() as cur:
-            for table in ("retrievals", "blindspots", "derivations", "artifacts", "sources"):
+            for table in (
+                "action_inputs",
+                "actions",
+                "retrievals",
+                "blindspots",
+                "derivations",
+                "artifacts",
+                "sources",
+            ):
                 cur.execute(f"DELETE FROM {table};")
 
     # ----- helpers -----------------------------------------------------------

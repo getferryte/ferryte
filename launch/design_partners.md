@@ -101,6 +101,29 @@ the post to these people in the launch hour.
 Aim for 10 × A, 10 × B, 10 × C. The A tier converts; the B+C tiers fund
 the social-proof tweet at week 2 ("five design partners signed up").
 
+### Named seed list (first pass — qualify, don't assume)
+
+> Candidates from the strategy doc + the market map (`memory_landscape.md`). The
+> "likely backend" column is a **hypothesis to verify on the call**, not confirmed.
+> Pick the ones where we can find a warm intro or a public signal first.
+
+| Company | Why they fit (multi-tenant agent memory) | Likely backend (verify) | Tier |
+|---|---|---|---|
+| **Decagon** | Multi-tenant customer-support agents; per-customer memory | Mem0 / DIY vector | Landable |
+| **Hebbia** | Multi-tenant document/agent memory over sensitive enterprise data | pgvector / Pinecone | Landable |
+| **Cognition** | Long-running coding agents with persistent state | DIY vector / Letta-style | Landable |
+| **Abridge** | Healthcare (HIPAA) multi-tenant memory → deletion mandate is real | pgvector / private | Landable |
+| **Sierra** | Multi-tenant conversational agents at scale | Mem0 / Zep | Trophy |
+| **Harvey** | In-VPC, single-tenant-isolated → **Enterprise (self-host)**, not Cloud | LanceDB + pgvector | Trophy (Enterprise) |
+
+Notes:
+- Harvey-tier (in-VPC, isolated) is an **Enterprise self-hosted** conversation, not a
+  Cloud design partner — route accordingly.
+- Lead each outreach with the backend they actually run (per `memory_landscape.md` §6) —
+  "we demo the leak against a `${their_backend}` stack like yours."
+- F3 offer is locked (above): 6 months Cloud free when it ships + founder-paired Core
+  integration + roadmap input. No change needed.
+
 ## Tracking
 
 A flat markdown file at `launch/design_partners.tracker.md` (gitignored — not

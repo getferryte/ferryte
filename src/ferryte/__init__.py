@@ -19,6 +19,30 @@ from .instrument import instrument, uninstrument
 from .lineage import LineageGraph, get_lineage
 from .registry import register_adapter
 
+
+def record_action(
+    *,
+    action_id: str,
+    kind: str,
+    artifact_ids,  # type: ignore[no-untyped-def]
+    tenant_id: str | None = None,
+    detail: dict | None = None,
+) -> None:
+    """Record that the agent took an action (sent an email, signed a contract,
+    made a decision) using the given retrieved artifacts. This builds the
+    retrieval→action edge so a later revocation can distinguish a *recallable*
+    leak (still in the store, deletable) from a *propagated* one that already
+    drove a consequence deletion cannot undo. (J2 — action/consequence lineage.)
+    """
+    get_lineage().record_action(
+        action_id=action_id,
+        kind=kind,
+        artifact_ids=artifact_ids,
+        tenant_id=tenant_id,
+        detail=detail,
+    )
+
+
 __all__ = [
     "instrument",
     "uninstrument",
@@ -29,6 +53,7 @@ __all__ = [
     "FerryteConfig",
     "get_config",
     "register_adapter",
+    "record_action",
 ]
 
 # Single source of truth is the installed package metadata (pyproject `version`),

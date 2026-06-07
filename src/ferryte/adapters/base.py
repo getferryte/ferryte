@@ -17,6 +17,8 @@ class BackendKind(str, enum.Enum):
     VECTOR = "vector"
     ZEP = "zep"
     AGENTCORE = "agentcore"
+    LETTA = "letta"
+    CLOUDFLARE = "cloudflare"
     CUSTOM = "custom"
 
 

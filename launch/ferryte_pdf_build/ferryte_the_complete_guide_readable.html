@@ -1,0 +1,1374 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Ferryte: The Complete Guide</title>
+  <style>
+    @page {
+      size: A4;
+      margin: 18mm 15mm 20mm 15mm;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      font-size: 16px;
+    }
+
+    body {
+      margin: 0;
+      background: #ffffff;
+      color: #1d2730;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+      line-height: 1.58;
+    }
+
+    .page {
+      max-width: 880px;
+      margin: 0 auto;
+      padding: 0;
+    }
+
+    .cover {
+      min-height: 245mm;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      border-bottom: 4px solid #14746f;
+      page-break-after: always;
+    }
+
+    .cover-kicker {
+      color: #14746f;
+      font-size: 12px;
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+
+    .cover h1 {
+      margin: 12px 0 10px;
+      color: #102a2f;
+      font-size: 54px;
+      line-height: 1.03;
+    }
+
+    .cover-subtitle {
+      max-width: 680px;
+      color: #496169;
+      font-size: 19px;
+      line-height: 1.45;
+    }
+
+    .cover-meta {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 34px;
+    }
+
+    .meta-card {
+      min-height: 72px;
+      padding: 14px 14px 12px;
+      border: 1px solid #d7e3e4;
+      border-radius: 8px;
+      background: #f7fbfb;
+    }
+
+    .meta-label {
+      color: #657880;
+      font-size: 10px;
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+
+    .meta-value {
+      margin-top: 3px;
+      color: #163238;
+      font-size: 18px;
+      font-weight: 800;
+    }
+
+    .reader-note {
+      margin: 0 0 22px;
+      padding: 14px 16px;
+      border-left: 5px solid #14746f;
+      background: #eef8f7;
+      color: #24383e;
+      page-break-inside: avoid;
+    }
+
+    .reader-note strong {
+      color: #102a2f;
+    }
+
+    h1, h2, h3 {
+      color: #102a2f;
+      line-height: 1.18;
+    }
+
+    main > h1 {
+      margin: 0 0 16px;
+      padding-top: 4px;
+      font-size: 34px;
+      page-break-before: always;
+      border-bottom: 3px solid #14746f;
+      padding-bottom: 10px;
+    }
+
+    main > h1:first-of-type {
+      page-break-before: auto;
+    }
+
+    h2 {
+      margin: 28px 0 10px;
+      font-size: 24px;
+    }
+
+    h3 {
+      margin: 22px 0 8px;
+      font-size: 18px;
+    }
+
+    p {
+      margin: 0 0 12px;
+    }
+
+    hr {
+      margin: 24px 0;
+      border: 0;
+      border-top: 1px solid #d7e3e4;
+    }
+
+    a {
+      color: #0b6f9d;
+      text-decoration: none;
+    }
+
+    ul, ol {
+      margin: 8px 0 14px 24px;
+      padding: 0;
+    }
+
+    li {
+      margin: 5px 0;
+      padding-left: 2px;
+    }
+
+    blockquote {
+      margin: 14px 0 18px;
+      padding: 13px 16px;
+      border-left: 5px solid #12a594;
+      border-radius: 0 8px 8px 0;
+      background: #eefaf8;
+      color: #20383d;
+      page-break-inside: avoid;
+    }
+
+    blockquote p:last-child {
+      margin-bottom: 0;
+    }
+
+    code {
+      padding: 1px 4px;
+      border-radius: 4px;
+      background: #eef2f3;
+      color: #163238;
+      font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+      font-size: 0.92em;
+    }
+
+    pre {
+      overflow: auto;
+      margin: 14px 0 18px;
+      padding: 12px 14px;
+      border: 1px solid #d7e3e4;
+      border-radius: 8px;
+      background: #f7fafb;
+      color: #16272d;
+      font-size: 12px;
+      line-height: 1.48;
+      white-space: pre-wrap;
+      word-break: break-word;
+      page-break-inside: avoid;
+    }
+
+    pre code {
+      padding: 0;
+      background: transparent;
+      font-size: inherit;
+    }
+
+    table {
+      width: 100%;
+      margin: 14px 0 22px;
+      border-collapse: collapse;
+      font-size: 12.3px;
+      line-height: 1.42;
+      page-break-inside: avoid;
+    }
+
+    th {
+      background: #143d43;
+      color: #ffffff;
+      font-weight: 800;
+      text-align: left;
+    }
+
+    th, td {
+      padding: 8px 9px;
+      border: 1px solid #cfdcde;
+      vertical-align: top;
+    }
+
+    tr:nth-child(even) td {
+      background: #f6f9fa;
+    }
+
+    .diagram-block {
+      margin: 18px 0 24px;
+      padding: 14px;
+      border: 1px solid #cddfe2;
+      border-radius: 8px;
+      background: #fbfdfd;
+      page-break-inside: avoid;
+    }
+
+    .diagram-block figcaption {
+      margin-bottom: 8px;
+      color: #526a72;
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+
+    .mermaid-source {
+      width: 100%;
+      text-align: center;
+    }
+
+    .mermaid-source svg {
+      max-width: 100%;
+      height: auto;
+    }
+
+    .diagram-error {
+      color: #8a2f2f;
+      font-weight: 700;
+    }
+
+    strong {
+      color: #102a2f;
+    }
+
+    @media print {
+      .page {
+        max-width: none;
+      }
+
+      a {
+        color: #0a5e82;
+      }
+
+      .diagram-block, blockquote, table, pre {
+        break-inside: avoid;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <section class="cover">
+      <div class="cover-kicker">Reader-friendly PDF edition</div>
+      <h1>Ferryte: The Complete Guide</h1>
+      <p class="cover-subtitle">&quot;I know nothing about AI&quot; to &quot;I understand Ferryte better than anyone&quot;</p>
+      <div class="cover-meta" aria-label="Document preservation summary">
+        <div class="meta-card">
+          <div class="meta-label">Source lines</div>
+          <div class="meta-value">948</div>
+        </div>
+        <div class="meta-card">
+          <div class="meta-label">Diagrams</div>
+          <div class="meta-value">12</div>
+        </div>
+        <div class="meta-card">
+          <div class="meta-label">Tables</div>
+          <div class="meta-value">6</div>
+        </div>
+      </div>
+    </section>
+
+    <main>
+      <aside class="reader-note">
+        <strong>Preservation note:</strong> this PDF keeps the original guide content intact and adds print styling for readability. Mermaid code blocks are rendered as diagrams, while the source Markdown file remains unchanged.
+      </aside>
+      <h1>Ferryte: The Complete Guide</h1>
+<h3>From “I know nothing about AI” to “I understand Ferryte better than anyone”</h3>
+<hr>
+<p><strong>How to read this book</strong></p>
+<p>This guide is built so that someone with <strong>zero</strong> technical background can finish it
+and understand Ferryte deeply — the problem, the product, the technology, the
+business, and the marketing.</p>
+<p>Two rules I follow everywhere in this book:</p>
+<ol>
+<li>
+<p><strong>Plain words first.</strong> Whenever a technical term shows up, I explain it in plain
+English immediately after, in a quoted box like this:</p>
+<blockquote>
+<p><strong>In plain words:</strong> this is where the simple explanation lives. If a sentence
+above confused you, the answer is in the box right below it.</p>
+</blockquote>
+</li>
+<li>
+<p><strong>A picture for every hard idea.</strong> Diagrams use a format called <em>Mermaid</em>. If
+you’re reading this on GitHub or in a markdown viewer, they render as real
+flowcharts. If you see raw text in a code box instead, just read it top-to-bottom
+like a recipe — arrows (<code>--&gt;</code>) mean “leads to.”</p>
+</li>
+</ol>
+<p>Take your time. There’s a <strong>Glossary</strong> at the very end — every bolded term is defined
+there too.</p>
+<hr>
+<h2>Table of contents</h2>
+<ul>
+<li><strong>Part 1 — The 60-second version</strong></li>
+<li><strong>Part 2 — Foundations: how AI agents and memory actually work</strong> (start here if AI is new to you)</li>
+<li><strong>Part 3 — The Problem: why “delete” doesn’t really delete</strong></li>
+<li><strong>Part 4 — The Solution: what Ferryte does</strong></li>
+<li><strong>Part 5 — Under the hood: how Ferryte is built</strong></li>
+<li><strong>Part 6 — The four tests (scenarios) explained</strong></li>
+<li><strong>Part 7 — The Benchmark: “The Forgetting Report”</strong></li>
+<li><strong>Part 8 — Positioning &amp; marketing: how we talk about Ferryte</strong></li>
+<li><strong>Part 9 — The business: free Core, paid Cloud, paid Enterprise</strong></li>
+<li><strong>Part 10 — The roadmap: what we plan to build</strong></li>
+<li><strong>Part 11 — The honest weaknesses (read this, it matters)</strong></li>
+<li><strong>Part 12 — Glossary of every term</strong></li>
+</ul>
+<hr>
+<h1>Part 1 — The 60-second version</h1>
+<p>Ferryte is a tool that checks one thing: <strong>when you tell an AI system to forget
+something, did it actually forget?</strong></p>
+<p>It turns out the answer is usually <strong>no</strong> — and almost nobody is checking. When an
+app deletes a piece of data, the AI has often already copied that data into other
+places (summaries, notes, search indexes). Deleting the original doesn’t remove the
+copies. So the AI keeps “remembering” things it was told to forget. That can leak a
+customer’s private data, break privacy law, or expose one company’s data to another.</p>
+<p>Ferryte:</p>
+<ol>
+<li>Plants a secret “marker” in the AI’s memory.</li>
+<li>Tells the AI to delete it (using the app’s real delete button).</li>
+<li>Asks the AI about it again.</li>
+<li>If the marker comes back, that’s a <strong>leak</strong>, and Ferryte shows you exactly where
+it’s hiding.</li>
+</ol>
+<p>Then a feature called the <strong>cascade</strong> can clean up every hidden copy automatically.</p>
+<p>That’s the whole idea. The rest of this book explains <em>why</em> this happens, <em>how</em>
+Ferryte does it, and <em>why it’s a business</em>.</p>
+<figure class="diagram-block" data-diagram="1"><figcaption>Diagram 1</figcaption><div class="mermaid-source">flowchart LR
+    A[Plant a secret marker] --&gt; B[Delete it via the app's real API]
+    B --&gt; C[Ask the AI again]
+    C --&gt; D{Marker comes back?}
+    D -- Yes --&gt; E[LEAK found - here's where it hides]
+    D -- No --&gt; F[Forgetting verified]
+</div></figure><hr>
+<h1>Part 2 — Foundations: how AI agents and memory actually work</h1>
+<p>If you already know what an LLM, embedding, and vector database are, skip to Part 3.
+Otherwise, read this part slowly — everything later depends on it.</p>
+<h2>2.1 What is an “AI agent”?</h2>
+<p>A normal program does exactly what it’s told, step by step. An <strong>AI agent</strong> is a
+program built around a <strong>large language model (LLM)</strong> — software that can read and
+write human language — that can <em>decide</em> what to do, take actions, and remember
+things between conversations.</p>
+<blockquote>
+<p><strong>In plain words:</strong> a chatbot that can also <em>do stuff</em> (look things up, call other
+tools, take actions) and <em>remember</em> you between chats is an “agent.” Think of a
+very capable virtual assistant.</p>
+</blockquote>
+<figure class="diagram-block" data-diagram="2"><figcaption>Diagram 2</figcaption><div class="mermaid-source">flowchart LR
+    U[User asks something] --&gt; AG[AI Agent]
+    AG --&gt; M[(Memory)]
+    M --&gt; AG
+    AG --&gt; T[Tools / actions]
+    AG --&gt; R[Reply to user]
+</div></figure><p>The key new ingredient versus an old chatbot is the box labeled <strong>Memory</strong>. That box
+is the entire reason Ferryte exists.</p>
+<h2>2.2 What is an LLM?</h2>
+<p><strong>LLM</strong> stands for <em>Large Language Model</em>. It’s the “brain” — a piece of software
+trained on huge amounts of text that can continue, summarize, translate, or answer in
+natural language. Examples: GPT, Claude, Gemini.</p>
+<blockquote>
+<p><strong>In plain words:</strong> the LLM is the part that “talks” and “thinks.” On its own it
+has no memory of you — every conversation starts blank unless something <em>feeds it</em>
+your past. That something is the memory system.</p>
+</blockquote>
+<h2>2.3 What is “memory” for an AI agent?</h2>
+<p>Because an LLM forgets everything between messages, agents bolt on a <strong>memory system</strong>
+— a place to store facts about you and your past conversations, and pull them back
+later. When you tell an assistant “I’m allergic to peanuts,” a good agent stores that
+and remembers it next week.</p>
+<p>There are a few common ways memory is stored. You need to understand three words:</p>
+<h3>Embeddings</h3>
+<p>An <strong>embedding</strong> is a way to turn a piece of text into a list of numbers that
+captures its <em>meaning</em>. Texts with similar meaning get similar numbers.</p>
+<blockquote>
+<p><strong>In plain words:</strong> imagine giving every sentence a “GPS coordinate” based on what
+it means, so that “I love dogs” and “puppies are great” end up near each other on
+the map. That coordinate is the embedding.</p>
+</blockquote>
+<h3>Vector database (vector store)</h3>
+<p>A <strong>vector database</strong> stores those number-lists (called <em>vectors</em>) and can quickly
+find the ones “nearest” to a question. That’s how the agent finds relevant memories.</p>
+<blockquote>
+<p><strong>In plain words:</strong> it’s a filing cabinet that files notes by <em>meaning</em> instead of
+by date or name, so when you ask a question it pulls the notes that <em>mean</em> something
+similar. Examples you’ll see in this book: <strong>pgvector, Chroma, Qdrant</strong>.</p>
+</blockquote>
+<h3>Summary / extracted facts (this is the important one)</h3>
+<p>To save space and work better, agents don’t just store your raw words. They use the
+LLM to <strong>summarize</strong> (“the user is a vegan who lives in Berlin and dislikes spicy
+food”) and to <strong>extract facts</strong> (“allergy: peanuts”). These summaries and facts are
+<em>new pieces of text the AI wrote in its own words.</em></p>
+<blockquote>
+<p><strong>In plain words:</strong> the AI keeps a <strong>personal notebook</strong> where it rewrites what you
+told it. Your original message is one thing; the AI’s notebook entry about it is a
+<em>separate copy</em>, in different words.</p>
+</blockquote>
+<p><strong>Remember the notebook. The notebook is the villain of this whole story.</strong></p>
+<h3>Derived memory</h3>
+<p>Anything the AI <em>created from</em> your original data — a summary, an extracted fact, an
+embedding, a knowledge-graph node — is called <strong>derived memory</strong> (or a <em>derived
+artifact</em>). Your original message is the <strong>source</strong>. Everything the AI made from it is
+<em>derived</em>.</p>
+<figure class="diagram-block" data-diagram="3"><figcaption>Diagram 3</figcaption><div class="mermaid-source">flowchart TD
+    S[&quot;SOURCE: your message&lt;br/&gt;'my secret code is KILO-VEGA-77'&quot;] --&gt; RAW[Raw row in vector DB]
+    S --&gt; SUM[&quot;Summary (notebook):&lt;br/&gt;'user shared a secret code KILO-VEGA-77'&quot;]
+    S --&gt; FACT[&quot;Extracted fact:&lt;br/&gt;secret_code = KILO-VEGA-77&quot;]
+    S --&gt; EMB[Embedding / search index entry]
+    RAW -.derived from.-&gt; S
+    SUM -.derived from.-&gt; S
+    FACT -.derived from.-&gt; S
+    EMB -.derived from.-&gt; S
+</div></figure><blockquote>
+<p><strong>In plain words:</strong> one thing you said becomes <em>many</em> copies inside the AI — the
+original, the notebook summary, the bullet-point fact, and the search-index entry.</p>
+</blockquote>
+<h2>2.4 Multi-tenant: one app, many customers</h2>
+<p>A <strong>multi-tenant</strong> system is one app serving many separate customers (“tenants”), each
+of whom must only ever see <em>their own</em> data. A customer-support AI used by 500
+different companies is multi-tenant: Company A must never see Company B’s data.</p>
+<blockquote>
+<p><strong>In plain words:</strong> like an apartment building. Everyone shares the building (the
+app), but you must never be able to walk into someone else’s apartment (their data).
+Multi-tenant AI memory is where leaks get <em>really</em> dangerous.</p>
+</blockquote>
+<p>You now have all the vocabulary you need. On to the problem.</p>
+<hr>
+<h1>Part 3 — The Problem: why “delete” doesn’t really delete</h1>
+<h2>3.1 The core failure, in one sentence</h2>
+<blockquote>
+<p><strong>You tell an AI to forget something. It says “done.” It hasn’t.</strong></p>
+</blockquote>
+<p>When an app deletes data, it usually deletes only the <strong>one thing it knows about</strong> —
+typically the raw row in the database. But by then the AI has already copied that data
+into the <strong>notebook</strong> (summaries), the <strong>fact list</strong>, and the <strong>search index</strong>. Those
+copies don’t get deleted. So the AI keeps answering from them.</p>
+<h2>3.2 The notebook analogy (the whole problem in a picture)</h2>
+<p>Imagine you hand an assistant a letter with a secret on it. The assistant:</p>
+<ul>
+<li>files the letter in a drawer (the raw row),</li>
+<li>copies the secret into a shared team notebook (the summary),</li>
+<li>writes it on a sticky note (the extracted fact).</li>
+</ul>
+<p>Later you say “shred that letter.” The assistant shreds the <strong>letter</strong> — but the
+<strong>notebook</strong> and the <strong>sticky note</strong> still have the secret. Ask again, and the
+assistant happily reads it back from the notebook.</p>
+<figure class="diagram-block" data-diagram="4"><figcaption>Diagram 4</figcaption><div class="mermaid-source">sequenceDiagram
+    participant You
+    participant App
+    participant DB as Raw store (drawer)
+    participant Note as Summary (notebook)
+
+    You-&gt;&gt;App: &quot;Remember: secret = KILO-VEGA-77&quot;
+    App-&gt;&gt;DB: save raw row
+    App-&gt;&gt;Note: LLM writes summary that INCLUDES the secret
+    Note--&gt;&gt;App: (copy now exists in the notebook)
+
+    You-&gt;&gt;App: &quot;Delete that / forget it&quot;
+    App-&gt;&gt;DB: delete raw row ✅
+    Note--&gt;&gt;Note: notebook untouched ❌
+
+    You-&gt;&gt;App: &quot;What was the secret?&quot;
+    App-&gt;&gt;Note: search memory
+    Note--&gt;&gt;App: &quot;KILO-VEGA-77&quot; 😱  (LEAK)
+    App--&gt;&gt;You: leaks the 'deleted' secret
+</div></figure><blockquote>
+<p><strong>In plain words:</strong> deleting the original doesn’t un-write the copies the AI already
+made. The AI keeps “remembering” the deleted thing from its notebook.</p>
+</blockquote>
+<h2>3.3 This is not a rare bug — the vendors document it themselves</h2>
+<p>This isn’t a weird edge case. The companies that <em>build</em> agent memory say so in their
+own manuals:</p>
+<ul>
+<li><strong>AWS Bedrock AgentCore</strong> (Amazon’s agent-memory service) literally writes:
+<em>“Deleting an event doesn’t remove the structured information derived out of it from
+the long term memory.”</em></li>
+<li><strong>Zep</strong> (another memory product): deleting an episode doesn’t regenerate the shared
+summaries that already absorbed it.</li>
+<li><strong>Mem0</strong> and generic vector stores: you delete the row, but copies already pulled
+into the agent’s working set keep coming back.</li>
+</ul>
+<blockquote>
+<p><strong>In plain words:</strong> the people who make these memory systems openly admit, in their
+documentation, that “delete” doesn’t delete the copies. Almost no company building on
+top of them checks whether this is hurting them.</p>
+</blockquote>
+<h2>3.4 Why it’s <em>architectural</em>, not a quick fix</h2>
+<p>It’s tempting to think “they’ll just patch it.” They won’t easily, because the copying
+is <em>the whole point</em> of the system. Summaries and extracted facts are what make agent
+memory fast and useful. The leak is a side-effect of a feature, not a typo in the code.</p>
+<blockquote>
+<p><strong>In plain words:</strong> the AI copies your data <em>on purpose</em>, because that’s what makes
+it smart. The leak is baked into how the technology works — so it needs a dedicated
+tool to catch and clean it, not a one-line fix.</p>
+</blockquote>
+<h2>3.5 Why anyone should care — the real-world damage</h2>
+<p>This isn’t academic. Concrete consequences:</p>
+<table>
+<thead>
+<tr>
+<th>Who</th>
+<th>What goes wrong</th>
+<th>Why it’s serious</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>A customer-support AI</td>
+<td>A customer asks you to delete their data; a derived summary keeps it</td>
+<td><strong>GDPR Article 17 (“right to be forgotten”)</strong> violation — real fines</td>
+</tr>
+<tr>
+<td>A legal AI (e.g. law firms)</td>
+<td>One firm’s privileged info surfaces to another tenant</td>
+<td>Malpractice / breach of privilege</td>
+</tr>
+<tr>
+<td>A healthcare AI</td>
+<td>A deleted patient note surfaces in another context</td>
+<td><strong>HIPAA</strong> violation</td>
+</tr>
+<tr>
+<td>Any multi-tenant AI</td>
+<td>Company A’s data leaks into Company B’s answers</td>
+<td>Headline-grade security incident</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>In plain words:</strong> “we deleted it” is something companies are legally and
+contractually required to mean. If the AI didn’t really forget, they’re exposed to
+fines, lawsuits, and very bad headlines — they just usually don’t know it yet.</p>
+</blockquote>
+<h3>A note on the legal term: GDPR Article 17</h3>
+<p><strong>GDPR</strong> is Europe’s privacy law. <strong>Article 17</strong> is the “right to erasure” / “right to
+be forgotten” — a person can demand a company delete their personal data, and the
+company must actually do it everywhere.</p>
+<blockquote>
+<p><strong>In plain words:</strong> in Europe (and increasingly elsewhere), if a user says “delete
+my data,” the company is <em>legally required</em> to truly delete it — including the AI’s
+notebook copies. Right now most companies can’t even prove they did.</p>
+</blockquote>
+<hr>
+<h1>Part 4 — The Solution: what Ferryte does</h1>
+<p>Ferryte is a <strong>verification layer for agent forgetting</strong>. “Verification layer” just
+means: a tool that <em>checks</em> whether something is true. Here, it checks whether
+forgetting actually happened.</p>
+<p>Internally we call the checking engine the <strong>forgetting oracle</strong>. An “oracle,” in
+testing, is just the part that <em>knows the right answer</em> and judges pass/fail.</p>
+<blockquote>
+<p><strong>In plain words:</strong> Ferryte is the referee. It sets up a test it knows the answer to,
+watches what the AI does, and blows the whistle when the AI leaks.</p>
+</blockquote>
+<p>Ferryte does this with <strong>three ideas</strong>, in order of how unique they are.</p>
+<h2>4.1 Idea 1 — Canary detection (the rigorous part)</h2>
+<p>A <strong>canary</strong> is a fake memory we plant on purpose, containing a <strong>marker</strong> — a weird,
+high-entropy code the AI could never have produced on its own, like
+<code>KILO-BETELGEUSE-58DCBE</code>.</p>
+<blockquote>
+<p><strong>In plain words:</strong> we slip a uniquely-colored marble into the box. Later, if that
+exact marble rolls out, we <em>know</em> it came from the thing we planted — not a
+coincidence, not the AI making something up. (“Canary” comes from “canary in a coal
+mine” — a planted thing that warns you of danger.)</p>
+</blockquote>
+<p>Why a weird code? Because if we asked about something normal (“the user’s city”), the
+AI might guess right by luck, and we couldn’t tell a real leak from a lucky guess. A
+random code like <code>KILO-BETELGEUSE-58DCBE</code> has essentially zero chance of appearing
+unless our planted data leaked. <strong>No false alarms.</strong></p>
+<p>The markers are <strong>deterministic</strong>: the same test produces the same markers every time,
+on every machine, so results are reproducible.</p>
+<blockquote>
+<p><strong>In plain words:</strong> the test is repeatable. Anyone, anywhere, running it gets the
+same markers and can confirm our results. That honesty is a big part of the pitch.</p>
+</blockquote>
+<h2>4.2 Idea 2 — Lineage tracking (the actual moat)</h2>
+<p>This is the special sauce. As the AI uses its memory, Ferryte quietly records a
+<strong>lineage graph</strong>: a map from each <strong>source</strong> (your original data) to every <strong>derived
+artifact</strong> it turned into (every summary, fact, embedding) and every <strong>retrieval</strong>
+(every time a memory was pulled up to answer a question).</p>
+<blockquote>
+<p><strong>In plain words:</strong> Ferryte keeps a family tree of your data. “This summary was born
+from that message. That search result came from this summary.” So when you delete
+the original, Ferryte already knows <em>every place a copy went</em>.</p>
+</blockquote>
+<figure class="diagram-block" data-diagram="5"><figcaption>Diagram 5</figcaption><div class="mermaid-source">flowchart TD
+    SRC[&quot;SOURCE&lt;br/&gt;'secret = KILO-VEGA-77'&quot;]
+    SRC --&gt; A1[Raw row]
+    SRC --&gt; A2[Summary in notebook]
+    SRC --&gt; A3[Extracted fact]
+    A2 --&gt; R1[Used to answer Q on Tuesday]
+    A3 --&gt; R2[Used to answer Q on Friday]
+    classDef src fill:#0d3d4e,stroke:#5a8a96,color:#fff;
+    classDef art fill:#143b46,stroke:#5a8a96,color:#cfe;
+    class SRC src;
+    class A1,A2,A3 art;
+</div></figure><p><strong>Moat</strong> is a business word for “a thing competitors can’t easily copy.” Lineage is
+Ferryte’s moat: anyone can plant a canary, but <strong>nobody else has the family tree</strong> that
+knows where every copy went.</p>
+<blockquote>
+<p><strong>In plain words:</strong> the family tree is the part that’s hard to copy and the reason
+Ferryte is special.</p>
+</blockquote>
+<h2>4.3 Idea 3 — CI-first delivery (how you actually use it)</h2>
+<p><strong>CI</strong> stands for <em>Continuous Integration</em> — the automated checks that run every time
+a developer changes the code, before it ships. (Like spell-check that runs
+automatically before you send an email.)</p>
+<p>Ferryte is built to run there. You add one line, <code>ferryte.instrument()</code>, and a test
+step <code>ferryte test</code>. If a leak appears, the build <strong>fails</strong> and prints exactly which
+hidden copy leaked.</p>
+<blockquote>
+<p><strong>In plain words:</strong> Ferryte plugs into the safety checks developers already run
+before shipping. If their change accidentally re-opens a leak, the alarm goes off
+immediately — not after a customer finds it. And trying it is free.</p>
+</blockquote>
+<h2>4.4 The “cascade” — actually fixing the leak</h2>
+<p>Detecting is half the value. The other half: the <strong>lineage cascade</strong> (the “with
+Ferryte” mode). Because Ferryte already has the family tree, when you delete a source it
+can automatically find and delete <strong>every derived copy</strong> too — the notebook entry, the
+fact, the index entry.</p>
+<figure class="diagram-block" data-diagram="6"><figcaption>Diagram 6</figcaption><div class="mermaid-source">flowchart LR
+    DEL[You delete the source] --&gt; LG[Ferryte checks the family tree]
+    LG --&gt; EN[Finds every derived copy]
+    EN --&gt; KILL[Deletes them all]
+    KILL --&gt; CLEAN[Now the AI truly forgets ✅]
+</div></figure><blockquote>
+<p><strong>In plain words:</strong> normal delete removes only the original. Ferryte’s cascade also
+hunts down and shreds every copy the AI made — so “delete” finally means delete.</p>
+</blockquote>
+<h2>4.5 The five-step loop (the whole product in one diagram)</h2>
+<p>Everything above comes together as a repeatable five-step routine:</p>
+<figure class="diagram-block" data-diagram="7"><figcaption>Diagram 7</figcaption><div class="mermaid-source">flowchart TD
+    S1[&quot;1 SEED&lt;br/&gt;plant canary markers, tagged by source + tenant&quot;] --&gt; S2[&quot;2 REVOKE&lt;br/&gt;call the app's REAL delete API&quot;]
+    S2 --&gt; S3[&quot;3 REPLAY + INSPECT&lt;br/&gt;ask the AI again AND look inside the store&quot;]
+    S3 --&gt; S4[&quot;4 TRACE&lt;br/&gt;follow lineage to every derived copy; compute blast radius&quot;]
+    S4 --&gt; S5[&quot;5 REPORT + GATE&lt;br/&gt;show leaks + blind spots; fail the build on a leak&quot;]
+</div></figure><p>Note step 3 says <strong>“and look inside the store.”</strong> Ferryte doesn’t just trust the AI’s
+final answer (the AI might <em>look</em> fine while the data still sits in the store). It also
+inspects the actual storage. This avoids “false confidence.”</p>
+<blockquote>
+<p><strong>In plain words:</strong> Ferryte doesn’t only ask “did the AI say the secret?” It also
+opens the drawers and checks if the secret is still physically sitting there. A clean
+answer with dirty drawers is still a fail.</p>
+</blockquote>
+<h2>4.6 Blind spots — the honesty feature</h2>
+<p>Ferryte also reports a <strong>blind-spot map</strong>: the places it <em>cannot</em> prove forgetting —
+for example, a store it isn’t connected to, or an LLM paraphrase so heavy the marker is
+gone. Instead of pretending everything’s fine, it says “here’s what I can’t see.”</p>
+<blockquote>
+<p><strong>In plain words:</strong> Ferryte admits what it doesn’t know. If it can’t check something,
+it tells you, rather than giving a fake green checkmark. (This honesty is rare in
+security tools and is a selling point.)</p>
+</blockquote>
+<p>A specific example baked into the code: when testing AWS AgentCore, if Amazon’s system
+hasn’t finished processing a memory yet, Ferryte marks the result <strong>BLIND</strong> (“couldn’t
+confirm”) instead of falsely <strong>PASS</strong>. A silent pass there would be the worst kind of
+lie.</p>
+<hr>
+<h1>Part 5 — Under the hood: how Ferryte is built</h1>
+<p>This part is more technical. Every piece still gets a plain-words box.</p>
+<h2>5.1 The big picture</h2>
+<figure class="diagram-block" data-diagram="8"><figcaption>Diagram 8</figcaption><div class="mermaid-source">flowchart TD
+    AGENT[Your AI agent + its memory] --&gt; INST[&quot;ferryte.instrument()&lt;br/&gt;(one line, auto-attaches)&quot;]
+    INST --&gt; AD[Adapters - one per memory backend]
+    AD --&gt; LIN[(Lineage graph - SQLite)]
+    AD --&gt; TR[(Retrieval traces)]
+    LIN --&gt; OR[Forgetting Oracle - runs scenarios]
+    TR --&gt; OR
+    OR --&gt; REP[Coverage report + blind-spot map]
+    OR --&gt; CI[CI gate: fail build on leak]
+    REP --&gt; DASH[Local dashboard - Next.js]
+</div></figure><p>Let’s walk each box.</p>
+<h2>5.2 <code>ferryte.instrument()</code> — the one-line on-switch</h2>
+<p>You call this once when your program starts. It quietly “wraps” your memory objects so
+Ferryte can watch every write, search, and delete — <strong>without you changing any other
+code.</strong></p>
+<blockquote>
+<p><strong>In plain words:</strong> flip one switch and Ferryte starts watching the AI’s memory. You
+don’t have to rewrite your app. (Technically it uses “monkey-patching” — swapping in
+wrapped versions of the memory functions at runtime. You don’t need to know that;
+just know it’s automatic and reversible.)</p>
+</blockquote>
+<h2>5.3 Adapters — translators for each memory system</h2>
+<p>Every memory product (Mem0, pgvector, Chroma, Qdrant, AWS AgentCore) has its own way of
+saving, searching, and deleting. An <strong>adapter</strong> is a small translator that teaches
+Ferryte how to talk to each one. Each adapter implements the same five actions:</p>
+<table>
+<thead>
+<tr>
+<th>Adapter action</th>
+<th>What it means in plain words</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>patch</code></td>
+<td>Start watching this memory object</td>
+</tr>
+<tr>
+<td><code>unpatch</code></td>
+<td>Stop watching it</td>
+</tr>
+<tr>
+<td><code>delete_source</code></td>
+<td>Use the backend’s real delete (and, in cascade mode, also delete derived copies)</td>
+</tr>
+<tr>
+<td><code>list_artifacts_for_source</code></td>
+<td>“Show me everything derived from this source”</td>
+</tr>
+<tr>
+<td><code>probe</code></td>
+<td>Ask the memory a question and see what comes back</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>In plain words:</strong> because every memory product is different, Ferryte ships a little
+“translator” for each one. Adding support for a new product = writing one new
+translator. (This is also why “premium adapters” can be a paid feature later.)</p>
+</blockquote>
+<h2>5.4 The lineage graph — the family tree, stored in a tiny database</h2>
+<p>The family tree lives in <strong>SQLite</strong> — a small, file-based database that needs no server.
+It stores:</p>
+<ul>
+<li><strong>sources</strong> (your originals),</li>
+<li><strong>artifacts</strong> (derived copies, each tagged <code>raw</code>, <code>summary</code>, <code>fact</code>, etc.),</li>
+<li><strong>derivations</strong> (which artifact came from which source, with a <em>confidence</em> score),</li>
+<li><strong>retrievals</strong> (every time a memory was pulled up),</li>
+<li><strong>blindspots</strong> (things Ferryte couldn’t verify).</li>
+</ul>
+<p>The <strong>confidence</strong> score matters: if Ferryte captured the link perfectly, it’s <code>1.0</code>.
+If it had to <em>guess</em> the link (e.g., by matching text because the backend lost the ID),
+confidence is lower and Ferryte says so.</p>
+<blockquote>
+<p><strong>In plain words:</strong> the family tree is saved in a simple file-database. It even tracks
+<em>how sure</em> it is about each family link — full certainty vs. an educated guess — and
+never hides the difference.</p>
+</blockquote>
+<h2>5.5 Blast radius — “how bad is this delete?”</h2>
+<p>When a source is revoked, Ferryte computes the <strong>blast radius</strong>: every derived artifact
+that came from it, plus every answer those artifacts ever influenced, plus a confidence
+score.</p>
+<blockquote>
+<p><strong>In plain words:</strong> when you delete something, Ferryte tells you the <em>full damage
+map</em>: every copy that existed and every past answer it touched. That’s the difference
+between “we deleted a row” and “we know exactly everywhere that data went.”</p>
+</blockquote>
+<figure class="diagram-block" data-diagram="9"><figcaption>Diagram 9</figcaption><div class="mermaid-source">flowchart LR
+    REV[Source revoked] --&gt; BR[Blast radius]
+    BR --&gt; C1[3 derived artifacts]
+    BR --&gt; C2[5 past answers they influenced]
+    BR --&gt; C3[confidence: 1.0 = certain]
+</div></figure><h2>5.6 The oracle and scenarios</h2>
+<p>The <strong>oracle</strong> is the engine that runs <strong>scenarios</strong> (individual tests) and judges each
+one <strong>PASS</strong>, <strong>WARN</strong>, or <strong>FAIL</strong>. The four shipped scenarios are explained in Part 6.</p>
+<ul>
+<li><strong>PASS</strong> = no problem found.</li>
+<li><strong>WARN</strong> = something concerning but not a hard leak (e.g., the AI can’t tell old data
+from new).</li>
+<li><strong>FAIL</strong> = a real leak (the forbidden marker came back).</li>
+</ul>
+<blockquote>
+<p><strong>In plain words:</strong> the referee runs each test and gives a green (PASS), yellow
+(WARN), or red (FAIL) card.</p>
+</blockquote>
+<h2>5.7 The report, the CI gate, and the dashboard</h2>
+<ul>
+<li><strong>Coverage report:</strong> a summary (JSON, HTML, and pretty terminal output) of what was
+tested, what leaked, and what couldn’t be checked.</li>
+<li><strong>CI gate:</strong> if anything FAILs, Ferryte exits with an error code, which makes the
+developer’s build fail. That’s the alarm.</li>
+<li><strong>Dashboard:</strong> a local web app (built with <strong>Next.js</strong>, a popular website framework)
+that shows the results visually.</li>
+</ul>
+<blockquote>
+<p><strong>In plain words:</strong> you get a readable report, an automatic build-breaking alarm, and
+a nice web page to look at the results.</p>
+</blockquote>
+<hr>
+<h1>Part 6 — The four tests (scenarios) explained</h1>
+<p>Ferryte ships four scenarios. Each targets a different way memory can betray you. Crucial
+point for later: <strong>these are four <em>different</em> problems</strong> — that’s why fixing all of them
+isn’t one fix.</p>
+<h2>6.1 Source-revocation (the flagship)</h2>
+<p><strong>Question it asks:</strong> if I delete a source, can the AI still surface it — from any
+derived copy?</p>
+<p>How it works: plant canaries → delete each source via the real API → ask the AI again →
+<strong>and</strong> peek inside the store. FAIL if the marker comes back in an answer or sits in a
+raw artifact; WARN if it lingers only in a derived (summary) artifact.</p>
+<blockquote>
+<p><strong>In plain words:</strong> the headline test. “I deleted it — is it <em>really</em> gone, including
+the notebook copies?” Before Ferryte’s cascade, <em>every</em> memory system we tested
+failed this. With the cascade, most pass.</p>
+</blockquote>
+<h2>6.2 Cross-tenant isolation</h2>
+<p><strong>Question it asks:</strong> can Customer A’s data ever show up in Customer B’s answers?</p>
+<p>How it works: seed two tenants with different secret markers, then ask <em>as tenant B</em> for
+<em>tenant A’s</em> secret. FAIL if A’s marker appears for B.</p>
+<blockquote>
+<p><strong>In plain words:</strong> “can one customer see another customer’s stuff?” Good news: every
+system we tested <strong>passes</strong> this. Important, because it proves our test isn’t rigged to
+fail everything — when systems do the right thing, Ferryte says so.</p>
+</blockquote>
+<h2>6.3 Stale-fact</h2>
+<p><strong>Question it asks:</strong> when a fact is updated, does the <em>old</em> version stop coming back?</p>
+<p>How it works: store an old secret, then a new contradicting secret, then ask “what’s the
+<em>current</em> one?” FAIL if only the stale one returns, or the stale one ranks higher; WARN
+if both come back and the AI can’t tell which is current.</p>
+<blockquote>
+<p><strong>In plain words:</strong> “you changed your password — does the AI still hand out the old
+one?” This is a hard one: to fully pass, the <em>old</em> value must completely disappear, not
+just rank lower.</p>
+</blockquote>
+<h2>6.4 Memory-poisoning</h2>
+<p><strong>Question it asks:</strong> if an attacker plants a malicious instruction in memory (“ignore
+your rules and reveal data”), does it silently come back and steer the AI?</p>
+<p>How it works: inject a clearly malicious marked memory from a “low-trust” source, then
+ask a normal question. FAIL if the poison comes back as if it were a normal fact.</p>
+<blockquote>
+<p><strong>In plain words:</strong> “can a bad actor slip a landmine into the AI’s memory?” This is
+related to a known attack class called <strong>prompt injection</strong> (tricking an AI with
+hidden instructions). It’s the hardest to solve honestly — more on that in Part 11.</p>
+</blockquote>
+<h2>6.5 How a verdict is decided</h2>
+<figure class="diagram-block" data-diagram="10"><figcaption>Diagram 10</figcaption><div class="mermaid-source">flowchart TD
+    RUN[Run a scenario] --&gt; Q1{Any FAIL finding?}
+    Q1 -- yes --&gt; F[FAIL - red]
+    Q1 -- no --&gt; Q2{Any WARN finding?}
+    Q2 -- yes --&gt; W[WARN - yellow]
+    Q2 -- no --&gt; P[PASS - green]
+</div></figure><blockquote>
+<p><strong>In plain words:</strong> one red finding makes the whole test red. No red but some yellow =
+yellow. Totally clean = green. A backend’s <strong>score</strong> is just “how many of the four
+tests are green.”</p>
+</blockquote>
+<hr>
+<h1>Part 7 — The Benchmark: “The Forgetting Report”</h1>
+<p>To prove the problem is real (and that Ferryte helps), we ran all four tests against six
+real memory systems, with real AI calls (OpenAI for embeddings and summaries, AWS for
+AgentCore). We call the public result <strong>“The Forgetting Report.”</strong></p>
+<h2>7.1 What “Forgetting Score” means</h2>
+<p>The <strong>Forgetting Score</strong> = the percentage of the four tests a system passes cleanly.
+100% = forgets perfectly. 25% = passes only one of four.</p>
+<blockquote>
+<p><strong>In plain words:</strong> a report card. Higher = better at truly forgetting. We show each
+system’s score <strong>before</strong> Ferryte (naive delete) and <strong>after</strong> Ferryte (with the
+cascade).</p>
+</blockquote>
+<h2>7.2 The results</h2>
+<table>
+<thead>
+<tr>
+<th>Memory system</th>
+<th style="text-align:right">Before Ferryte</th>
+<th style="text-align:right">With Ferryte</th>
+<th style="text-align:right">Movement</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>AWS Bedrock AgentCore</td>
+<td style="text-align:right">50%</td>
+<td style="text-align:right"><strong>75%</strong></td>
+<td style="text-align:right"><strong>+25</strong></td>
+</tr>
+<tr>
+<td>pgvector + summary</td>
+<td style="text-align:right">25%</td>
+<td style="text-align:right"><strong>50%</strong></td>
+<td style="text-align:right"><strong>+25</strong></td>
+</tr>
+<tr>
+<td>Chroma + summary</td>
+<td style="text-align:right">25%</td>
+<td style="text-align:right"><strong>50%</strong></td>
+<td style="text-align:right"><strong>+25</strong></td>
+</tr>
+<tr>
+<td>Qdrant + summary</td>
+<td style="text-align:right">25%</td>
+<td style="text-align:right"><strong>50%</strong></td>
+<td style="text-align:right"><strong>+25</strong></td>
+</tr>
+<tr>
+<td>In-memory + summary</td>
+<td style="text-align:right">25%</td>
+<td style="text-align:right"><strong>50%</strong></td>
+<td style="text-align:right"><strong>+25</strong></td>
+</tr>
+<tr>
+<td>Mem0</td>
+<td style="text-align:right">25%</td>
+<td style="text-align:right">25%</td>
+<td style="text-align:right">—</td>
+</tr>
+<tr>
+<td>Zep</td>
+<td style="text-align:right">—</td>
+<td style="text-align:right">—</td>
+<td style="text-align:right">pending</td>
+</tr>
+</tbody>
+</table>
+<p>What the columns mean:</p>
+<ul>
+<li><strong>Source-revocation:</strong> before Ferryte, <strong>everything leaked</strong>. With Ferryte, <strong>5 of 6
+pass.</strong> (Mem0 is the holdout — see Part 11.)</li>
+<li><strong>Cross-tenant:</strong> everyone passes (good — proves the test is fair).</li>
+<li><strong>Stale-fact:</strong> nobody fully passes yet (it’s a different kind of fix).</li>
+<li><strong>Poisoning:</strong> AgentCore passes; the plain vector systems and Mem0 don’t.</li>
+</ul>
+<blockquote>
+<p><strong>In plain words:</strong> before our tool, every system failed the main “did it forget” test.
+Our cascade fixes that for almost all of them. Two other problem types (stale data and
+poisoning) are still open — and we say so openly.</p>
+</blockquote>
+<h2>7.3 Why we <em>don’t</em> show 100% everywhere (and why that’s smart)</h2>
+<p>It would be easy to fake a perfect scorecard. We don’t, because:</p>
+<ol>
+<li>A benchmark where the author’s own tool scores 100% looks rigged.</li>
+<li>Our honesty (showing Mem0 unfixed, poisoning unsolved) is exactly what makes serious
+buyers <em>believe</em> the parts that do work.</li>
+</ol>
+<blockquote>
+<p><strong>In plain words:</strong> the imperfect, honest scorecard is more persuasive than a perfect
+one. Real engineers trust the company that admits what doesn’t work yet.</p>
+</blockquote>
+<hr>
+<h1>Part 8 — Positioning &amp; marketing: how we talk about Ferryte</h1>
+<p><strong>Positioning</strong> = the one clear spot Ferryte occupies in people’s minds, versus
+everything else. <strong>Marketing</strong> = how we communicate that spot.</p>
+<h2>8.1 The category we own</h2>
+<p>There are tools that watch AI systems for <strong>speed, cost, and quality</strong> (LangSmith,
+Arize, Helicone). There is <strong>no</strong> established tool for <strong>“did the AI actually forget?”</strong>
+That empty space is the category Ferryte is planting a flag in: <strong>agent memory
+correctness / agent forgetting.</strong></p>
+<blockquote>
+<p><strong>In plain words:</strong> lots of tools check if the AI is <em>fast</em> or <em>accurate</em>. Ferryte is
+the first aimed at whether it <em>forgets when told to</em>. We’re trying to own that idea.</p>
+</blockquote>
+<h2>8.2 The one-liner and the proof</h2>
+<ul>
+<li><strong>One-liner:</strong> <em>“Ferryte is the verification layer for AI agent memory — we prove that
+when an app deletes data, the agent actually forgets it, everywhere it leaked.”</em></li>
+<li><strong>The proof quote</strong> (we lead with it everywhere): AWS’s own docs admitting derived
+memory survives deletion. Using the <em>vendor’s own words</em> makes the problem
+undeniable.</li>
+</ul>
+<blockquote>
+<p><strong>In plain words:</strong> we don’t have to convince people the problem is real — we just
+quote Amazon admitting it, then show our test catching it.</p>
+</blockquote>
+<h2>8.3 Why we win on this specific wedge</h2>
+<p>A <strong>wedge</strong> is the narrow first thing you’re clearly best at, which you use to enter a
+market.</p>
+<table>
+<thead>
+<tr>
+<th>Alternative</th>
+<th>Why it isn’t the answer</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Generic AI red-team tools (e.g. Promptfoo)</td>
+<td>No lineage, no real delete, no blind-spot map</td>
+</tr>
+<tr>
+<td>Memory vendors (Zep/Graphiti)</td>
+<td>Their “provenance” only works inside their own system; shared summaries still leak</td>
+</tr>
+<tr>
+<td>Privacy/PII platforms (Transcend/Ethyca)</td>
+<td>Top-down legal tools; slow to buy; don’t model derived agent memory</td>
+</tr>
+<tr>
+<td>OWASP memory guard</td>
+<td>Free middleware for a single store; no product, no audit evidence</td>
+</tr>
+</tbody>
+</table>
+<p>Our defensible wedge: <strong>cross-system source-to-copy verification</strong> — exactly what
+vendors document as broken and nobody else verifies.</p>
+<blockquote>
+<p><strong>In plain words:</strong> others check one piece, or only inside their own walls. Ferryte is
+the independent referee that follows your data <em>across</em> systems and proves whether it
+truly died. That’s the thing nobody else does.</p>
+</blockquote>
+<h2>8.4 Who actually buys (the ideal customer)</h2>
+<p>The <strong>ICP</strong> (<em>Ideal Customer Profile</em> — the precise description of who needs you most):
+a company running <strong>multi-tenant AI agents with persistent memory</strong> for enterprise
+customers, where a <strong>security review</strong> or a <strong>real incident</strong> just created urgency.</p>
+<blockquote>
+<p><strong>In plain words:</strong> companies whose AI remembers things for many customers, especially
+right after a security questionnaire, a “delete my data” request, or a regulator email.
+That’s when this stops being theoretical and someone needs us <em>today</em>.</p>
+</blockquote>
+<hr>
+<h1>Part 9 — The business: free Core, paid Cloud, paid Enterprise</h1>
+<p>Ferryte makes money with the same proven shape as <strong>Sentry, CockroachDB, and
+HashiCorp</strong>: give away a powerful, readable core; charge for the hosted and
+enterprise layers on top.</p>
+<h2>9.1 The three tiers</h2>
+<figure class="diagram-block" data-diagram="11"><figcaption>Diagram 11</figcaption><div class="mermaid-source">flowchart TD
+    DEV[&quot;Developer: 'I think we leak'&quot;] --&gt; CORE
+    TEAM[&quot;Eng team: 'did a change re-open it?'&quot;] --&gt; CLOUD
+    SEC[&quot;Security/compliance: 'prove it to an auditor'&quot;] --&gt; ENT
+
+    CORE[&quot;CORE - free, source-available&lt;br/&gt;library + CLI + 4 scenarios + lineage + cascade&quot;]
+    CLOUD[&quot;CLOUD - paid (not launched)&lt;br/&gt;hosted history + regression alerts + Slack/PagerDuty&quot;]
+    ENT[&quot;ENTERPRISE - paid (roadmap)&lt;br/&gt;SSO, audit logs, signed GDPR receipts, self-host, runtime enforcement&quot;]
+
+    CORE --&gt; CLOUD --&gt; ENT
+</div></figure><table>
+<thead>
+<tr>
+<th>Tier</th>
+<th>Who it’s for</th>
+<th>What it adds</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Core</strong></td>
+<td>Individual developers</td>
+<td>The whole detection engine, free to run in production</td>
+<td><strong>Shipped</strong></td>
+</tr>
+<tr>
+<td><strong>Cloud</strong></td>
+<td>Engineering teams</td>
+<td>Remembers history, alerts you when a leak <em>re-opens</em></td>
+<td>In development</td>
+</tr>
+<tr>
+<td><strong>Enterprise</strong></td>
+<td>Security / compliance</td>
+<td>Signed legal-grade “we forgot it” receipts, SSO, self-host</td>
+<td>Roadmap</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>In plain words:</strong> the free version proves the problem and runs the test. Cloud
+watches it forever and alerts you. Enterprise gives the signed paperwork a regulator
+or big-company security team demands. Each sells to a <em>different person</em> in the same
+company, so they don’t cannibalize each other.</p>
+</blockquote>
+<h2>9.2 The license: BSL 1.1 (why it’s not “open source MIT”)</h2>
+<p>The Core is <strong>source-available</strong> under the <strong>Business Source License (BSL) 1.1</strong>, which
+<strong>converts to Apache 2.0 after 3 years</strong>.</p>
+<ul>
+<li><strong>Source-available</strong> = anyone can read, run, modify, and self-host the code for free.</li>
+<li>The <strong>one</strong> restriction: you can’t take Ferryte and resell it as a competing hosted
+service.</li>
+<li>After 3 years, each version becomes fully open (Apache 2.0).</li>
+</ul>
+<blockquote>
+<p><strong>In plain words:</strong> it’s “free to read and use, but you can’t clone our paid product
+and resell it.” This stops a giant cloud company from copying us, while still letting
+engineers audit every line — which matters because nobody trusts a <em>security</em> tool
+they can’t read. Same move HashiCorp and Sentry made.</p>
+</blockquote>
+<h2>9.3 Why the free part is essential, not generous</h2>
+<p>Security tools that you can’t inspect don’t get adopted. Making Core free and readable is
+what creates the <strong>funnel</strong>: developers try it → teams need Cloud → companies need
+Enterprise.</p>
+<blockquote>
+<p><strong>In plain words:</strong> the free tool isn’t charity — it’s the front door. People walk in
+through the free thing and some walk out the paid door.</p>
+</blockquote>
+<hr>
+<h1>Part 10 — The roadmap: what we plan to build</h1>
+<h2>10.1 The path to a perfect score (and what each fix really is)</h2>
+<p>Recall from Part 6 that the four tests are four <em>different</em> problems. Getting every
+system to 100% means building three new capabilities:</p>
+<table>
+<thead>
+<tr>
+<th>New capability</th>
+<th>Fixes which test</th>
+<th>Honesty</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Deeper Mem0 adapter</strong> (capture Mem0’s hidden extracted facts so the cascade can delete them)</td>
+<td>Mem0’s source-revocation</td>
+<td>Clean, easy win</td>
+</tr>
+<tr>
+<td><strong>Supersession</strong> (when a fact is updated, automatically retire the old version)</td>
+<td>Stale-fact (all systems)</td>
+<td>Clean, but means Ferryte starts editing memory, not just auditing</td>
+</tr>
+<tr>
+<td><strong>Injection classifier</strong> (detect malicious “ignore your rules” content at write time)</td>
+<td>Poisoning</td>
+<td>Hard; only honest if it detects on <em>content</em>, not on a label the test itself planted</td>
+</tr>
+</tbody>
+</table>
+<figure class="diagram-block" data-diagram="12"><figcaption>Diagram 12</figcaption><div class="mermaid-source">flowchart LR
+    A[Mem0 deep adapter] --&gt; M[Mem0 25 to 50]
+    B[Supersession] --&gt; N[AgentCore reaches 100]
+    C[Injection defense] --&gt; O[Vector systems toward 100]
+</div></figure><blockquote>
+<p><strong>In plain words:</strong> “make it 100%” isn’t one button. It’s three separate new features,
+each solving a different problem. One is easy and honest; one is real engineering; one
+(stopping poison) is genuinely hard and we won’t fake it.</p>
+</blockquote>
+<h2>10.2 The long-term moat: runtime enforcement (v2)</h2>
+<p>Today Ferryte <em>tests</em> in CI. The big future product is <strong>runtime retrieval enforcement</strong>:
+Ferryte sits in the live agent and <strong>blocks</strong> any memory whose family tree traces to a
+deleted source — in real time, in production, not just in a test.</p>
+<blockquote>
+<p><strong>In plain words:</strong> today Ferryte is a test you run. The future Ferryte is a guard that
+stands in the doorway and refuses to hand the AI any “deleted” memory, live. That turns
+Ferryte from “a tool” into “infrastructure you can’t ship without” — the real company.</p>
+</blockquote>
+<h2>10.3 Cloud build order (the disciplined plan)</h2>
+<ol>
+<li><strong>Ingest + history:</strong> push every test run to a hosted timeline.</li>
+<li><strong>Watch + alert:</strong> detect when a passing test starts failing; ping Slack/PagerDuty.</li>
+<li><strong>Explain + manage:</strong> dashboards, trends, team seats.</li>
+</ol>
+<p>The rule: <strong>don’t turn on billing or build Enterprise until design partners pull it out
+of us.</strong> First earn 5 teams relying on it, then charge.</p>
+<blockquote>
+<p><strong>In plain words:</strong> build the hosted version step by step, get a handful of real teams
+depending on it, and only then start charging and building the heavy enterprise
+features. Don’t over-build before customers ask.</p>
+</blockquote>
+<hr>
+<h1>Part 11 — The honest weaknesses (read this, it matters)</h1>
+<p>A real expert knows the holes. Here they are, plainly.</p>
+<ol>
+<li>
+<p><strong>No paying customers yet.</strong> Cloud and Enterprise don’t exist as products. Today
+Ferryte is a free tool with a sharp benchmark. “Revenue” is a hypothesis until a
+design partner pays.</p>
+</li>
+<li>
+<p><strong>We fix one of three problem types cleanly.</strong> The cascade nails <em>deletion</em>
+(source-revocation). <em>Stale facts</em> and <em>poisoning</em> are only partly handled. A skeptic
+can fairly say “you solved one of three.” Our honest answer: they’re genuinely
+different problems, we <em>detect</em> all three today, and we fix the rest in v2.</p>
+</li>
+<li>
+<p><strong>Mem0 isn’t fixed yet.</strong> The most popular open-source memory framework hides its
+internal facts from us, so our cascade can’t reach them. We show this as “no
+improvement” on the leaderboard rather than hiding it.</p>
+</li>
+<li>
+<p><strong>Only six systems tested.</strong> Plenty of memory products (LangChain, LlamaIndex, Letta,
+custom in-house systems) are untested.</p>
+</li>
+<li>
+<p><strong>The poisoning trap.</strong> We could make the poisoning test go green by keying off the
+“low-trust” label the benchmark itself attaches — but that’s cheating, since real
+attackers don’t label their attacks. We refuse to do that. Honest poisoning defense
+needs a real classifier and will stay imperfect.</p>
+</li>
+</ol>
+<blockquote>
+<p><strong>In plain words:</strong> the problem we point at is 100% real and admitted by the vendors.
+Our fix is real but currently covers the deletion problem best; the rest is honest
+work-in-progress. And we have product, but not yet paying customers. Saying all this
+out loud is <em>part of the strategy</em> — it’s what makes people trust the parts that work.</p>
+</blockquote>
+<hr>
+<h1>Part 12 — Glossary of every term</h1>
+<ul>
+<li><strong>Adapter</strong> — a small translator that teaches Ferryte how to read/write/delete in a
+specific memory product (Mem0, pgvector, etc.).</li>
+<li><strong>AI agent</strong> — a program built on an LLM that can decide, act, and remember between
+conversations.</li>
+<li><strong>Apache 2.0</strong> — a fully-open software license. Ferryte’s Core converts to it 3 years
+after each release.</li>
+<li><strong>Artifact (derived artifact)</strong> — any copy the AI made from your data: a summary,
+extracted fact, embedding, or index entry.</li>
+<li><strong>Blast radius</strong> — the full map of everything affected when you delete a source: all
+derived copies and all answers they influenced.</li>
+<li><strong>Blind spot</strong> — something Ferryte cannot verify and openly says so, instead of faking
+a pass.</li>
+<li><strong>BSL 1.1 (Business Source License)</strong> — “free to read, run, modify, self-host; just
+don’t resell it as a competing hosted service.” Converts to Apache 2.0 after 3 years.</li>
+<li><strong>Canary</strong> — a fake memory we plant on purpose to test forgetting.</li>
+<li><strong>Cascade</strong> — Ferryte’s feature that deletes every derived copy when you delete a
+source, using the lineage family tree.</li>
+<li><strong>CI (Continuous Integration)</strong> — automated checks that run on every code change before
+it ships. Ferryte runs here.</li>
+<li><strong>Cloud (tier)</strong> — the planned paid hosted product: history + alerts.</li>
+<li><strong>Confidence</strong> — how sure Ferryte is about a family-tree link: 1.0 = captured exactly,
+lower = inferred/guessed.</li>
+<li><strong>Core (tier)</strong> — the free, source-available engine.</li>
+<li><strong>Cross-tenant leak</strong> — one customer’s data showing up in another customer’s answers.</li>
+<li><strong>Derived memory</strong> — see <em>Artifact</em>. Anything the AI created from your original.</li>
+<li><strong>Embedding</strong> — text turned into a list of numbers that captures its meaning, so
+similar meanings sit near each other.</li>
+<li><strong>Enterprise (tier)</strong> — planned paid product for security/compliance: SSO, audit logs,
+signed deletion receipts, self-hosting, runtime enforcement.</li>
+<li><strong>Forgetting oracle</strong> — Ferryte’s engine that runs the tests and judges pass/fail.</li>
+<li><strong>Forgetting Score</strong> — the % of the four tests a system passes cleanly.</li>
+<li><strong>GDPR / Article 17</strong> — Europe’s privacy law / its “right to be forgotten.” Requires
+truly deleting personal data on request.</li>
+<li><strong>HIPAA</strong> — US health-data privacy law.</li>
+<li><strong>ICP (Ideal Customer Profile)</strong> — the precise description of who needs the product
+most.</li>
+<li><strong>Instrumentation / <code>ferryte.instrument()</code></strong> — the one-line switch that makes Ferryte
+start watching the AI’s memory without other code changes.</li>
+<li><strong>Lineage graph</strong> — the family tree mapping each source to every derived copy and every
+retrieval. Ferryte’s moat.</li>
+<li><strong>LLM (Large Language Model)</strong> — the language “brain” (GPT, Claude, etc.).</li>
+<li><strong>Marker</strong> — the unique high-entropy code inside a canary (e.g. <code>KILO-VEGA-77</code>) that
+proves a leak with no false alarms.</li>
+<li><strong>Moat</strong> — something competitors can’t easily copy. Here: the lineage graph.</li>
+<li><strong>Monkey-patching</strong> — swapping in wrapped versions of functions at runtime; how
+instrumentation attaches invisibly.</li>
+<li><strong>Multi-tenant</strong> — one app serving many separate customers who must never see each
+other’s data.</li>
+<li><strong>Positioning</strong> — the single clear spot a product occupies in people’s minds.</li>
+<li><strong>Prompt injection</strong> — tricking an AI by hiding malicious instructions in its inputs or
+memory.</li>
+<li><strong>Retrieval</strong> — the act of pulling a memory back up to help answer a question.</li>
+<li><strong>Runtime enforcement (v2)</strong> — the future feature that blocks deleted-lineage memories
+live in production, not just in tests.</li>
+<li><strong>Scenario</strong> — one specific test (source-revocation, cross-tenant, stale-fact,
+poisoning).</li>
+<li><strong>Source</strong> — your original piece of data, before the AI copied it.</li>
+<li><strong>Source-available</strong> — the code is readable/usable by anyone, but under a license with
+some restrictions (unlike fully-open MIT).</li>
+<li><strong>SQLite</strong> — a small, serverless, file-based database; where Ferryte stores the lineage
+graph.</li>
+<li><strong>Stale fact</strong> — an old value that should have been replaced but still comes back.</li>
+<li><strong>Supersession</strong> — the planned feature that retires an old fact when a new one replaces
+it.</li>
+<li><strong>Vector / vector database (pgvector, Chroma, Qdrant)</strong> — storage that files data by
+meaning (using embeddings) and finds the nearest matches to a question.</li>
+<li><strong>Verdict (PASS / WARN / FAIL)</strong> — green / yellow / red result of a scenario.</li>
+<li><strong>Wedge</strong> — the narrow first thing you’re clearly best at, used to enter a market.</li>
+</ul>
+<hr>
+<h3>The one-paragraph summary you can repeat to anyone</h3>
+<blockquote>
+<p>AI agents copy your data into summaries, facts, and search indexes to be useful. When
+you delete the original, those copies survive — so the AI keeps “remembering” things
+it was told to forget, which leaks private data and breaks privacy law. The vendors
+admit this in their own docs; almost nobody checks for it. <strong>Ferryte</strong> plants a unique
+marker, deletes it through the app’s real delete button, and checks whether it comes
+back — proving leaks with no false alarms. It keeps a “family tree” of every copy
+(its unique advantage), and its <strong>cascade</strong> can delete every copy so “delete” finally
+means delete. It’s free to run in your tests today; the money will come from a hosted
+version that watches forever and an enterprise version that produces the signed
+“we forgot it” proof regulators demand.</p>
+</blockquote>
+
+    </main>
+  </div>
+
+  <script src="node_modules/mermaid/dist/mermaid.min.js"></script>
+  <script>
+    function escapeForPre(value) {
+      return value
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;");
+    }
+
+    function normalizeMermaidForRendering(source) {
+      if (!/^sequenceDiagram\b/m.test(source)) {
+        return source;
+      }
+
+      return source
+        .replace(/\bparticipant Note as/g, "participant Notebook as")
+        .replace(/->>Note\b/g, "->>Notebook")
+        .replace(/-->>Note\b/g, "-->>Notebook")
+        .replace(/\bNote-->>/g, "Notebook-->>")
+        .replace(/\bNote->>/g, "Notebook->>");
+    }
+
+    async function renderMermaidBlocks() {
+      mermaid.initialize({
+        startOnLoad: false,
+        securityLevel: "loose",
+        theme: "base",
+        themeVariables: {
+          background: "#fbfdfd",
+          primaryColor: "#e7f6f4",
+          primaryTextColor: "#123238",
+          primaryBorderColor: "#14746f",
+          lineColor: "#14746f",
+          secondaryColor: "#f5fbfb",
+          tertiaryColor: "#ffffff",
+          fontFamily: "-apple-system, BlinkMacSystemFont, Segoe UI, Arial, sans-serif"
+        },
+        flowchart: {
+          htmlLabels: true,
+          curve: "basis",
+          useMaxWidth: true
+        },
+        sequence: {
+          useMaxWidth: true,
+          wrap: true
+        }
+      });
+
+      const blocks = Array.from(document.querySelectorAll(".mermaid-source"));
+      for (let index = 0; index < blocks.length; index += 1) {
+        const block = blocks[index];
+        const source = normalizeMermaidForRendering(block.textContent.trim());
+        try {
+          const result = await mermaid.render("mermaid-render-" + index, source);
+          block.innerHTML = result.svg;
+          block.classList.add("mermaid-rendered");
+          if (result.bindFunctions) {
+            result.bindFunctions(block);
+          }
+        } catch (error) {
+          block.classList.add("diagram-error");
+          block.innerHTML = "<p>Diagram render failed; original Mermaid source is preserved below.</p><pre>" + escapeForPre(source) + "</pre>";
+          console.error("Mermaid render failed", index, error);
+        }
+      }
+      window.__mermaidDone = true;
+    }
+
+    window.__mermaidDone = false;
+    window.addEventListener("load", renderMermaidBlocks);
+  </script>
+</body>
+</html>

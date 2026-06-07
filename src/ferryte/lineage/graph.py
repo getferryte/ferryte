@@ -56,6 +56,26 @@ class LineageGraph:
             metadata=retrieval.metadata,
         )
 
+    def record_action(
+        self,
+        *,
+        action_id: str,
+        kind: str,
+        artifact_ids: Iterable[str],
+        tenant_id: str | None = None,
+        detail: dict[str, Any] | None = None,
+    ) -> None:
+        self.store.record_action(
+            action_id=action_id,
+            kind=kind,
+            artifact_ids=artifact_ids,
+            tenant_id=tenant_id,
+            detail=detail,
+        )
+
+    def actions_consuming_source(self, source_id: str) -> list[dict[str, Any]]:
+        return self.store.actions_consuming_source(source_id)
+
     def record_blindspot(self, *, backend: str, kind: str, detail: str) -> None:
         self.store.record_blindspot(backend=backend, kind=kind, detail=detail)
 
@@ -108,7 +128,11 @@ def get_lineage(path: Path | None = None) -> LineageGraph:
     if _LINEAGE is None:
         cfg = get_config()
         cfg.ensure_dirs()
-        store = LineageStore(path or cfg.resolved_db_path())
+        store = LineageStore(
+            path or cfg.resolved_db_path(),
+            fingerprint_mode=getattr(cfg, "fingerprint_mode", False),
+            fingerprint_salt=getattr(cfg, "fingerprint_salt", None),
+        )
         _LINEAGE = LineageGraph(store)
     return _LINEAGE
 
