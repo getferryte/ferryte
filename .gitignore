@@ -55,3 +55,8 @@ yarn-error.log*
 /launch/cloud_enterprise_plan.md
 /launch/memory_landscape.md
 /launch/report_launch_kit.md
+/launch/ferryte_the_business_book.md
+# The complete guide is being kept internal for now (removed from the public repo)
+/launch/ferryte_the_complete_guide.md
+/launch/ferryte_the_complete_guide_readable.pdf
+/launch/ferryte_pdf_build/
