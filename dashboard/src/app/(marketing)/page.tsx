@@ -142,12 +142,12 @@ function ScrollCue() {
 
 function Compatibility() {
   const items: Array<{ name: string; status: "stable" | "beta" | "planned" }> = [
-    { name: "Mem0", status: "stable" },
     { name: "pgvector / Chroma / Qdrant", status: "stable" },
     { name: "AWS AgentCore", status: "beta" },
     { name: "Zep", status: "beta" },
     { name: "Letta", status: "beta" },
     { name: "Cloudflare Agents", status: "beta" },
+    { name: "Mem0", status: "stable" },
     { name: "LangGraph", status: "planned" },
   ];
   const tone = {

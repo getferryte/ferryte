@@ -70,7 +70,7 @@ const STEPS = [
   {
     num: "01",
     title: "Instrument",
-    body: "One line — ferryte.instrument(). Auto-patches Mem0 and the generic vector base at construction time. Subclass it for pgvector, Chroma, Qdrant. Your agent code does not change.",
+    body: "One line — ferryte.instrument(). Auto-patches your memory client at construction time — the generic vector base, AgentCore, Zep, Letta, Cloudflare, Mem0 — plus subclasses for pgvector, Chroma, Qdrant. Your agent code does not change.",
     code: `import ferryte
 ferryte.instrument()
 
@@ -334,13 +334,13 @@ function WhatItProves() {
 /* ----------------------------------------------- Stack */
 
 const STACK = [
-  { name: "Mem0", status: "stable", body: "First-class adapter, auto-patch on construction. Verified live: forgets cleanly." },
   { name: "Vector stores", status: "stable", body: "Generic vector base ships today. Subclass for pgvector, Chroma, Qdrant." },
-  { name: "Custom stores", status: "stable", body: "Implement the 80-line MemoryAdapter protocol." },
-  { name: "AWS AgentCore", status: "beta", body: "Verified live: derived records survive DeleteEvent — the cascade closes it." },
+  { name: "AWS AgentCore", status: "beta", body: "Verified live: derived records survive DeleteEvent — the cascade closes it (50% → 75%)." },
   { name: "Zep", status: "beta", body: "Captures episodes + graph facts; cascades shared-node summaries on revoke." },
   { name: "Letta", status: "beta", body: "Archival passages + derived summaries. Shipped in Core." },
   { name: "Cloudflare Agents", status: "beta", body: "Vectorize-backed memory. Shipped in Core." },
+  { name: "Custom stores", status: "stable", body: "Implement the 80-line MemoryAdapter protocol." },
+  { name: "Mem0", status: "stable", body: "Auto-patch on construction. Verified live: forgets cleanly — Ferryte proves it." },
   { name: "LangGraph", status: "planned", body: "Tracing hooks on the roadmap." },
 ];
 
