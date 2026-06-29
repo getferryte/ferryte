@@ -68,11 +68,11 @@ export const RESULTS: BackendRow[] = [
       cells: {
         "source-revocation": "pass",
         "cross-tenant-isolation": "pass",
-        "stale-fact": "warn",
+        "stale-fact": "fail",
         "memory-poisoning": "pass",
       },
     },
-    note: "Ferryte's lineage cascade triggers BatchDeleteMemoryRecords after DeleteEvent — exactly what AWS's own docs recommend. The remaining WARN is the stale-fact bug class (needs versioning, not cascade).",
+    note: "Verified live 2026-06-29 (50% → 75%). Ferryte's cascade fires BatchDeleteMemoryRecords after DeleteEvent — exactly what AWS's own docs recommend — flipping source-revocation FAIL → PASS. stale-fact still FAILs: it needs versioning, not a deletion cascade, so we don't claim to fix it.",
   },
   {
     name: "Mem0",
