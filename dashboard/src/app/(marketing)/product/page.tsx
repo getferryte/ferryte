@@ -267,6 +267,7 @@ const COVERED = [
   "Cross-tenant isolation — tenant A receiving markers planted only in tenant B.",
   "Stale-fact overwrite — old fact persisting after the canonical update.",
   "Memory poisoning — adversarial writes (ASI06) surviving normal cleanup.",
+  "Mosaic reassembly — a secret split across sources that recombines after deletion.",
 ];
 
 const HONEST = [
@@ -333,11 +334,13 @@ function WhatItProves() {
 /* ----------------------------------------------- Stack */
 
 const STACK = [
-  { name: "Mem0", status: "stable", body: "First-class adapter. Auto-patch on construction." },
+  { name: "Mem0", status: "stable", body: "First-class adapter, auto-patch on construction. Verified live: forgets cleanly." },
   { name: "Vector stores", status: "stable", body: "Generic vector base ships today. Subclass for pgvector, Chroma, Qdrant." },
   { name: "Custom stores", status: "stable", body: "Implement the 80-line MemoryAdapter protocol." },
-  { name: "Zep", status: "planned", body: "Built with the design-partner cohort." },
-  { name: "AWS AgentCore", status: "planned", body: "Built with the design-partner cohort." },
+  { name: "AWS AgentCore", status: "beta", body: "Verified live: derived records survive DeleteEvent — the cascade closes it." },
+  { name: "Zep", status: "beta", body: "Captures episodes + graph facts; cascades shared-node summaries on revoke." },
+  { name: "Letta", status: "beta", body: "Archival passages + derived summaries. Shipped in Core." },
+  { name: "Cloudflare Agents", status: "beta", body: "Vectorize-backed memory. Shipped in Core." },
   { name: "LangGraph", status: "planned", body: "Tracing hooks on the roadmap." },
 ];
 

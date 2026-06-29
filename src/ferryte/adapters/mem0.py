@@ -15,6 +15,7 @@ explicitly or rely on the surrounding ``ferryte.tag(...)`` context.
 
 from __future__ import annotations
 
+import re
 import uuid
 from collections.abc import Iterable
 from typing import Any
@@ -22,6 +23,11 @@ from typing import Any
 from ..context import current_context
 from ..lineage import get_lineage
 from .base import AdapterCapability, BackendKind, RetrievalRecord, WriteRecord
+
+# Canary-style high-entropy markers (e.g. KILO-VEGA-7A3F1C, ZEBRA-1BDBA3).
+# Used by the cascade to find *derived/merged* memories that still encode a
+# revoked source's secret but whose id was never returned at write time.
+_MARKER_RE = re.compile(r"[A-Z0-9]{2,}(?:-[A-Z0-9]+)+")
 
 
 class Mem0Adapter:
@@ -169,18 +175,32 @@ class Mem0Adapter:
     def delete_source(
         self, client: Any, *, source_id: str, tenant_id: str | None = None
     ) -> int:
+        """Forget everything derived from ``source_id``.
+
+        Two layers, deliberately separated so the benchmark's before/after is
+        honest:
+
+        * **Baseline (any competent app, no Ferryte cascade):** delete the memory
+          ids Mem0 returned for this source at write time. Mem0 forgets *these*
+          cleanly — verified 10/10 in ``benchmark/mem0_scalp.py`` — so this is
+          NOT a leak and the baseline must reflect it. (We capture those ids via
+          the shipped ``add`` patch, i.e. the same mapping any user gets back
+          from ``add()`` and would store keyed by their source.)
+        * **Ferryte cascade (the real lift):** additionally re-scan the live
+          store for *derived/merged* memories that still encode the source's
+          high-entropy markers but whose ids were never returned at write time —
+          Mem0 consolidates facts across writes, so deleting only the captured
+          id can miss these. This is where Ferryte beats a careful manual user.
+        """
         lineage = get_lineage()
         lineage.mark_source_revoked(source_id)
 
-        # Naive baseline: without the lineage-driven cascade there is no
-        # source→derived-fact mapping, so Mem0's extracted facts can't be
-        # targeted and survive the delete (the leak Ferryte exists to close).
-        if not getattr(self, "cascade_derived", True):
-            return 0
-
         delete = getattr(client, "delete", None)
-        # De-dupe; a source can fan out into several derived facts.
-        ids = list(dict.fromkeys(a["artifact_id"] for a in lineage.artifacts_for_source(source_id)))
+        records = list(lineage.artifacts_for_source(source_id))
+
+        # Baseline: delete the captured write-time ids (de-duped; a source can
+        # fan out into several extracted facts).
+        ids = list(dict.fromkeys(r["artifact_id"] for r in records))
         n = 0
         for aid in ids:
             if delete is None:
@@ -190,7 +210,67 @@ class Mem0Adapter:
             if self._delete_one(delete, aid, lineage):
                 lineage.mark_artifact_deleted(aid)
                 n += 1
+
+        # Ferryte cascade: catch derived/merged survivors by marker re-scan.
+        if getattr(self, "cascade_derived", True):
+            n += self._cascade_markers(client, records, tenant_id, lineage)
         return n
+
+    def _cascade_markers(
+        self, client: Any, records: list[dict[str, Any]], tenant_id: str | None, lineage: Any
+    ) -> int:
+        """Delete any live memory still encoding one of the source's markers."""
+        delete = getattr(client, "delete", None)
+        if delete is None:
+            return 0
+        markers: list[str] = []
+        for r in records:
+            markers.extend(_MARKER_RE.findall(r.get("content") or ""))
+        markers = list(dict.fromkeys(markers))
+        if not markers:
+            return 0
+        seen: set[str] = set()
+        n = 0
+        for marker in markers:
+            for hit in self._search_marker(client, marker, tenant_id):
+                hid = str(hit.get("id") or "")
+                text = str(hit.get("memory") or hit.get("text") or hit.get("content") or "")
+                if not hid or hid in seen or marker not in text:
+                    continue
+                seen.add(hid)
+                if self._delete_one(delete, hid, lineage):
+                    lineage.mark_artifact_deleted(hid)
+                    n += 1
+        return n
+
+    def _search_marker(self, client: Any, marker: str, tenant_id: str | None) -> list[dict[str, Any]]:
+        """Best-effort lookup of live memories matching a marker, tolerating the
+        mem0 2.x ``filters=`` surface, the legacy ``user_id=`` surface, and
+        ``get_all`` as a fallback."""
+        search = getattr(client, "search", None)
+        for attempt in (
+            lambda: search(marker, user_id=tenant_id) if search else None,
+            lambda: search(marker, filters={"user_id": tenant_id}) if search else None,
+            lambda: search(marker) if search else None,
+        ):
+            try:
+                hits = _iter_hits(attempt())
+            except Exception:  # noqa: BLE001 - try the next shape
+                continue
+            if hits:
+                return hits
+        get_all = getattr(client, "get_all", None)
+        for attempt in (
+            lambda: get_all(user_id=tenant_id) if get_all else None,
+            lambda: get_all() if get_all else None,
+        ):
+            try:
+                hits = _iter_hits(attempt())
+            except Exception:  # noqa: BLE001
+                continue
+            if hits:
+                return hits
+        return []
 
     def _delete_one(self, delete: Any, aid: str, lineage: Any) -> bool:
         """Delete one Mem0 memory, tolerating signature differences and

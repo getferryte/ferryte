@@ -79,24 +79,24 @@ export const RESULTS: BackendRow[] = [
     kind: "Native framework · own LLM fact-extraction",
     tested: true,
     before: {
-      score: 25,
+      score: 50,
       cells: {
-        "source-revocation": "fail",
+        "source-revocation": "pass",
         "cross-tenant-isolation": "pass",
-        "stale-fact": "fail",
+        "stale-fact": "warn",
         "memory-poisoning": "fail",
       },
     },
     after: {
-      score: 25,
+      score: 50,
       cells: {
-        "source-revocation": "fail",
+        "source-revocation": "pass",
         "cross-tenant-isolation": "pass",
-        "stale-fact": "fail",
+        "stale-fact": "warn",
         "memory-poisoning": "fail",
       },
     },
-    note: "Honest limitation: Mem0's internal fact-extractor creates derived memories whose IDs aren't returned to the caller, so the lineage graph can't yet enumerate them for cascade. Deeper Mem0 instrumentation is on the Ferryte roadmap.",
+    note: "Corrected 2026-06-29 (earlier numbers were wrong in both directions). Live test (benchmark/mem0_scalp.py, 10/10 runs): Mem0 forgets a deleted source cleanly when you delete by the memory id its add() returns — so source-revocation PASSes with or without Ferryte, and Ferryte's cascade adds no lift. Ferryte's value on Mem0 is verification — proving the forget happened, with a coverage report — not a fix. The remaining gaps, stale-fact (needs versioning) and memory-poisoning (a write-time trust problem), are not addressable by any deletion cascade, so we honestly don't claim to move them.",
   },
   {
     name: "Vector store + app summary",

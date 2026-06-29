@@ -177,6 +177,18 @@ function Synthesis() {
           incident time — a confused customer, a screenshot in a Slack thread, an
           appsec ticket, a privacy regulator email.
         </p>
+        <p className="text-ink">
+          So we stopped asserting and started measuring. We reproduced this live on
+          AWS Bedrock AgentCore — delete the source events, the extracted records still
+          answer. We also found that Mem0 forgets cleanly, and we report it as a PASS.
+          The leak is not in every library; it lives in the <span className="text-ink">derived
+          layer</span> an app composes on top — summaries, extracted facts, graph nodes.
+          The honest, reproducible scoreboard — passes and leaks alike — is{" "}
+          <Link href="/benchmark" className="text-royal underline-offset-4 hover:underline">
+            The Forgetting Report
+          </Link>
+          .
+        </p>
       </RevealOnScroll>
     </section>
   );

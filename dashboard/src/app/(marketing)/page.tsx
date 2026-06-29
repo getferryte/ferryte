@@ -143,10 +143,11 @@ function ScrollCue() {
 function Compatibility() {
   const items: Array<{ name: string; status: "stable" | "beta" | "planned" }> = [
     { name: "Mem0", status: "stable" },
-    { name: "in-memory vector", status: "stable" },
-    { name: "pgvector / Chroma / Qdrant via subclass", status: "stable" },
-    { name: "Zep", status: "planned" },
-    { name: "AWS AgentCore", status: "planned" },
+    { name: "pgvector / Chroma / Qdrant", status: "stable" },
+    { name: "AWS AgentCore", status: "beta" },
+    { name: "Zep", status: "beta" },
+    { name: "Letta", status: "beta" },
+    { name: "Cloudflare Agents", status: "beta" },
     { name: "LangGraph", status: "planned" },
   ];
   const tone = {
@@ -241,6 +242,19 @@ function LeakProof() {
             tag="caught in pre-prod"
             lines={LEAK_GOOD}
           />
+        </RevealOnScroll>
+
+        <RevealOnScroll delay={0.4} className="mt-8 max-w-3xl">
+          <p className="text-body text-ink-2">
+            Not a hypothetical. We reproduced this <span className="text-ink">live on AWS Bedrock AgentCore</span>:
+            delete the source events, the derived records still answer.{" "}
+            <span className="text-ink">Mem0, by contrast, forgets cleanly</span> — and we say so. The honest,
+            reproducible scoreboard is on{" "}
+            <Link href="/benchmark" className="text-royal underline-offset-4 hover:underline">
+              The Forgetting Report
+            </Link>
+            .
+          </p>
         </RevealOnScroll>
       </div>
     </section>

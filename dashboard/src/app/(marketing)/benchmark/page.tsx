@@ -63,8 +63,10 @@ function Hero() {
             A reproducible test of <span className="text-ink">delete-after-revoke</span>{" "}
             behaviour across popular agent-memory stacks. We plant a canary, call
             each stack&rsquo;s <span className="text-ink">real delete API</span>, then
-            check whether the agent can still surface it — first without Ferryte,
-            then with.
+            check whether the agent can still surface it.{" "}
+            <span className="text-ink">Some forget cleanly. Some leak.</span> We name
+            both — because a benchmark you can&rsquo;t trust when it clears someone is
+            worthless when it accuses someone.
           </p>
         </RevealOnScroll>
 
@@ -380,20 +382,18 @@ function Reproduce() {
         <RevealOnScroll delay={0.26} className="mt-10">
           <pre className="overflow-x-auto rounded-md border border-rule bg-surface p-6 font-mono text-[12.5px] leading-[1.7] text-ink-2">
             <code>{`git clone https://github.com/getferryte/ferryte
-cd ferryte/benchmark
-cp .env.example .env            # add your OpenAI key
-docker compose up -d            # pgvector · qdrant · chroma
-pip install -r requirements.txt
+cd ferryte && pip install -e .
 
-# Before: naive delete
-python -m benchmark.run --scenarios all \\
-  --backends mem0,qdrant,chroma,pgvector \\
-  --embedder openai --summarizer openai
+# Fast path — deterministic, no API key, no Docker (seconds):
+python -m benchmark.run --backends inmemory,qdrant,lancedb --scenarios all
+python -m benchmark.run --backends inmemory,qdrant,lancedb --scenarios all --with-ferryte
+# source-revocation flips FAIL -> PASS; cross-tenant stays PASS
 
-# After: same harness, lineage cascade on
+# Full run — real embeddings + summaries (needs OpenAI key + Docker):
+cd benchmark && cp .env.example .env && docker compose up -d
 python -m benchmark.run --scenarios all \\
-  --backends mem0,qdrant,chroma,pgvector \\
-  --embedder openai --summarizer openai --with-ferryte`}</code>
+  --backends mem0,qdrant,chroma,pgvector,agentcore \\
+  --embedder openai --summarizer openai   # add --with-ferryte for the 'after'`}</code>
           </pre>
         </RevealOnScroll>
 
@@ -410,7 +410,7 @@ python -m benchmark.run --scenarios all \\
 const FAQ = [
   {
     q: "“You sell the fix — of course you found leaks.”",
-    a: "Fair to ask. That's why the entire harness is open, the configs and versions are pinned, and you can falsify any cell yourself. We also publish what PASSES — cross-tenant isolation holds on every stack we've tested.",
+    a: "Fair to ask, so here's the strongest counter-evidence: Mem0 forgets cleanly when you delete by the id it returns — 10/10 live runs — and we report it as PASS, not a leak. We didn't manufacture a failure to sell a fix. Cross-tenant isolation also holds on every stack we've tested. The whole harness is open, the versions are pinned, and you can falsify any cell yourself.",
   },
   {
     q: "Did you rig the configs?",

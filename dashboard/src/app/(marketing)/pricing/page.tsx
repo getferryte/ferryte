@@ -72,9 +72,9 @@ const TIERS = [
     featuresNote: null as string | null,
     features: [
       "ferryte.instrument() one-line auto-patch",
-      "source-revocation · cross-tenant-isolation · stale-fact · memory-poisoning",
+      "source-revocation · cross-tenant · stale-fact · poisoning · mosaic",
       "Lineage graph + blast radius (SQLite)",
-      "Mem0 adapter + generic vector base (subclass for pgvector / Chroma / Qdrant)",
+      "Mem0 · vector · Zep · Letta · Cloudflare adapters (pgvector / Chroma / Qdrant)",
       "JSON + HTML coverage reports",
       "Local Next.js dashboard",
       "CI gate: non-zero exit on leak",
@@ -113,7 +113,7 @@ const TIERS = [
       "Self-hosted with SSO + RBAC",
       "Audit logs + SOC2-ready posture",
       "Signed compliance attestations (GDPR / CCPA)",
-      "Premium adapters: AgentCore, Zep, GovCloud",
+      "Premium adapters: deep AgentCore, GovCloud, custom",
       "Runtime retrieval enforcement (v2)",
       "Support SLA + dedicated channel",
     ],
@@ -254,15 +254,15 @@ function BadgePill({
 
 const COMPARE_ROWS = [
   { feature: "Local CLI + dashboard", core: true, cloud: true, ent: true },
-  { feature: "Four canary scenarios", core: true, cloud: true, ent: true },
-  { feature: "Mem0 adapter + generic vector base", core: true, cloud: true, ent: true },
+  { feature: "Five canary scenarios", core: true, cloud: true, ent: true },
+  { feature: "Mem0 · vector · Zep · Letta · Cloudflare adapters", core: true, cloud: true, ent: true },
   { feature: "Hosted continuous verification", core: false, cloud: true, ent: true },
   { feature: "Historical reports + regression alerts", core: false, cloud: true, ent: true },
   { feature: "Slack / PagerDuty / Linear", core: false, cloud: true, ent: true },
   { feature: "SSO + RBAC", core: false, cloud: false, ent: true },
   { feature: "Audit logs · SOC2 posture", core: false, cloud: false, ent: true },
   { feature: "Signed GDPR / CCPA attestations", core: false, cloud: false, ent: true },
-  { feature: "Premium adapters (AgentCore / Zep / GovCloud)", core: false, cloud: false, ent: true },
+  { feature: "Premium adapters (deep AgentCore / GovCloud / custom)", core: false, cloud: false, ent: true },
   { feature: "Runtime retrieval enforcement (v2)", core: false, cloud: false, ent: true },
 ];
 
