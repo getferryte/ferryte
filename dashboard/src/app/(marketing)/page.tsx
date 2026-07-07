@@ -191,20 +191,21 @@ const LEAK_BAD: TerminalLine[] = [
 ];
 
 const LEAK_GOOD: TerminalLine[] = [
-  { kind: "command", text: 'ferryte why "Legacy Free plan"' },
+  { kind: "command", text: 'ferryte why "Legacy Free plan" --replay' },
   {
     kind: "output",
-    text: "caused by 3 candidate memories · top conf 0.82",
+    text: "caused by 3 candidate memories · top conf 1.00",
     tone: "brand",
   },
   { kind: "spacer" },
-  { kind: "output", text: "#1  stale belief · conf 0.82", tone: "issue" },
+  { kind: "output", text: "#1  stale belief · conf 1.00", tone: "issue" },
   { kind: "output", text: "  Customer acme is on the Legacy Free plan." },
   { kind: "output", text: "  from 'zendesk-ticket-8821'" },
-  { kind: "output", text: "  retrieved 1x into context — reached the prompt" },
-  { kind: "output", text: "  → a newer fact on this subject exists" },
+  { kind: "output", text: "  recorded in context for this answer" },
+  { kind: "output", text: '  shared span: "legacy free plan"' },
+  { kind: "output", text: "  superseded by billing-sync-0601" },
   { kind: "spacer" },
-  { kind: "output", text: "fix: delete it, re-run why to confirm", tone: "brand" },
+  { kind: "output", text: "counterfactual replay: without it → Pro plan", tone: "brand" },
 ];
 
 function LeakProof() {

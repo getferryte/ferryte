@@ -12,7 +12,7 @@ export const metadata: Metadata = {
     template: "%s · Ferryte",
   },
   description:
-    "See why your AI agent said that. Ferryte traces any wrong, stale, or leaked answer back to the exact memory that caused it — where it came from, what it contaminated, and proves your fix stuck. Source-available.",
+    "See why your AI agent said that. Ferryte traces wrong, stale, leaked, or poisoned answers back to the exact memory in context, then uses counterfactual replay to prove what would have happened without it. Source-available.",
   keywords: [
     "agent memory",
     "AI agents",
@@ -37,7 +37,7 @@ export const metadata: Metadata = {
     siteName: "Ferryte",
     title: "Ferryte — memory debugging for AI agents",
     description:
-      "When your agent gets something wrong, Ferryte shows which memory caused it, where it came from, and proves the fix stuck. Source-available. BSL 1.1 engine.",
+      "When your agent gets something wrong, Ferryte shows which memory caused it, whether it was actually in context, and what would have happened without it. Source-available. BSL 1.1 engine.",
     images: [
       {
         url: "/og",
@@ -51,7 +51,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Ferryte — memory debugging for AI agents",
     description:
-      "See why your AI agent said that. Trace any wrong answer back to the memory that caused it.",
+      "Trace any wrong answer back to the exact memory in context, then replay what would have happened without it.",
     images: ["/og"],
     creator: "@ferryte",
   },

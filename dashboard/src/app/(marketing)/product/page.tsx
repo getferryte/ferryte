@@ -79,27 +79,39 @@ ferryte.instrument()
   {
     num: "02",
     title: "Trace",
-    body: "As your agent runs, Ferryte records write-time lineage for every memory: the source it came from, the summaries and embeddings it derived into, and every retrieval that pulled it into a prompt. Cross-session, not just per-run.",
+    body: "As your agent runs, Ferryte records write-time lineage for every memory: the source it came from, the summaries and embeddings it derived into, every retrieval that pulled it into a prompt, and — with one optional call per turn — the exact answer those memories produced.",
     code: `# recorded automatically
 mem_3f9c
   ← source  zendesk-ticket-8821
   → derived summary_v2, embedding
-  → retrieved 14x (tenant=acme)`,
+  → retrieved 14x (tenant=acme)
+
+# optional: exact answer→memory edge
+ferryte.record_answer(
+  answer_id=turn_id,
+  content=answer,
+  artifact_ids=[m.id for m in context],
+)`,
   },
   {
     num: "03",
     title: "Attribute",
-    body: "Point at a wrong, stale, or leaked answer. Ferryte ranks the memories that most likely caused it — by how much of the answer each explains and whether it was actually retrieved into context — then flags the phantom, stale, and cross-tenant ones.",
+    body: "Point at a wrong, stale, or leaked answer. Ferryte ranks the memories that caused it using recorded answer-input edges, retrieval evidence, IDF-weighted overlap, and quote-level shared spans — then flags phantom, stale, cross-tenant, zombie, and poison-pattern hub memories.",
     code: `$ ferryte why "Legacy Free plan"
-#1  stale belief · conf 0.82
+#1  stale belief · conf 1.00
   from zendesk-ticket-8821
-  retrieved 1x into context`,
+  recorded in context for this answer
+  shared span: "legacy free plan"
+  superseded by billing-sync-0601`,
   },
   {
     num: "04",
-    title: "Fix & verify",
-    body: "Delete the memory in your store, then prove it — and everything derived from it — is actually gone. Ferryte replays retrieval after the delete and fails if any residue survives; the same lineage cascade is what flips AgentCore's leak to a clean pass.",
-    code: `$ ferryte test --scenario source-revocation
+    title: "Replay, fix, verify",
+    body: "Before you delete anything, Ferryte can run a retrieval-layer counterfactual: remove the top suspect and show what would have entered the agent's context instead. Then delete or supersede the bad memory and run the forgetting oracle to prove no revoked residue survives.",
+    code: `$ ferryte why "Legacy Free plan" --replay
+counterfactual: without mem_old → Pro plan
+
+$ ferryte test --scenario source-revocation
 source-revocation   PASS
 no surviving markers in retrieval ✓`,
   },
@@ -202,13 +214,16 @@ You're on the Legacy Free plan.
             label="With Ferryte"
             tag="root cause"
             code={`› ferryte why "Legacy Free plan"
-caused by 3 candidate memories · top conf 0.82
+caused by 3 candidate memories · top conf 1.00
 
-#1  stale belief · conf 0.82
+#1  stale belief · conf 1.00
   Customer acme is on the Legacy Free plan.
   from 'zendesk-ticket-8821'
-  retrieved 1x into context — reached the prompt
-  → a newer fact on this subject exists
+  recorded in context for this answer
+  shared span: "legacy free plan"
+
+› ferryte why "Legacy Free plan" --replay
+counterfactual: without it → Pro plan
 
 fix: delete it, then re-run why to confirm`}
           />
@@ -263,7 +278,8 @@ const COVERED = [
   "Stale belief — an old fact still outranking the correction that replaced it.",
   "Cross-contamination — tenant A receiving something only tenant B ever told the agent.",
   "Phantom memory — deleted data still driving answers via a summary or embedding.",
-  "Poisoned memory — adversarial or low-trust writes (ASI06) shaping later behavior.",
+  "Hub / poisoned memory — one record showing up across too many unrelated queries.",
+  "Answer attribution — the exact memories present when a wrong answer was produced.",
   "Mosaic mis-belief — fragments across sources recombining into a wrong conclusion.",
 ];
 
