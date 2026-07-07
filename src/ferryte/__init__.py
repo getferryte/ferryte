@@ -1,4 +1,4 @@
-"""Ferryte — verification for agent forgetting.
+"""Ferryte — memory debugging for AI agents.
 
 Public API:
 
@@ -6,6 +6,10 @@ Public API:
     ferryte.instrument()                  # one-line auto-patch of detected memory clients
 
     ferryte.tag(source_id=..., tenant_id=...)   # context manager: tag writes happening inside
+
+    ferryte.record_answer(...)            # optional: answer→memory edge for exact `ferryte why`
+    ferryte.record_supersession(...)      # optional: mark a fact replaced (structural staleness)
+    ferryte.record_action(...)            # optional: retrieval→action edge (propagated blast radius)
 """
 
 from __future__ import annotations
@@ -43,6 +47,55 @@ def record_action(
     )
 
 
+def record_answer(
+    *,
+    answer_id: str,
+    content: str,
+    artifact_ids,  # type: ignore[no-untyped-def]
+    query: str | None = None,
+    tenant_id: str | None = None,
+    metadata: dict | None = None,
+) -> None:
+    """Record an answer the agent produced and the memories that were in its
+    context. This builds the retrieval→answer edge: with it, ``ferryte why``
+    anchors attribution on the exact recorded input set instead of inferring
+    causation from content overlap. Call it once per agent turn::
+
+        results = mem.search(query=q, tenant_id=tid)
+        answer = llm(q, context=results)
+        ferryte.record_answer(
+            answer_id=turn_id, content=answer, query=q, tenant_id=tid,
+            artifact_ids=[r.artifact_id for r in results],
+        )
+    """
+    get_lineage().record_answer(
+        answer_id=answer_id,
+        content=content,
+        query=query,
+        tenant_id=tenant_id,
+        artifact_ids=artifact_ids,
+        metadata=metadata,
+    )
+
+
+def record_supersession(
+    *,
+    old_artifact_id: str,
+    new_artifact_id: str,
+    reason: str | None = None,
+) -> None:
+    """Record that one memory supersedes another (the newer fact replaces the
+    older belief). Bi-temporal invalidation in the Zep/Graphiti sense: the old
+    memory isn't deleted, but if it still wins retrieval afterwards, ``ferryte
+    why`` reports a structurally provable stale belief instead of a guess.
+    """
+    get_lineage().record_supersession(
+        old_artifact_id=old_artifact_id,
+        new_artifact_id=new_artifact_id,
+        reason=reason,
+    )
+
+
 __all__ = [
     "instrument",
     "uninstrument",
@@ -54,6 +107,8 @@ __all__ = [
     "get_config",
     "register_adapter",
     "record_action",
+    "record_answer",
+    "record_supersession",
 ]
 
 # Single source of truth is the installed package metadata (pyproject `version`),

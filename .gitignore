@@ -19,6 +19,7 @@ env/
 
 # Ferryte local state
 .ferryte/
+.ferryte-*/
 .recall/
 ferryte.db
 *.duckdb

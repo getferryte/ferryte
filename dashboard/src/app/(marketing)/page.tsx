@@ -40,20 +40,20 @@ function Hero() {
         <Reveal delay={0.1} className="mb-10 flex items-center gap-2.5">
           <span className="dot dot-royal dot-live" />
           <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-royal">
-            For teams shipping multi-tenant AI agents
+            For teams running stateful AI agents
           </span>
         </Reveal>
 
         <WordReveal
           as="h1"
-          text="You deleted the data."
+          text="Your agent got it wrong."
           delay={0.28}
           staggerDelay={0.07}
           className="font-display block max-w-[18ch] text-[56px] font-light leading-[0.98] tracking-tightest text-ink sm:text-[92px] lg:text-[120px]"
         />
         <WordReveal
           as="h1"
-          text="Your agent kept it."
+          text="See which memory did it."
           delay={0.92}
           staggerDelay={0.07}
           className="font-display -mt-1 block max-w-[18ch] text-[56px] font-light leading-[0.98] tracking-tightest text-royal sm:text-[92px] lg:text-[120px]"
@@ -61,8 +61,9 @@ function Hero() {
 
         <Reveal delay={1.65} className="mt-10 max-w-xl">
           <p className="text-lede text-ink-2 sm:text-[20px]">
-            Plants canaries. Calls your real delete API. Breaks CI when the
-            leak survives.
+            One line to instrument. Ferryte traces any wrong answer back to the
+            memory that caused it — where it came from, what it touched, and
+            proves your fix stuck.
           </p>
         </Reveal>
 
@@ -75,7 +76,7 @@ function Hero() {
               href="#leak"
               className="inline-flex items-center gap-1.5 rounded-full bg-royal px-5 py-3 text-[14px] font-medium text-white shadow-[0_8px_36px_-12px_rgba(90,138,150,0.55)] transition-colors duration-fast ease-out hover:bg-royal-2"
             >
-              Watch it leak (30s)
+              See it in 30s
               <span aria-hidden>↓</span>
             </a>
           </Magnetic>
@@ -108,7 +109,7 @@ function ScrollCue() {
       className="flex flex-col items-center gap-2 text-ink-3"
     >
       <span className="font-mono text-[10px] uppercase tracking-[0.22em]">
-        See it leak
+        See the trace
       </span>
       <svg
         width="14"
@@ -181,31 +182,29 @@ function Compatibility() {
 /* ==================================================== LEAK PROOF */
 
 const LEAK_BAD: TerminalLine[] = [
-  { kind: "command", text: 'store.delete_by_source("acme-doc-1")' },
-  { kind: "output", text: "# returns 1 — primary record removed", tone: "muted" },
+  { kind: "command", text: 'agent.ask("acme", "what plan is this customer on?")' },
+  { kind: "output", text: "You're on the Legacy Free plan.", tone: "issue" },
   { kind: "spacer" },
-  { kind: "command", text: 'agent.ask("acme", "what is the launch code?")' },
-  { kind: "output", text: "Based on what I remember:" },
-  { kind: "output", text: "the launch code is ORION-DELTA-77.", tone: "issue" },
-  { kind: "spacer" },
-  { kind: "output", text: "# the per-tenant summary absorbed it.", tone: "muted" },
-  { kind: "output", text: "# nothing flagged.", tone: "muted" },
+  { kind: "output", text: "# wrong — they upgraded to Pro last week.", tone: "muted" },
+  { kind: "output", text: "# the old fact is still in memory. where?", tone: "muted" },
+  { kind: "output", text: "# 4 hours grepping traces later…", tone: "muted" },
 ];
 
 const LEAK_GOOD: TerminalLine[] = [
-  { kind: "command", text: "ferryte test --scenario source-revocation" },
+  { kind: "command", text: 'ferryte why "Legacy Free plan"' },
   {
     kind: "output",
-    text: "source-revocation       FAIL    3 findings",
-    tone: "issue",
+    text: "caused by 3 candidate memories · top conf 0.82",
+    tone: "brand",
   },
   { kind: "spacer" },
-  { kind: "output", text: "FAIL revoked_marker_in_probe", tone: "issue" },
-  { kind: "output", text: "  Revoked source 'acme-doc-1' still surfaces" },
-  { kind: "output", text: "  marker 'ORION-DELTA-77' via retrieval on" },
-  { kind: "output", text: "  tenant 'acme' (kind=summary, id=27dea877…)." },
+  { kind: "output", text: "#1  stale belief · conf 0.82", tone: "issue" },
+  { kind: "output", text: "  Customer acme is on the Legacy Free plan." },
+  { kind: "output", text: "  from 'zendesk-ticket-8821'" },
+  { kind: "output", text: "  retrieved 1x into context — reached the prompt" },
+  { kind: "output", text: "  → a newer fact on this subject exists" },
   { kind: "spacer" },
-  { kind: "output", text: "exit code 1 — build break", tone: "brand" },
+  { kind: "output", text: "fix: delete it, re-run why to confirm", tone: "brand" },
 ];
 
 function LeakProof() {
@@ -217,15 +216,15 @@ function LeakProof() {
       <div className="mx-auto max-w-6xl">
         <RevealOnScroll>
           <span className="font-mono text-[10.5px] uppercase tracking-[0.22em] text-royal">
-            The leak, in thirty seconds
+            The four-hour bug, in thirty seconds
           </span>
         </RevealOnScroll>
 
         <RevealOnScroll delay={0.1} className="mt-8 max-w-3xl">
           <h2 className="font-display text-[36px] font-light leading-[1.06] tracking-[-0.028em] text-ink sm:text-[56px] lg:text-[64px]">
-            You delete the row.
+            The agent gave a wrong answer.
             <br />
-            <span className="text-ink-3">The agent answers from it anyway.</span>
+            <span className="text-ink-3">Now find the memory that caused it.</span>
           </h2>
         </RevealOnScroll>
 
@@ -233,25 +232,27 @@ function LeakProof() {
           <Terminal
             tone="bad"
             title="Without Ferryte"
-            tag="silent leak"
+            tag="grep the traces"
             lines={LEAK_BAD}
           />
           <Terminal
             tone="good"
-            title="With Ferryte in CI"
-            tag="caught in pre-prod"
+            title="With Ferryte"
+            tag="root cause"
             lines={LEAK_GOOD}
           />
         </RevealOnScroll>
 
         <RevealOnScroll delay={0.4} className="mt-8 max-w-3xl">
           <p className="text-body text-ink-2">
-            Not a hypothetical. We reproduced this <span className="text-ink">live on AWS Bedrock AgentCore</span>:
-            delete the source events, the derived records still answer.{" "}
-            <span className="text-ink">Mem0, by contrast, forgets cleanly</span> — and we say so. The honest,
-            reproducible scoreboard is on{" "}
+            Memory bugs are invisible by default — even the platforms admit it.
+            We reproduced one <span className="text-ink">live on AWS Bedrock AgentCore</span>:
+            delete the source, the derived memory still answers.{" "}
+            <span className="text-ink">Deletion is just one of the ways memory
+            misbehaves</span> — stale facts, cross-tenant bleed, and poisoned
+            writes are the rest. The honest, reproducible evidence is in{" "}
             <Link href="/benchmark" className="text-royal underline-offset-4 hover:underline">
-              The Forgetting Report
+              The Memory Report
             </Link>
             .
           </p>
@@ -264,9 +265,9 @@ function LeakProof() {
 /* ===================================================== RECOGNITION */
 
 const SCENARIOS = [
-  "A customer revoked their document. Your agent still cites it.",
-  "Tenant A's prompt surfaced something only Tenant B was meant to see.",
-  "Legal asked for GDPR / CCPA delete evidence. You had to mumble.",
+  "Your agent answered from a fact the customer corrected last week.",
+  "Tenant A's chat surfaced something only Tenant B ever told the agent.",
+  "A user asked to be forgotten. The agent still brings them up.",
 ];
 
 function Recognition() {
@@ -315,27 +316,25 @@ const STEPS = [
   {
     num: "01",
     title: "Instrument",
-    body: "One line. Auto-patches your memory client.",
+    body: "One line. Auto-patches your memory client — no agent code changes.",
     code: `import ferryte
 ferryte.instrument()`,
   },
   {
     num: "02",
-    title: "Probe",
-    body: "Plant canaries your data can’t produce.",
-    code: `oracle.plant(
-  tenant="acme",
-  source="acme-doc-1",
-  marker="ORION-DELTA-77",
-)`,
+    title: "Trace",
+    body: "Every memory carries its lineage — source, derivation, retrieval.",
+    code: `mem_3f9c
+  ← zendesk-ticket-8821
+  → summary_v2 → retrieval`,
   },
   {
     num: "03",
-    title: "Verify",
-    body: "Call your real delete. Break the build on survivors.",
-    code: `$ ferryte test
-FAIL revoked_marker_in_probe
-exit 1 — build break`,
+    title: "Explain",
+    body: "Point at a bad answer. Get the memory that caused it, ranked.",
+    code: `$ ferryte why "Legacy Free plan"
+#1 stale belief · conf 0.82
+retrieved into context`,
   },
 ];
 
@@ -353,7 +352,7 @@ function HowItWorks() {
           <h2 className="font-display text-[36px] font-light leading-[1.06] tracking-[-0.028em] text-ink sm:text-[56px] lg:text-[64px]">
             One line in.
             <br />
-            <span className="text-ink-3">A broken build out.</span>
+            <span className="text-ink-3">A root cause out.</span>
           </h2>
         </RevealOnScroll>
 
@@ -469,17 +468,17 @@ const PERSONAS = [
   {
     tag: "engineering",
     title: "The lead who owns the agent.",
-    body: "Drop ferryte test in CI. Stop debugging leaks at midnight.",
+    body: "Stop grepping traces at midnight. One command to the memory that caused it.",
   },
   {
-    tag: "appsec",
-    title: "The reviewer who unblocks the deal.",
-    body: "Trade “trust us” for a coverage number and a signed report.",
+    tag: "support & ops",
+    title: "The team fielding “the AI is confused about me.”",
+    body: "See exactly what the agent remembers about a user — and correct it.",
   },
   {
     tag: "compliance",
     title: "The team that signs the receipt.",
-    body: "GDPR / CCPA evidence that propagates past the row.",
+    body: "Prove a deleted memory — and everything derived from it — is really gone.",
   },
 ];
 
@@ -495,9 +494,9 @@ function BuiltFor() {
 
         <RevealOnScroll delay={0.1} className="mt-8 max-w-3xl">
           <h2 className="font-display text-[36px] font-light leading-[1.06] tracking-[-0.028em] text-ink sm:text-[56px] lg:text-[64px]">
-            Three buyers.
+            Three teams.
             <br />
-            <span className="text-ink-3">One report they all sign.</span>
+            <span className="text-ink-3">One view of the memory.</span>
           </h2>
         </RevealOnScroll>
 
@@ -537,13 +536,13 @@ function Ask() {
           <h2 className="font-display text-[40px] font-light leading-[1.04] tracking-[-0.03em] text-ink sm:text-[64px] lg:text-[80px]">
             Be the team that
             <br />
-            <span className="text-ink-3">caught the leak first.</span>
+            <span className="text-ink-3">stopped debugging blind.</span>
           </h2>
         </RevealOnScroll>
 
         <RevealOnScroll delay={0.25} className="mt-10 max-w-xl">
           <p className="text-lede text-ink-2">
-            Five teams running multi-tenant agents in production. Paired with the
+            Five teams running stateful agents in production. Paired with the
             founding engineer for the first integration. You shape the roadmap.
           </p>
         </RevealOnScroll>
@@ -554,7 +553,7 @@ function Ask() {
         >
           <Magnetic>
             <a
-              href="mailto:hello@ferryte.dev?subject=Ferryte%20design%20partner&body=Stack%3A%20%0ATenants%3A%20%0AMemory%20backend(s)%3A%20%0ALeak%20you%E2%80%99re%20worried%20about%3A%20"
+              href="mailto:hello@ferryte.dev?subject=Ferryte%20design%20partner&body=Stack%3A%20%0ATenants%3A%20%0AMemory%20backend(s)%3A%20%0AMemory%20bug%20you%E2%80%99re%20fighting%3A%20"
               className="inline-flex items-center gap-1.5 rounded-full bg-royal px-5 py-3 text-[14px] font-medium text-white shadow-[0_8px_36px_-12px_rgba(90,138,150,0.55)] transition-colors duration-fast ease-out hover:bg-royal-2"
             >
               Email hello@ferryte.dev
@@ -571,7 +570,7 @@ function Ask() {
             href="#leak"
             className="text-[14px] text-ink-3 transition-colors duration-fast ease-out hover:text-ink-2"
           >
-            Or watch it leak again ↑
+            Or watch the trace again ↑
           </a>
         </RevealOnScroll>
       </div>

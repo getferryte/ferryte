@@ -41,19 +41,18 @@ function Header() {
 
       <Reveal delay={0.18} className="mt-10 max-w-5xl">
         <h1 className="font-display text-[44px] font-light leading-[1.02] tracking-[-0.04em] text-ink sm:text-[72px] lg:text-[96px]">
-          Free where developers live.
+          Free where developers debug.
           <br />
-          <span className="text-ink-3">Paid where security teams pay.</span>
+          <span className="text-ink-3">Paid where teams run in prod.</span>
         </h1>
       </Reveal>
 
       <Reveal delay={0.4} className="mt-8 max-w-2xl">
         <p className="text-lede text-ink-2">
-          Same model as Sentry, CockroachDB, and HashiCorp. The detection
-          engine is source-available (BSL 1.1) because nobody adopts
-          un-auditable security tooling — read every line, self-host it, run it
-          in production free. The trust plane — hosted, hardened, attested — is
-          where the revenue lives.
+          Same model as Sentry and LangSmith. The debugging engine is
+          source-available (BSL 1.1) — read every line, self-host it, run it on
+          your machine free. The hosted memory-observability plane — persistent
+          timelines, prod alerts, shared history — is where the revenue lives.
         </p>
       </Reveal>
     </section>
@@ -68,16 +67,16 @@ const TIERS = [
     badge: "Available today",
     badgeTone: "ok" as const,
     price: "BSL 1.1 · free forever (self-hosted)",
-    blurb: "The library, the CLI, and the four scenarios. Read it, self-host it, ship it in your CI today. Free in production — and free forever for self-hosted use.",
+    blurb: "The library, the CLI, and the local memory inspector. Read it, self-host it, debug your agent today. Free on your machine — and free forever for self-hosted use.",
     featuresNote: null as string | null,
     features: [
       "ferryte.instrument() one-line auto-patch",
-      "source-revocation · cross-tenant · stale-fact · poisoning · mosaic",
-      "Lineage graph + blast radius (SQLite)",
+      "ferryte why — attribute any answer to the memory behind it",
+      "Write-time lineage graph + blast radius (SQLite)",
       "Mem0 · vector · Zep · Letta · Cloudflare adapters (pgvector / Chroma / Qdrant)",
-      "JSON + HTML coverage reports",
-      "Local Next.js dashboard",
-      "CI gate: non-zero exit on leak",
+      "Local memory inspector dashboard",
+      "Fix & verify: prove a deleted memory is really gone",
+      "CI gate for memory regressions",
     ],
     cta: { label: "pip install ferryte", href: null, copyable: "pip install ferryte" },
     accent: false,
@@ -87,16 +86,16 @@ const TIERS = [
     badge: "Pre-release",
     badgeTone: "royal" as const,
     price: "Free for design partners · paid after · pricing TBD",
-    blurb: "Not built yet — five design partners are shaping it. Free during the design-partner window, then a paid product. When it ships, the hosted oracle for continuous verification.",
+    blurb: "Not built yet — five design partners are shaping it. Free during the design-partner window, then a paid product. When it ships, the hosted memory-observability plane for agents in production.",
     featuresNote: "What it will do once we ship it",
     features: [
       "Everything in Core",
-      "Hosted continuous verification",
-      "Historical reports + regression alerts",
+      "Hosted memory timelines (persistent, cross-session)",
+      "Prod incident alerts when memory misbehaves",
+      "Regression detection across deploys",
       "Slack, PagerDuty, Linear integrations",
-      "Multi-environment management",
-      "Per-tenant blast-radius dashboards",
-      "Public status badges for the repo",
+      "Per-user & per-tenant memory dashboards",
+      "Team collaboration + shared history",
     ],
     cta: { label: "Join design-partner cohort", href: "/cloud#waitlist", copyable: null },
     accent: true,
@@ -110,11 +109,11 @@ const TIERS = [
     featuresNote: "What we plan to build, once Cloud is in hands",
     features: [
       "Everything in Cloud",
-      "Self-hosted with SSO + RBAC",
+      "Self-hosted / VPC with SSO + RBAC",
       "Audit logs + SOC2-ready posture",
-      "Signed compliance attestations (GDPR / CCPA)",
+      "Signed deletion attestations (GDPR / CCPA)",
       "Premium adapters: deep AgentCore, GovCloud, custom",
-      "Runtime retrieval enforcement (v2)",
+      "Runtime memory governance (v2)",
       "Support SLA + dedicated channel",
     ],
     cta: { label: "Talk to us", href: "/cloud#book-a-call", copyable: null },
@@ -253,17 +252,18 @@ function BadgePill({
 /* ---------------------------------------------------------- Compare */
 
 const COMPARE_ROWS = [
-  { feature: "Local CLI + dashboard", core: true, cloud: true, ent: true },
-  { feature: "Five canary scenarios", core: true, cloud: true, ent: true },
+  { feature: "Local CLI + memory inspector", core: true, cloud: true, ent: true },
+  { feature: "ferryte why — memory attribution", core: true, cloud: true, ent: true },
+  { feature: "Fix & verify a deletion", core: true, cloud: true, ent: true },
   { feature: "Mem0 · vector · Zep · Letta · Cloudflare adapters", core: true, cloud: true, ent: true },
-  { feature: "Hosted continuous verification", core: false, cloud: true, ent: true },
-  { feature: "Historical reports + regression alerts", core: false, cloud: true, ent: true },
+  { feature: "Hosted memory timelines (cross-session)", core: false, cloud: true, ent: true },
+  { feature: "Prod incident alerts + regression detection", core: false, cloud: true, ent: true },
   { feature: "Slack / PagerDuty / Linear", core: false, cloud: true, ent: true },
   { feature: "SSO + RBAC", core: false, cloud: false, ent: true },
   { feature: "Audit logs · SOC2 posture", core: false, cloud: false, ent: true },
-  { feature: "Signed GDPR / CCPA attestations", core: false, cloud: false, ent: true },
+  { feature: "Signed GDPR / CCPA deletion attestations", core: false, cloud: false, ent: true },
   { feature: "Premium adapters (deep AgentCore / GovCloud / custom)", core: false, cloud: false, ent: true },
-  { feature: "Runtime retrieval enforcement (v2)", core: false, cloud: false, ent: true },
+  { feature: "Runtime memory governance (v2)", core: false, cloud: false, ent: true },
 ];
 
 function Compare() {
@@ -395,7 +395,7 @@ function Waitlist() {
 const FAQ_ITEMS = [
   {
     q: "Why source-available (BSL) and not MIT or fully closed?",
-    a: "Nobody adopts un-auditable security tooling, so the engine stays readable and self-hostable — appsec teams can read the source on a Friday afternoon and ship a CI gate on Monday. BSL adds exactly one restriction over MIT: you can't resell Ferryte as a competing hosted service. That closes the hyperscaler-clone risk that hit Elastic, Redis, and HashiCorp, without locking anything away — every version converts to Apache 2.0 after three years.",
+    a: "Nobody instruments their agent's memory with un-auditable tooling, so the engine stays readable and self-hostable — read the source on a Friday afternoon, ship it Monday. BSL adds exactly one restriction over MIT: you can't resell Ferryte as a competing hosted service. That closes the hyperscaler-clone risk that hit Elastic, Redis, and HashiCorp, without locking anything away — every version converts to Apache 2.0 after three years.",
   },
   {
     q: "Can I self-host the dashboard without paying?",
@@ -403,7 +403,7 @@ const FAQ_ITEMS = [
   },
   {
     q: "Will Core ever become paid, or get features clawed back into Cloud?",
-    a: "No. Core is free forever for self-hosted use — we never paywall something Core already does. Cloud and Enterprise are net-new surface (continuous hosted verification, alerts, signed attestations) sold to a different buyer. The design-partner cohort gets Cloud free during the build window; after that Cloud is a paid product, while Core stays free.",
+    a: "No. Core is free forever for self-hosted use — we never paywall something Core already does. Cloud and Enterprise are net-new surface (hosted memory timelines, prod alerts, signed attestations) sold to teams running agents in production. The design-partner cohort gets Cloud free during the build window; after that Cloud is a paid product, while Core stays free.",
   },
   {
     q: "What license do contributions fall under?",
@@ -411,7 +411,7 @@ const FAQ_ITEMS = [
   },
   {
     q: "When does Cloud GA?",
-    a: "After the design-partner cohort. We are deliberately not pushing the button until we have five teams running multi-tenant memory in production and the alerting + history surface have survived a quarter of regressions.",
+    a: "After the design-partner cohort. We are deliberately not pushing the button until we have five teams running stateful agents in production and the timeline + alerting surface have survived a quarter of real memory bugs.",
   },
 ];
 

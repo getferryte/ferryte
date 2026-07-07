@@ -122,7 +122,7 @@ export async function GET(req: Request) {
               whiteSpace: "nowrap",
             }}
           >
-            Your AI deleted the data.
+            Your agent got it wrong.
           </div>
           <div
             style={{
@@ -135,7 +135,7 @@ export async function GET(req: Request) {
               color: "transparent",
             }}
           >
-            The derived memories didn’t.
+            See which memory did it.
           </div>
         </div>
 
@@ -152,7 +152,7 @@ export async function GET(req: Request) {
             textTransform: "uppercase",
           }}
         >
-          <div style={{ display: "flex" }}>Verification for agent forgetting</div>
+          <div style={{ display: "flex" }}>Memory debugging for AI agents</div>
           <div style={{ display: "flex" }}>ferryte.dev</div>
         </div>
       </div>

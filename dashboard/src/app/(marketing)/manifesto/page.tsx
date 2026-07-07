@@ -41,9 +41,9 @@ function Header() {
 
       <Reveal delay={0.18} className="mt-10">
         <h1 className="font-display text-[44px] font-light leading-[1.02] tracking-[-0.04em] text-ink sm:text-[72px] lg:text-[88px]">
-          Your AI deleted the data.
+          Your agent remembers everything.
           <br />
-          <span className="text-ink-3">The derived memories didn’t.</span>
+          <span className="text-ink-3">You can see almost none of it.</span>
         </h1>
       </Reveal>
 
@@ -65,18 +65,21 @@ function Lede() {
     <section className="border-t border-rule/60 py-16">
       <RevealOnScroll>
         <p className="text-[22px] font-light leading-[1.5] tracking-[-0.014em] text-ink sm:text-[24px]">
-          Modern AI agents do not just hold the data you gave them. They hold every
-          summary, every embedding, every per-tenant fact they distilled from it.
-          When you delete the original, those derivations stay behind — and the next
-          retrieval brings them right back to the prompt.
+          Modern AI agents do not just store what you tell them. They distill it —
+          into summaries, embeddings, graph nodes, per-user facts — and answer from
+          those derivations weeks later. So when the agent gets something wrong, the
+          cause is buried in a memory nobody can see, derived from a source nobody
+          remembers writing.
         </p>
       </RevealOnScroll>
 
       <RevealOnScroll delay={0.1} className="mt-8">
         <p className="text-body text-ink-2">
-          We do not know this because we are guessing. We know it because the
-          platforms themselves say so, in their own documentation, in 2025. Three
-          different vendors, three different products, the same admission.
+          This is not a guess. The platforms themselves document it — that deleting
+          a source leaves its derived memory behind, that revocation does not
+          propagate, that poisoned context survives. Three different vendors, three
+          different products, the same admission: memory misbehaves, and it does so
+          invisibly.
         </p>
       </RevealOnScroll>
     </section>
@@ -157,35 +160,37 @@ function Synthesis() {
 
       <RevealOnScroll delay={0.1} className="mt-10 grid gap-5 text-body text-ink-2">
         <p>
-          You ship a tool that lets a tenant revoke a document, or a customer hits
-          the right-to-be-forgotten button, or a stale fact is supposed to be
-          overwritten. Your delete API returns success. The row is gone.
+          A customer corrects a fact. A tenant churns. A user asks to be forgotten.
+          Your app does the obvious thing — updates the record, calls delete, moves
+          on. The primary row is handled.
         </p>
         <p>
-          Then your agent answers a question. The answer is sourced from a summary
-          that was generated weeks ago. The summary absorbed a marker from the
-          deleted document. The model has no idea anything was supposed to be
-          forgotten. Neither does your test suite, because all your test suite
-          checked was whether the row was missing.
+          Then your agent answers a question, and the answer is sourced from a
+          summary generated weeks ago that absorbed the old fact. The model isn&rsquo;t
+          hallucinating — it is faithfully retrieving from a derivation nobody knew
+          existed. And when it&rsquo;s wrong, the person on call opens the logs and
+          starts reading: no map from the bad answer to the memory behind it, no
+          record of where that memory came from, no way to know what else it touched.
         </p>
         <p className="text-ink">
-          The leak is not the model hallucinating. The leak is the model
-          faithfully retrieving from a derivation that nobody knew existed.
+          The bug is not the model. The bug is that agent memory is a black box —
+          you can see what it said, never why it believed it.
         </p>
         <p>
-          Almost nobody tests for this in CI. The cost is exclusively borne at
-          incident time — a confused customer, a screenshot in a Slack thread, an
-          appsec ticket, a privacy regulator email.
+          Almost nobody can trace this. The cost is borne at incident time — a
+          confused customer, a screenshot in a Slack thread, a support ticket, a
+          privacy email — and the fix is hours of grepping traces and hoping you
+          deleted the right thing.
         </p>
         <p className="text-ink">
-          So we stopped asserting and started measuring. We reproduced this live on
-          AWS Bedrock AgentCore — delete the source events, the extracted records still
-          answer. We also found that Mem0 forgets cleanly, and we report it as a PASS.
-          The leak is not in every library; it lives in the <span className="text-ink">derived
-          layer</span> an app composes on top — summaries, extracted facts, graph nodes.
-          The honest, reproducible scoreboard — passes and leaks alike — is{" "}
+          So we stopped guessing and started tracing. We reproduced one class of
+          this live on AWS Bedrock AgentCore — delete the source, the derived records
+          still answer — while Mem0 forgets cleanly, and we say so. Deletion is only
+          one way memory misbehaves; stale facts, cross-tenant bleed, and poisoned
+          writes are the rest. All of them live in the <span className="text-ink">derived
+          layer</span> an app composes on top. The honest, reproducible evidence is{" "}
           <Link href="/benchmark" className="text-royal underline-offset-4 hover:underline">
-            The Forgetting Report
+            The Memory Report
           </Link>
           .
         </p>
@@ -200,17 +205,17 @@ const BUYERS = [
   {
     tag: "engineering",
     title: "The lead who owns the agent.",
-    body: "Drop `ferryte test` into CI. The build breaks the moment a revoked source re-enters retrieval. Catch the leak in pre-prod, not in a Slack thread on Sunday.",
+    body: "Run `ferryte why` on the bad answer instead of grepping traces until midnight. Get the memory that caused it, its full lineage, and a one-command fix — in minutes.",
   },
   {
-    tag: "appsec",
-    title: "The reviewer who unblocks the deal.",
-    body: "Replace \u201cwe delete the row, trust us\u201d with a regenerated forgetting-test report, an explicit blind-spot map, and a coverage number. Security review goes from weeks to days.",
+    tag: "support & ops",
+    title: "The team fielding \u201cthe AI is confused about me.\u201d",
+    body: "Open the customer\u2019s memory timeline and see exactly what the agent believes about them and where each belief came from — then correct the one that\u2019s wrong, without wiping the rest.",
   },
   {
     tag: "compliance",
     title: "The team that signs the receipt.",
-    body: "GDPR and CCPA right-to-be-forgotten don\u2019t end at the row. Ferryte gives you transitive deletion evidence across raw stores, summaries, embeddings, and retrievals — and (in Enterprise) signed attestations.",
+    body: "GDPR and CCPA right-to-be-forgotten don\u2019t end at the row. Ferryte proves a deleted memory \u2014 and everything derived from it \u2014 is gone across raw stores, summaries, embeddings, and retrievals, and (in Enterprise) signs the attestation.",
   },
 ];
 
@@ -219,7 +224,7 @@ function Buyers() {
     <section className="border-t border-rule/60 py-20">
       <RevealOnScroll>
         <h2 className="font-display text-[34px] font-light leading-[1.06] tracking-[-0.028em] text-ink sm:text-[44px]">
-          Three buyers. One artifact.
+          Three teams. One view of the memory.
         </h2>
       </RevealOnScroll>
 
@@ -249,9 +254,9 @@ function Close() {
     <section className="border-t border-rule/60 py-24">
       <RevealOnScroll>
         <h2 className="font-display text-[36px] font-light leading-[1.04] tracking-[-0.03em] text-ink sm:text-[52px]">
-          Verification is not a feature.
+          A memory you can’t explain
           <br />
-          <span className="text-ink-3">It’s the difference between trust and a press release.</span>
+          <span className="text-ink-3">is a memory you can’t trust.</span>
         </h2>
       </RevealOnScroll>
 

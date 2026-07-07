@@ -25,7 +25,7 @@ export default function MarketingLayout({
             <div className="max-w-md">
               <BrandLink href="/" showVersion={false} />
               <p className="mt-5 text-body text-ink-3">
-                Source-available verification for AI agent memory. BSL 1.1
+                Source-available memory debugging for AI agents. BSL 1.1
                 engine (converts to Apache 2.0), commercial Cloud + Enterprise
                 tiers.
               </p>
@@ -55,7 +55,7 @@ export default function MarketingLayout({
           <div className="mt-14 flex flex-wrap items-center justify-between gap-3 border-t border-rule/70 pt-8 text-caption text-ink-3">
             <span>© {new Date().getFullYear()} Ferryte · source-available core (BSL 1.1)</span>
             <span className="font-mono text-[11px] tracking-[0.06em]">
-              Designed for catching the leak before your customer does.
+              Designed for the engineer debugging their agent&rsquo;s memory at 2am.
             </span>
           </div>
         </div>

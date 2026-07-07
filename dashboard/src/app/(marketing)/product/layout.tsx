@@ -3,18 +3,18 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
   title: "Product",
   description:
-    "How Ferryte works: one line to instrument, deterministic canary probes, your real delete API, deep store + retrieval verification. Fails CI on any surviving marker.",
+    "How Ferryte works: one line to instrument, write-time lineage for every memory, causal attribution by replay, and a fix-and-verify loop. Trace any answer back to the memory that caused it.",
   openGraph: {
     title: "Product — Ferryte",
     description:
-      "Four steps from install to a broken build. One line, zero new mental model.",
+      "Four steps from install to root cause. One line, full memory provenance.",
     type: "article",
   },
   twitter: {
     card: "summary_large_image",
     title: "Product — Ferryte",
     description:
-      "Four steps from install to a broken build.",
+      "Four steps from install to root cause.",
   },
   alternates: { canonical: "/product" },
 };

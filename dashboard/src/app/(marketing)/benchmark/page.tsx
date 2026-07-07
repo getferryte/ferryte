@@ -40,7 +40,7 @@ function Hero() {
         <RevealOnScroll className="mb-9 flex items-center gap-2.5">
           <span className="dot dot-royal dot-live" />
           <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-royal">
-            The Forgetting Report · open benchmark
+            The Memory Report · open benchmark
           </span>
         </RevealOnScroll>
 
@@ -60,13 +60,13 @@ function Hero() {
 
         <RevealOnScroll delay={0.2} className="mt-9 max-w-2xl">
           <p className="text-lede text-ink-2 sm:text-[20px]">
-            A reproducible test of <span className="text-ink">delete-after-revoke</span>{" "}
-            behaviour across popular agent-memory stacks. We plant a canary, call
-            each stack&rsquo;s <span className="text-ink">real delete API</span>, then
-            check whether the agent can still surface it.{" "}
-            <span className="text-ink">Some forget cleanly. Some leak.</span> We name
-            both — because a benchmark you can&rsquo;t trust when it clears someone is
-            worthless when it accuses someone.
+            The clearest proof that agent memory misbehaves invisibly is the
+            simplest one: <span className="text-ink">delete the data, then ask
+            for it back.</span> We plant a canary, call each stack&rsquo;s real
+            delete API, and check whether the agent can still surface it.{" "}
+            <span className="text-ink">Some forget cleanly. Some don&rsquo;t.</span>{" "}
+            Deletion is just one way memory goes wrong — but it&rsquo;s the one you
+            can measure without arguing, so we name both, cleanly and provably.
           </p>
         </RevealOnScroll>
 

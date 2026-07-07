@@ -1,4 +1,4 @@
-// The Forgetting Report — leaderboard data.
+// The Memory Report — leaderboard data (delete-after-revoke = the phantom-memory class).
 //
 // Numbers reproducible from `benchmark/run.py`:
 //   without Ferryte:  python -m benchmark.run --backends X --scenarios all --embedder openai --summarizer openai

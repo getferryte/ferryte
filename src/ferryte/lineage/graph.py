@@ -76,6 +76,34 @@ class LineageGraph:
     def actions_consuming_source(self, source_id: str) -> list[dict[str, Any]]:
         return self.store.actions_consuming_source(source_id)
 
+    def record_answer(
+        self,
+        *,
+        answer_id: str,
+        content: str | None,
+        query: str | None = None,
+        tenant_id: str | None = None,
+        artifact_ids: Iterable[str] = (),
+        metadata: dict[str, Any] | None = None,
+    ) -> None:
+        self.store.record_answer(
+            answer_id=answer_id,
+            content=content,
+            query=query,
+            tenant_id=tenant_id,
+            artifact_ids=artifact_ids,
+            metadata=metadata,
+        )
+
+    def record_supersession(
+        self, *, old_artifact_id: str, new_artifact_id: str, reason: str | None = None
+    ) -> None:
+        self.store.record_supersession(
+            old_artifact_id=old_artifact_id,
+            new_artifact_id=new_artifact_id,
+            reason=reason,
+        )
+
     def record_blindspot(self, *, backend: str, kind: str, detail: str) -> None:
         self.store.record_blindspot(backend=backend, kind=kind, detail=detail)
 
@@ -92,6 +120,9 @@ class LineageGraph:
 
     def sources(self, tenant_id: str | None = None) -> list[dict[str, Any]]:
         return self.store.sources(tenant_id=tenant_id)
+
+    def sources_for_artifact(self, artifact_id: str) -> list[dict[str, Any]]:
+        return self.store.sources_for_artifact(artifact_id)
 
     def retrievals_for_artifact(
         self, artifact_id: str, since: float | None = None
@@ -111,6 +142,32 @@ class LineageGraph:
 
     def all_artifacts(self) -> Iterable[dict[str, Any]]:
         return self.store.all_artifacts()
+
+    def artifacts_by_ids(self, artifact_ids: Iterable[str]) -> list[dict[str, Any]]:
+        return self.store.artifacts_by_ids(artifact_ids)
+
+    def candidate_artifact_ids(
+        self, tokens: Iterable[str], *, limit: int = 2000
+    ) -> list[str] | None:
+        return self.store.candidate_artifact_ids(tokens, limit=limit)
+
+    def answers_matching(
+        self,
+        *,
+        tenant_id: str | None = None,
+        since: float | None = None,
+        limit: int = 100,
+    ) -> list[dict[str, Any]]:
+        return self.store.answers_matching(tenant_id=tenant_id, since=since, limit=limit)
+
+    def artifact_ids_for_answer(self, answer_id: str) -> list[str]:
+        return self.store.artifact_ids_for_answer(answer_id)
+
+    def supersessions_for(self, artifact_id: str) -> list[dict[str, Any]]:
+        return self.store.supersessions_for(artifact_id)
+
+    def retrieval_query_counts(self) -> dict[str, int]:
+        return self.store.retrieval_query_counts()
 
     def blindspots(self) -> list[dict[str, Any]]:
         return self.store.blindspots()

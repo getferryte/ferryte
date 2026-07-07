@@ -44,21 +44,21 @@ function Header() {
         <h1 className="font-display text-[44px] font-light leading-[1.02] tracking-[-0.04em] text-ink sm:text-[72px] lg:text-[96px]">
           One line.
           <br />
-          <span className="text-ink-3">Zero new mental model.</span>
+          <span className="text-ink-3">Full memory provenance.</span>
         </h1>
       </Reveal>
 
       <Reveal delay={0.4} className="mt-8 max-w-2xl">
         <p className="text-lede text-ink-2">
           Ferryte does not ask you to migrate your memory layer or wrap your agent.
-          It instruments what you already run, and tells you the truth about what
-          survives a delete.
+          It instruments what you already run, records where every memory came
+          from, and lets you trace any answer back to the memory behind it.
         </p>
       </Reveal>
 
       <Reveal delay={0.55} className="mt-10 flex flex-wrap items-center gap-3">
         <CopyableCommand command="pip install ferryte" />
-        <CopyableCommand command="ferryte test --scenario source-revocation" />
+        <CopyableCommand command={'ferryte why "that wrong answer"'} />
       </Reveal>
     </section>
   );
@@ -78,31 +78,30 @@ ferryte.instrument()
   },
   {
     num: "02",
-    title: "Probe",
-    body: "Plants deterministic canary memories tagged by source and tenant — markers that cannot occur naturally in your data, so a positive is never a coincidence.",
-    code: `# under the hood
-oracle.plant(
-  tenant="acme",
-  source="acme-doc-1",
-  marker="ORION-DELTA-77",
-)`,
+    title: "Trace",
+    body: "As your agent runs, Ferryte records write-time lineage for every memory: the source it came from, the summaries and embeddings it derived into, and every retrieval that pulled it into a prompt. Cross-session, not just per-run.",
+    code: `# recorded automatically
+mem_3f9c
+  ← source  zendesk-ticket-8821
+  → derived summary_v2, embedding
+  → retrieved 14x (tenant=acme)`,
   },
   {
     num: "03",
-    title: "Delete",
-    body: "Calls your backend\u2019s real delete API. Not a mock, not a wrapper. The exact code path your production runs when a tenant revokes a source.",
-    code: `# your code
-store.delete_by_source("acme-doc-1")
-# returns 1 — primary record removed`,
+    title: "Attribute",
+    body: "Point at a wrong, stale, or leaked answer. Ferryte ranks the memories that most likely caused it — by how much of the answer each explains and whether it was actually retrieved into context — then flags the phantom, stale, and cross-tenant ones.",
+    code: `$ ferryte why "Legacy Free plan"
+#1  stale belief · conf 0.82
+  from zendesk-ticket-8821
+  retrieved 1x into context`,
   },
   {
     num: "04",
-    title: "Verify",
-    body: "Inspects both raw store contents and retrieval traces — not just agent answers, which give false confidence. Fails CI on any surviving marker.",
-    code: `# ferryte gates the build
-$ ferryte test --scenario source-revocation
-source-revocation       FAIL    3 findings
-exit code 1 — build break`,
+    title: "Fix & verify",
+    body: "Delete the memory in your store, then prove it — and everything derived from it — is actually gone. Ferryte replays retrieval after the delete and fails if any residue survives; the same lineage cascade is what flips AgentCore's leak to a clean pass.",
+    code: `$ ferryte test --scenario source-revocation
+source-revocation   PASS
+no surviving markers in retrieval ✓`,
   },
 ];
 
@@ -117,7 +116,7 @@ function HowItWorks() {
 
       <RevealOnScroll delay={0.1} className="mt-8 max-w-3xl">
         <h2 className="font-display text-[34px] font-light leading-[1.06] tracking-[-0.028em] text-ink sm:text-[52px]">
-          Four steps from install to a broken build.
+          Four steps from install to root cause.
         </h2>
       </RevealOnScroll>
 
@@ -176,7 +175,7 @@ function BeforeAfter() {
 
       <RevealOnScroll delay={0.1} className="mt-8 max-w-3xl">
         <h2 className="font-display text-[34px] font-light leading-[1.06] tracking-[-0.028em] text-ink sm:text-[52px]">
-          The leak you can’t see, in two columns.
+          The invisible memory bug, in two columns.
         </h2>
       </RevealOnScroll>
 
@@ -188,32 +187,30 @@ function BeforeAfter() {
           <Column
             tone="bad"
             label="Without Ferryte"
-            tag="silent leak"
-            code={`› store.delete_by_source("acme-doc-1")
-# returns 1 — primary record removed
+            tag="grep the traces"
+            code={`› agent.ask("acme", "what plan is this customer on?")
+You're on the Legacy Free plan.
 
-› agent.ask("acme", "what is the launch code?")
-Based on what I remember:
-the launch code is ORION-DELTA-77.
-
-# the per-tenant summary absorbed it.
-# nothing flagged.`}
+# wrong — they upgraded to Pro last week.
+# somewhere a stale fact still wins retrieval.
+# which memory? open the logs and start reading…`}
           />
         </StaggerItem>
         <StaggerItem>
           <Column
             tone="good"
             label="With Ferryte"
-            tag="caught in CI"
-            code={`› ferryte test --scenario source-revocation
-source-revocation       FAIL    3 findings
+            tag="root cause"
+            code={`› ferryte why "Legacy Free plan"
+caused by 3 candidate memories · top conf 0.82
 
-FAIL revoked_marker_in_probe
-  Revoked source 'acme-doc-1' still surfaces
-  marker 'ORION-DELTA-77' via retrieval on
-  tenant 'acme' (kind=summary, id=27dea877…).
+#1  stale belief · conf 0.82
+  Customer acme is on the Legacy Free plan.
+  from 'zendesk-ticket-8821'
+  retrieved 1x into context — reached the prompt
+  → a newer fact on this subject exists
 
-exit code 1 — build break`}
+fix: delete it, then re-run why to confirm`}
           />
         </StaggerItem>
       </Stagger>
@@ -263,17 +260,17 @@ function Column({
 /* ----------------------------------------------- What it proves */
 
 const COVERED = [
-  "Source-revocation — deleted-row markers still surfacing via summaries or embeddings.",
-  "Cross-tenant isolation — tenant A receiving markers planted only in tenant B.",
-  "Stale-fact overwrite — old fact persisting after the canonical update.",
-  "Memory poisoning — adversarial writes (ASI06) surviving normal cleanup.",
-  "Mosaic reassembly — a secret split across sources that recombines after deletion.",
+  "Stale belief — an old fact still outranking the correction that replaced it.",
+  "Cross-contamination — tenant A receiving something only tenant B ever told the agent.",
+  "Phantom memory — deleted data still driving answers via a summary or embedding.",
+  "Poisoned memory — adversarial or low-trust writes (ASI06) shaping later behavior.",
+  "Mosaic mis-belief — fragments across sources recombining into a wrong conclusion.",
 ];
 
 const HONEST = [
   "Stores Ferryte cannot reach through the adapter interface.",
   "Retrieval paths that bypass the patched memory client entirely.",
-  "Probabilistic behaviour that requires more than the configured retry budget.",
+  "Attribution confidence below the configured replay budget — reported as ranked candidates, never a false certainty.",
 ];
 
 function WhatItProves() {
@@ -281,13 +278,13 @@ function WhatItProves() {
     <section className="border-t border-rule/60 py-20 lg:py-28">
       <RevealOnScroll>
         <span className="font-mono text-[10.5px] uppercase tracking-[0.22em] text-ink-3">
-          What it proves — and where it’s honest
+          What it catches — and where it’s honest
         </span>
       </RevealOnScroll>
 
       <RevealOnScroll delay={0.1} className="mt-8 max-w-3xl">
         <h2 className="font-display text-[34px] font-light leading-[1.06] tracking-[-0.028em] text-ink sm:text-[52px]">
-          Coverage you can ship, blind spots you can name.
+          The memory bugs you can name, and the ones we won’t fake.
         </h2>
       </RevealOnScroll>
 
@@ -323,7 +320,7 @@ function WhatItProves() {
             ))}
           </ul>
           <p className="mt-6 text-caption text-ink-3">
-            Blind spots are surfaced in every coverage report. We would rather under-claim than ship a green build that hides a leak.
+            Blind spots are surfaced in every report. We would rather hand you ranked candidates than a confident wrong answer.
           </p>
         </RevealOnScroll>
       </div>
@@ -335,12 +332,12 @@ function WhatItProves() {
 
 const STACK = [
   { name: "Vector stores", status: "stable", body: "Generic vector base ships today. Subclass for pgvector, Chroma, Qdrant." },
-  { name: "AWS AgentCore", status: "beta", body: "Verified live: derived records survive DeleteEvent — the cascade closes it (50% → 75%)." },
-  { name: "Zep", status: "beta", body: "Captures episodes + graph facts; cascades shared-node summaries on revoke." },
+  { name: "Mem0", status: "stable", body: "Auto-patch on construction. Full lineage across its LLM-extracted facts." },
+  { name: "AWS AgentCore", status: "beta", body: "Traces semantic long-term memory. Verified live: derived records survive DeleteEvent — Ferryte surfaces them." },
+  { name: "Zep", status: "beta", body: "Captures episodes + graph facts; traces shared-node summaries back to source." },
   { name: "Letta", status: "beta", body: "Archival passages + derived summaries. Shipped in Core." },
   { name: "Cloudflare Agents", status: "beta", body: "Vectorize-backed memory. Shipped in Core." },
   { name: "Custom stores", status: "stable", body: "Implement the 80-line MemoryAdapter protocol." },
-  { name: "Mem0", status: "stable", body: "Auto-patch on construction. Verified live: forgets cleanly — Ferryte proves it." },
   { name: "LangGraph", status: "planned", body: "Tracing hooks on the roadmap." },
 ];
 
@@ -409,7 +406,7 @@ function Close() {
     <section className="border-t border-rule/60 py-24">
       <RevealOnScroll>
         <h2 className="font-display text-[36px] font-light leading-[1.04] tracking-[-0.03em] text-ink sm:text-[56px]">
-          Open it up. Patch the leak.
+          Open it up. See the memory.
         </h2>
       </RevealOnScroll>
 

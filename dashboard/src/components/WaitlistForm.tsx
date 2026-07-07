@@ -127,13 +127,13 @@ export function WaitlistForm({ tier = "cloud" }: { tier?: string }) {
 
         <div className="sm:col-span-2">
           <label className={LABEL} htmlFor="wl-concern">
-            What leak worries you?
+            What memory bug bites you most?
           </label>
           <textarea
             id="wl-concern"
             name="concern"
             rows={3}
-            placeholder="e.g. multi-tenant agent; GDPR deletion requests; not sure derived summaries get cleared."
+            placeholder="e.g. agent answers from stale facts; one user's context bleeds into another's; can't tell where a belief came from."
             className={`${FIELD} resize-none`}
           />
         </div>

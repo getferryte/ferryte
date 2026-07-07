@@ -65,6 +65,21 @@ def build_app() -> Any:
             out.append(art)
         return {"artifacts": out}
 
+    @app.get("/api/why")
+    def why(
+        answer: str,
+        query: str | None = None,
+        tenant_id: str | None = None,
+        limit: int = 5,
+    ) -> dict[str, Any]:
+        """Attribution over the local lineage DB — the dashboard's `why` view."""
+        from ..oracle.attribute import attribute_answer
+
+        result = attribute_answer(
+            answer, lineage=get_lineage(), query=query, tenant_id=tenant_id, limit=limit
+        )
+        return result.to_dict()
+
     @app.get("/api/reports/latest")
     def latest_report() -> dict[str, Any]:
         cfg = get_config()

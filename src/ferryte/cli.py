@@ -2,6 +2,7 @@
 
 Commands:
 
+    ferryte why "<bad answer>"         # trace a wrong answer to the memory that caused it
     ferryte init                       # create local state dir, write ferryte.toml stub
     ferryte test [--scenario NAME]     # run scenarios, write reports/latest.{json,html}
     ferryte coverage                   # render the coverage + blind-spot map
@@ -16,7 +17,9 @@ from __future__ import annotations
 
 import importlib
 import json
+import re
 import sys
+import time
 from pathlib import Path
 from typing import List, Optional
 
@@ -41,13 +44,13 @@ from .reports import (
 app = typer.Typer(
     add_completion=False,
     no_args_is_help=True,
-    help="Ferryte — verification for agent forgetting.",
+    help="Ferryte — memory debugging for AI agents.",
 )
 console = Console()
 
 
 _BANNER = (
-    "[bold]Ferryte[/bold] — verification for agent forgetting "
+    "[bold]Ferryte[/bold] — memory debugging for AI agents "
     f"[dim]v{__version__}[/dim]"
 )
 
@@ -216,6 +219,246 @@ def test(
         console.print("[yellow]Warnings present and --fail-on-warn is set.[/yellow]")
         raise typer.Exit(code=1)
     console.print("[green]All scenarios passed.[/green]")
+
+
+_DIAGNOSIS_LABEL = {
+    "phantom-memory": ("phantom memory", "revoked source still answering"),
+    "zombie-memory": ("zombie memory", "deleted but retrieved after the delete"),
+    "cross-tenant": ("cross-tenant", "another tenant's memory surfaced here"),
+    "stale-belief": ("stale belief", "a newer fact on this subject exists"),
+    "hub-memory": ("hub memory", "outlier retrieval fan-out — poison/over-broad summary pattern"),
+    "active-memory": ("active memory", "live memory, not obviously faulty"),
+}
+
+
+def _parse_since(value: Optional[str]) -> Optional[float]:
+    """'45m' / '2h' / '3d' / '90s' -> unix timestamp that far in the past."""
+    if not value:
+        return None
+    m = re.fullmatch(r"(\d+(?:\.\d+)?)\s*([smhd]?)", value.strip().lower())
+    if not m:
+        raise typer.BadParameter("use e.g. 45m, 2h, 3d, or plain seconds")
+    mult = {"": 1.0, "s": 1.0, "m": 60.0, "h": 3600.0, "d": 86400.0}[m.group(2)]
+    return time.time() - float(m.group(1)) * mult
+
+
+@app.command()
+def why(
+    answer: str = typer.Argument(
+        ...,
+        help="The wrong/stale/leaked answer (or a distinctive phrase from it).",
+    ),
+    query: Optional[str] = typer.Option(
+        None, "--query", "-q", help="The question the agent was answering, if known."
+    ),
+    tenant: Optional[str] = typer.Option(
+        None, "--tenant", "-t", help="The tenant/user who saw the answer (enables cross-tenant diagnosis)."
+    ),
+    limit: int = typer.Option(5, "--limit", "-n", help="Max candidate memories to show."),
+    module: Optional[str] = typer.Option(
+        None, "--module", "-m", help="Import your app module so its lineage is loaded first."
+    ),
+    since: Optional[str] = typer.Option(
+        None, "--since", help="Only count retrievals in this window (e.g. 45m, 2h, 3d)."
+    ),
+    replay: bool = typer.Option(
+        False,
+        "--replay",
+        help="Counterfactual check: re-probe the live memory client without the top "
+        "suspect and show what the agent's context would have been (needs --query "
+        "and an instrumented client, e.g. via --module).",
+    ),
+    as_json: bool = typer.Option(False, "--json", help="Emit machine-readable JSON instead of a table."),
+) -> None:
+    """Explain a bad answer: rank the memories that most likely caused it.
+
+    Reads the lineage graph your instrumented agent has already written, scores
+    every stored memory against the answer, and traces the top matches back to
+    their source — flagging phantom (revoked), stale, cross-tenant, zombie, and
+    hub (poison-pattern) memories along the way. With --replay it then ablates
+    the top suspect from live retrieval and shows the counterfactual context.
+    """
+    from .oracle.attribute import attribute_answer
+
+    if replay and not query:
+        raise typer.BadParameter("--replay needs --query (the question the agent was answering)")
+
+    _maybe_load_user_module(module)
+    lineage = get_lineage()
+    since_ts = _parse_since(since)
+    result = attribute_answer(
+        answer, lineage=lineage, query=query, tenant_id=tenant, limit=limit, since=since_ts
+    )
+
+    replay_report = None
+    if replay and result.candidates:
+        from .oracle.replay import replay_query
+
+        replay_report = replay_query(
+            query or "",
+            result.candidates[0].artifact_id,
+            tenant_id=tenant,
+        )
+
+    if as_json:
+        payload = result.to_dict()
+        if replay_report is not None:
+            payload["replay"] = replay_report.to_dict()
+        console.print_json(json.dumps(payload))
+        raise typer.Exit(code=0 if result.candidates else 3)
+
+    console.print(_BANNER)
+    if not result.candidates:
+        console.print(
+            Panel.fit(
+                "No memory in the lineage graph matches that answer.\n\n"
+                "Either the agent isn't instrumented yet ([bold]ferryte.instrument()[/bold]), "
+                "no memory was written/retrieved for this, or the phrase is too generic — "
+                "try a more distinctive fragment of the answer.",
+                title="no attribution",
+            )
+        )
+        raise typer.Exit(code=3)
+
+    top = result.candidates[0]
+    console.print(
+        f"\n[bold]caused by {len(result.candidates)} "
+        f"{'memory' if len(result.candidates) == 1 else 'candidate memories'}[/bold] "
+        f"· top confidence [bold]{top.score:.2f}[/bold]\n"
+    )
+
+    for i, c in enumerate(result.candidates, start=1):
+        _render_candidate(i, c)
+
+    if replay_report is not None:
+        _render_replay(replay_report)
+
+    console.print(
+        f"\n[dim]Fix the top suspect:[/dim] "
+        f"delete [bold]{top.artifact_id}[/bold] from your store, then re-run "
+        f"[bold]ferryte why[/bold] to confirm it's gone.\n"
+    )
+
+
+def _render_replay(r: "Any") -> None:  # noqa: F821 - ReplayReport
+    lines: list[str] = []
+    if r.verdict == "no-clients":
+        lines.append(
+            "No instrumented memory client to probe. Pass [bold]--module your_app[/bold] "
+            "so your client is constructed (after ferryte.instrument()) in this process."
+        )
+        tone = "yellow"
+    elif r.verdict == "not-retrieved":
+        lines.append(
+            f"[bold]{r.suspect_artifact_id}[/bold] does not enter the retrieved context "
+            f"for this query right now [dim]({r.backend})[/dim]."
+        )
+        lines.append(
+            "  Its content match may be historical — check the retrieval trace window "
+            "with [bold]--since[/bold], or the memory may already be fixed."
+        )
+        tone = "yellow"
+    else:
+        lines.append(
+            f"[bold]{r.suspect_artifact_id}[/bold] is live in context at "
+            f"[bold]rank {r.suspect_rank}[/bold] for this query [dim]({r.backend})[/dim]."
+        )
+        if r.replacement is not None:
+            snippet = (r.replacement.content or "").strip().replace("\n", " ")
+            if len(snippet) > 140:
+                snippet = snippet[:137] + "…"
+            lines.append("")
+            lines.append("  [bold]Without it, the agent's context becomes:[/bold]")
+            lines.append(f"  {snippet}")
+            if r.replacement.artifact_id:
+                lines.append(f"  [dim]({r.replacement.artifact_id})[/dim]")
+        tone = "red"
+
+    console.print(
+        Panel(
+            "\n".join(lines),
+            title=f"[{tone}]counterfactual replay · {r.verdict}[/{tone}]",
+            title_align="left",
+            border_style=tone,
+        )
+    )
+
+
+def _render_candidate(index: int, c: "Any") -> None:  # noqa: F821 - MemoryCandidate
+    import time as _time
+
+    diags = ", ".join(
+        _DIAGNOSIS_LABEL.get(d, (d, ""))[0] for d in c.diagnoses
+    )
+    tone = "red" if any(
+        d in ("phantom-memory", "zombie-memory", "cross-tenant") for d in c.diagnoses
+    ) else ("yellow" if "stale-belief" in c.diagnoses else "cyan")
+
+    lines: list[str] = []
+    content = (c.content or "").strip().replace("\n", " ")
+    if len(content) > 160:
+        content = content[:157] + "…"
+    lines.append(f"[bold]{c.artifact_id}[/bold]  [dim]{c.backend} · {c.kind}[/dim]")
+    if content:
+        lines.append(f"  belief: {content}")
+    if c.tenant_id:
+        lines.append(f"  tenant: {c.tenant_id}")
+
+    for s in c.sources:
+        revoked = s.get("revoked_at")
+        if revoked:
+            lines.append(f"  from '[bold]{s['source_id']}[/bold]'  [red]← source revoked[/red]")
+        else:
+            lines.append(f"  from '{s['source_id']}'")
+
+    if c.retrieved:
+        when = ""
+        if c.last_retrieved_at:
+            ago = max(0, int(_time.time() - c.last_retrieved_at))
+            when = f", last {ago}s ago" if ago < 3600 else ""
+        lines.append(
+            f"  [bold]retrieved {c.retrieval_count}× into context[/bold]{when} "
+            f"[dim](actually reached the prompt)[/dim]"
+        )
+    else:
+        lines.append("  [dim]not seen in retrieval trace — matched on content only[/dim]")
+
+    if c.deleted_at:
+        lines.append("  [red]soft-deleted, yet still present[/red]")
+
+    ev = getattr(c, "evidence", {}) or {}
+    if ev.get("span") and c.method != "exact":
+        lines.append(f'  shared span: "[bold]{ev["span"]}[/bold]"')
+    if ev.get("recorded_answer_id"):
+        lines.append(
+            f"  [bold]recorded in context for this answer[/bold] "
+            f"[dim](answer {ev['recorded_answer_id']})[/dim]"
+        )
+    if ev.get("superseded_by"):
+        lines.append(
+            f"  superseded by [bold]{ev['superseded_by']}[/bold] "
+            f"[dim](recorded supersession edge)[/dim]"
+        )
+    elif ev.get("newer_artifact"):
+        lines.append(f"  newer competing memory: [dim]{ev['newer_artifact']}[/dim]")
+    if ev.get("distinct_queries"):
+        lines.append(
+            f"  retrieved across [bold]{ev['distinct_queries']} distinct queries[/bold]"
+        )
+
+    for d in c.diagnoses:
+        label, expl = _DIAGNOSIS_LABEL.get(d, (d, ""))
+        if expl:
+            lines.append(f"  → [bold]{label}[/bold]: {expl}")
+
+    console.print(
+        Panel(
+            "\n".join(lines),
+            title=f"[{tone}]#{index} · {diags} · conf {c.score:.2f} · {c.method}[/{tone}]",
+            title_align="left",
+            border_style=tone,
+        )
+    )
 
 
 @app.command()

@@ -13,7 +13,7 @@ import { WaitlistForm } from "@/components/WaitlistForm";
 
 const BOOKING_URL =
   process.env.NEXT_PUBLIC_BOOKING_URL ||
-  "mailto:hello@ferryte.dev?subject=Ferryte%20design-partner%20call&body=Stack%3A%20%0ATenants%3A%20%0AMemory%20backend(s)%3A%20%0ALeak%20you%E2%80%99re%20worried%20about%3A%20%0APreferred%20times%3A%20";
+  "mailto:hello@ferryte.dev?subject=Ferryte%20design-partner%20call&body=Stack%3A%20%0ATenants%3A%20%0AMemory%20backend(s)%3A%20%0AMemory%20bug%20you%E2%80%99re%20fighting%3A%20%0APreferred%20times%3A%20";
 
 export default function CloudPage() {
   return (
@@ -44,19 +44,20 @@ function Header() {
 
       <Reveal delay={0.18} className="mt-10 max-w-5xl">
         <h1 className="font-display text-[42px] font-light leading-[1.03] tracking-[-0.04em] text-ink sm:text-[68px] lg:text-[88px]">
-          The test proves it once.
+          You caught it once.
           <br />
-          <span className="text-ink-3">We&rsquo;ll prove it forever.</span>
+          <span className="text-ink-3">We&rsquo;ll watch for the next one.</span>
         </h1>
       </Reveal>
 
       <Reveal delay={0.4} className="mt-8 max-w-2xl">
         <p className="text-lede text-ink-2">
-          The free CLI shows your agent leaked deleted data today. Ferryte Cloud
-          will watch every deploy and alert you the moment a leak re-opens —
-          and Enterprise will hand your compliance team the signed receipt a
-          regulator actually accepts. Neither is launched yet. We&rsquo;re
-          building them with five design partners. Get in early.
+          The free CLI traces a memory bug on your machine today. Ferryte Cloud
+          will watch your agent in production — keeping every memory&rsquo;s
+          history and pinging you the moment one starts misbehaving — and
+          Enterprise will hand your compliance team the signed receipt a
+          regulator accepts. Neither is launched yet. We&rsquo;re building them
+          with five design partners. Get in early.
         </p>
       </Reveal>
 
@@ -88,14 +89,14 @@ const TIERS = [
     name: "Cloud",
     audience: "For engineering teams",
     tone: "royal" as const,
-    line: "Continuous proof the leak stays closed.",
+    line: "Every memory bug, the moment it happens.",
     blurb:
-      "Push every CI run to a hosted project. We keep the history, diff each run, and ping Slack or PagerDuty the second a scenario that used to pass starts leaking again.",
+      "Point your production agent at a hosted project. We keep every memory's history across sessions, watch for stale, contaminated, or leaked beliefs, and ping Slack or PagerDuty the second one shows up.",
     bullets: [
-      "Hosted run history + per-tenant blast radius",
-      "Regression alerts when a leak re-opens",
+      "Persistent, cross-session memory timelines",
+      "Prod alerts + regression detection",
       "Slack · PagerDuty · Linear · webhook",
-      "Status badge for your repo",
+      "Per-user & per-tenant memory dashboards",
     ],
   },
   {
@@ -202,7 +203,7 @@ function Waitlist() {
 
           <RevealOnScroll delay={0.2} className="mt-7 max-w-md">
             <p className="text-body text-ink-2">
-              Five teams running multi-tenant agent memory will define what
+              Five teams running stateful agents in production will define what
               Cloud becomes. Design partners get the founder paired with their
               team for the first integration, and six months of Cloud free once
               it ships. Tell us your stack — we read every entry by hand.
@@ -241,8 +242,9 @@ function BookCall() {
           <RevealOnScroll delay={0.18} className="mt-5 max-w-xl">
             <p className="text-body text-ink-2">
               Bring your architecture. We&rsquo;ll map where your agent&rsquo;s
-              memory most likely leaks deleted data, and whether the
-              design-partner cohort is a fit. No pitch deck.
+              memory most likely misleads it — stale facts, cross-tenant bleed,
+              phantom data — and whether the design-partner cohort is a fit. No
+              pitch deck.
             </p>
           </RevealOnScroll>
         </div>

@@ -3,18 +3,18 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
   title: "Manifesto",
   description:
-    "Why Ferryte exists: AWS, Zep, and OWASP have already admitted that AI agent memory does not propagate deletes. Almost nobody tests for it in CI.",
+    "Why Ferryte exists: agent memory is a black box. You can see what the agent said, never why it believed it. AWS, Zep, and OWASP already admit memory misbehaves invisibly — we make it traceable.",
   openGraph: {
     title: "Manifesto — Ferryte",
     description:
-      "The platforms said it themselves. We made it testable.",
+      "Agent memory is a black box. We make it traceable.",
     type: "article",
   },
   twitter: {
     card: "summary_large_image",
     title: "Manifesto — Ferryte",
     description:
-      "The platforms said it themselves. We made it testable.",
+      "Agent memory is a black box. We make it traceable.",
   },
   alternates: { canonical: "/manifesto" },
 };
