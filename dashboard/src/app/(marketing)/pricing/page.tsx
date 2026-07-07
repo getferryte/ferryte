@@ -49,10 +49,10 @@ function Header() {
 
       <Reveal delay={0.4} className="mt-8 max-w-2xl">
         <p className="text-lede text-ink-2">
-          Same model as Sentry and LangSmith. The debugging engine is
-          source-available (BSL 1.1) — read every line, self-host it, run it on
-          your machine free. The hosted memory-observability plane — persistent
-          timelines, prod alerts, shared history — is where the revenue lives.
+          Same model as Sentry and MariaDB. The debugging engine is
+          source-available (BSL 1.1) — read every line, self-host it, run it
+          in production free. The hosted plane — persistent timelines, prod
+          alerts, shared history — is the paid product.
         </p>
       </Reveal>
     </section>
@@ -67,7 +67,7 @@ const TIERS = [
     badge: "Available today",
     badgeTone: "ok" as const,
     price: "BSL 1.1 · free forever (self-hosted)",
-    blurb: "The library, the CLI, and the local memory inspector. Read it, self-host it, debug your agent today. Free on your machine — and free forever for self-hosted use.",
+    blurb: "The library, the CLI, and the local memory inspector. Read it, self-host it, debug your agent today — free forever for self-hosted use.",
     featuresNote: null as string | null,
     features: [
       "ferryte.instrument() one-line auto-patch",
@@ -212,7 +212,7 @@ function Tiers() {
           >
             COMMERCIAL.md
           </a>{" "}
-          in the repo for the exact source-available boundary, contributor policy, and commercial-tier scope.
+          in the repo for the exact licensing boundary, contributor policy, and commercial-tier scope.
         </p>
       </RevealOnScroll>
     </section>
@@ -395,11 +395,11 @@ function Waitlist() {
 const FAQ_ITEMS = [
   {
     q: "Why source-available (BSL) and not MIT or fully closed?",
-    a: "Nobody instruments their agent's memory with un-auditable tooling, so the engine stays readable and self-hostable — read the source on a Friday afternoon, ship it Monday. BSL adds exactly one restriction over MIT: you can't resell Ferryte as a competing hosted service. That closes the hyperscaler-clone risk that hit Elastic, Redis, and HashiCorp, without locking anything away — every version converts to Apache 2.0 after three years.",
+    a: "Nobody instruments their agent's memory with un-auditable tooling, so the engine stays readable and self-hostable — read the source on a Friday afternoon, ship it Monday. BSL adds exactly one restriction over MIT: you can't resell Ferryte itself as a competing hosted service. That closes the hyperscaler-clone risk that hit Elastic, Redis, and HashiCorp, without locking anything away — every version converts to Apache 2.0 after four years.",
   },
   {
     q: "Can I self-host the dashboard without paying?",
-    a: "Yes. The local Next.js dashboard is source-available (BSL 1.1) and ships in the repo. Run it against the JSON reports the CLI produces, in production, for free. Enterprise adds SSO, audit logs, multi-environment management, and signed compliance receipts on top of the same surface.",
+    a: "Yes. The local Next.js dashboard is source-available and ships in the repo. Run it against the JSON reports the CLI produces, in production, for free. Enterprise adds SSO, audit logs, multi-environment management, and signed compliance receipts on top of the same surface.",
   },
   {
     q: "Will Core ever become paid, or get features clawed back into Cloud?",
@@ -407,7 +407,7 @@ const FAQ_ITEMS = [
   },
   {
     q: "What license do contributions fall under?",
-    a: "Contributors sign a CLA that grants us a license to incorporate their changes into both the source-available core (BSL 1.1, converting to Apache 2.0) and the commercial tiers. The core repository stays source-available in perpetuity, and every version becomes Apache 2.0 three years after release. See LICENSING.md and CONTRIBUTING.md.",
+    a: "Contributors sign a CLA that grants us a license to incorporate their changes into both the source-available core (BSL 1.1, converting to Apache 2.0) and the commercial tiers. The core repository stays source-available in perpetuity, and every version becomes Apache 2.0 four years after release. See LICENSING.md and CONTRIBUTING.md.",
   },
   {
     q: "When does Cloud GA?",

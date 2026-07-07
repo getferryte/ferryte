@@ -4,7 +4,7 @@
 
 ## Scope
 
-- [ ] Core (BSL 1.1) — see LICENSING.md
+- [ ] Core (FSL-1.1) — see LICENSING.md
 - [ ] Documentation, tests, or tooling only
 - [ ] Proposes a Cloud / Enterprise-scoped change (please open an issue first)
 

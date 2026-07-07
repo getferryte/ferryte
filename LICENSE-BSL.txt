@@ -3,18 +3,17 @@ Business Source License 1.1
 Parameters
 
 Licensor:             Ferryte (and its commercial entity)
-Licensed Work:        Ferryte v0.2.3 or later. The Licensed Work is
+Licensed Work:        Ferryte v0.2.0 or later. The Licensed Work is
                       (c) 2026 Ferryte contributors.
 Additional Use Grant: You may make production use of the Licensed Work,
                       provided that you do not offer the Licensed Work to
                       third parties on a hosted or embedded basis that
                       competes with a Ferryte commercial offering. A
                       "competing offering" is a product or service marketed
-                      to third parties that provides debugging,
-                      observability, attribution, auditing, or verification
-                      of AI agent memory as a managed, hosted, or embedded
-                      service.
-Change Date:          Four years from the date each version is first
+                      to third parties that provides verification, auditing,
+                      or attestation of AI agent memory forgetting as a
+                      managed or hosted service.
+Change Date:          Three years from the date each version is first
                       published.
 Change License:       Apache License, Version 2.0
 

@@ -25,9 +25,9 @@ export default function MarketingLayout({
             <div className="max-w-md">
               <BrandLink href="/" showVersion={false} />
               <p className="mt-5 text-body text-ink-3">
-                Source-available memory debugging for AI agents. BSL 1.1
-                engine (converts to Apache 2.0), commercial Cloud + Enterprise
-                tiers.
+                Memory debugging for AI agents. Source-available engine
+                (BSL 1.1, converts to Apache 2.0), commercial Cloud +
+                Enterprise tiers.
               </p>
             </div>
 

@@ -59,13 +59,13 @@ Or open the SVGs in Figma / Sketch / browser, screenshot, done.
 
 Pick one based on field length:
 
-- **80 chars:** `Verification for agent forgetting. Source-available. BSL 1.1.`
-- **120 chars:** `Source-available forgetting oracle for AI agents. We prove your delete actually deleted. BSL 1.1. Cloud + Enterprise coming.`
-- **160 chars (max):** `Source-available forgetting oracle for AI agents. We prove your delete actually deleted — across memory, summaries, embeddings, retrievals. BSL 1.1. Cloud soon.`
+- **80 chars:** `Memory debugging for AI agents. Source-available. BSL 1.1.`
+- **120 chars:** `Memory debugging for AI agents. Trace any wrong answer to the memory that caused it. Source-available. Cloud coming.`
+- **160 chars (max):** `Memory debugging for AI agents. One command traces a wrong, stale, or leaked answer back to the exact memory that caused it — and proves the fix. Source-available.`
 
 ## One-liners (for press / one-pagers / cold emails)
 
-- 8 words: **Verification for agent forgetting.**
-- 15 words: **We prove your AI agent stops acting on revoked, stale, or cross-tenant data.**
-- 25 words: **Ferryte is the source-available forgetting oracle for AI agents — one line, and your CI breaks the moment a revoked memory still influences output.**
-- 50 words: **Ferryte is the source-available forgetting oracle for AI agents. One line — `ferryte.instrument()` — and your memory layer is wired to a canary-based verification engine that plants markers, calls the real delete API, and inspects both store contents and retrieval traces. CI breaks on leak. Cloud and Enterprise tiers handle scale.**
+- 8 words: **Memory debugging for AI agents.**
+- 15 words: **We trace your agent's wrong answer back to the exact memory that caused it.**
+- 25 words: **Ferryte is Sentry for AI agent memory — one line to instrument, one command to trace a bad answer to its root-cause memory, provably.**
+- 50 words: **Ferryte is memory debugging for AI agents. One line — `ferryte.instrument()` — records where every memory came from and every retrieval it entered. When the agent answers wrong, `ferryte why` names the memory that caused it, replays retrieval without it, and proves the fix. Source-available; Cloud and Enterprise tiers handle scale.**

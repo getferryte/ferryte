@@ -70,7 +70,7 @@ const STEPS = [
   {
     num: "01",
     title: "Instrument",
-    body: "One line — ferryte.instrument(). Auto-patches your memory client at construction time — the generic vector base, AgentCore, Zep, Letta, Cloudflare, Mem0 — plus subclasses for pgvector, Chroma, Qdrant. Your agent code does not change.",
+    body: "One line — ferryte.instrument(). Auto-patches the memory client you already use: vector stores, AgentCore, Zep, Letta, Cloudflare, Mem0. Your agent code does not change.",
     code: `import ferryte
 ferryte.instrument()
 
@@ -79,7 +79,7 @@ ferryte.instrument()
   {
     num: "02",
     title: "Trace",
-    body: "As your agent runs, Ferryte records write-time lineage for every memory: the source it came from, the summaries and embeddings it derived into, every retrieval that pulled it into a prompt, and — with one optional call per turn — the exact answer those memories produced.",
+    body: "As your agent runs, Ferryte records where every memory came from, what it derived into, and every retrieval that pulled it into a prompt. One optional call per turn links memories to the exact answers they produced.",
     code: `# recorded automatically
 mem_3f9c
   ← source  zendesk-ticket-8821
@@ -96,7 +96,7 @@ ferryte.record_answer(
   {
     num: "03",
     title: "Attribute",
-    body: "Point at a wrong, stale, or leaked answer. Ferryte ranks the memories that caused it using recorded answer-input edges, retrieval evidence, IDF-weighted overlap, and quote-level shared spans — then flags phantom, stale, cross-tenant, zombie, and poison-pattern hub memories.",
+    body: "Point at a wrong, stale, or leaked answer. Ferryte ranks the memories that caused it — using recorded answer edges, retrieval evidence, and quote-level shared spans — and names the fault: phantom, stale, cross-tenant, zombie, or poisoned.",
     code: `$ ferryte why "Legacy Free plan"
 #1  stale belief · conf 1.00
   from zendesk-ticket-8821
@@ -107,7 +107,7 @@ ferryte.record_answer(
   {
     num: "04",
     title: "Replay, fix, verify",
-    body: "Before you delete anything, Ferryte can run a retrieval-layer counterfactual: remove the top suspect and show what would have entered the agent's context instead. Then delete or supersede the bad memory and run the forgetting oracle to prove no revoked residue survives.",
+    body: "Before deleting anything, replay the retrieval without the top suspect and see what would have entered the context instead. Then delete or supersede the bad memory and re-run to prove nothing survived.",
     code: `$ ferryte why "Legacy Free plan" --replay
 counterfactual: without mem_old → Pro plan
 

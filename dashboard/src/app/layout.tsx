@@ -37,7 +37,7 @@ export const metadata: Metadata = {
     siteName: "Ferryte",
     title: "Ferryte — memory debugging for AI agents",
     description:
-      "When your agent gets something wrong, Ferryte shows which memory caused it, whether it was actually in context, and what would have happened without it. Source-available. BSL 1.1 engine.",
+      "When your agent gets something wrong, Ferryte shows which memory caused it, whether it was actually in context, and what would have happened without it. Source-available (BSL 1.1) engine.",
     images: [
       {
         url: "/og",

@@ -185,9 +185,8 @@ function Synthesis() {
         <p className="text-ink">
           So we stopped guessing and started tracing. We reproduced one class of
           this live on AWS Bedrock AgentCore — delete the source, the derived records
-          still answer — while Mem0 forgets cleanly, and we say so. Deletion is only
-          one way memory misbehaves; stale facts, cross-tenant bleed, and poisoned
-          writes are the rest. All of them live in the <span className="text-ink">derived
+          still answer. Deletion is only one way memory misbehaves; stale facts,
+          cross-tenant bleed, and poisoned writes are the rest. All of them live in the <span className="text-ink">derived
           layer</span> an app composes on top. The honest, reproducible evidence is{" "}
           <Link href="/benchmark" className="text-royal underline-offset-4 hover:underline">
             The Memory Report

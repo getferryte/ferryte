@@ -1,70 +1,71 @@
 # Commercial tiers
 
-Ferryte is source-available under the Business Source License 1.1. The engine
-in this repository is enough to run scenarios in your CI pipeline against your
-own infrastructure, in production, forever, for free.
+Ferryte is source-available under the Business Source License 1.1. The
+engine in this repository is enough to trace, attribute,
+and verify your agents' memory in CI and production, forever, for free.
 
-This document describes the closed-source commercial products built on top of
-that engine, and how to get access to them.
+This document describes the commercial products built on top of that engine,
+and how to get access to them.
 
-For the precise open-source / closed-source boundary, see
-[LICENSING.md](LICENSING.md).
+For the precise licensing boundary, see [LICENSING.md](LICENSING.md).
 
 ---
 
 ## Core (BSL 1.1) — available today
 
-The library, the CLI, the four scenarios, the lineage graph, and the local
-dashboard.
+The library, the CLI (`ferryte why`, `ferryte test`), the attribution engine,
+counterfactual replay, the lineage graph, and the local dashboard.
 
 - **Price:** free, forever.
-- **License:** Business Source License 1.1 — read, run, modify, and self-host
-  in production for free. Converts to Apache 2.0 three years after each
-  release. The only restriction: you can't resell it as a competing hosted
-  service. (v0.1.0 remains MIT.)
+- **License:** Business Source License 1.1 — read, run, modify, and
+  self-host in production for free. Converts to Apache 2.0 four years after
+  each release. The only restriction: you can't resell Ferryte itself as a
+  competing hosted or embedded service. (v0.1.0 remains MIT; v0.2.0–v0.2.2
+  carry the earlier 3-year BSL terms.)
 - **Install:** `pip install ferryte`
-- **Run:** `ferryte test`
+- **Run:** `ferryte why "the wrong answer" --tenant acme`
 - **Support:** community via GitHub issues and discussions.
-- **Best for:** individual developers and small teams who want to verify
-  agent forgetting in their own CI without involving procurement.
+- **Best for:** individual developers and small teams debugging their own
+  agents' memory without involving procurement.
 
 ## Cloud — pre-release
 
-The hosted forgetting oracle. **Not built yet.** We are building Cloud with
-the first five design partners, not before. When it ships, you will point
-your adapters at Ferryte Cloud instead of running the CI gate locally; we
-will run continuous verification, retain history, alert on regressions, and
+Hosted, continuous memory observability. **Not built yet.** We are building
+Cloud with the first five design partners, not before. When it ships, your
+instrumented agents will stream lineage to Ferryte Cloud; we will run
+continuous verification, retain memory history, alert on regressions, and
 integrate with the rest of your incident-response stack.
 
 - **Price:** TBD at GA. Free for design partners through 2026.
 - **License:** commercial SaaS.
 - **Status:** pre-release — five design-partner seats, building together.
-- **Best for:** companies running multi-tenant memory in production who want
-  continuous verification rather than periodic CI runs, and who need
-  regression alerts on memory drift across deploys.
+- **Best for:** teams running agent memory in production who want continuous
+  attribution and verification rather than one-off local runs, and who need
+  alerts when memory quality regresses across deploys.
 
 **What it will include beyond Core (once built):**
 
-- Continuous, scheduled verification runs across multiple environments
+- Continuous, scheduled verification runs across environments
   (dev, staging, prod).
-- Historical retention of every report, every blast-radius graph, every
-  finding — searchable, diff-able across runs.
-- Regression alerts when a new derived artifact starts surviving deletion.
+- Historical retention of every attribution, replay, and blast-radius report
+  — searchable, diff-able across runs.
+- Regression alerts: a memory turning stale, a deleted source resurfacing,
+  a hub-memory pattern emerging.
 - Slack, PagerDuty, Linear, and generic webhook destinations.
-- Per-tenant blast-radius dashboards (useful for incident triage).
-- A public status badge for your OSS repos (`forgetting: passing`).
+- Per-tenant memory dashboards for incident triage.
 - Org-level RBAC, projects, and environments.
 
 **How to get in:** email `hello@ferryte.dev` with:
 
 1. Your stack (memory backends, agent framework, hosting).
 2. Roughly how many tenants you serve and how sensitive their data is.
-3. The specific leak shape you're worried about.
+3. The specific memory failure you're fighting (wrong answers, stale facts,
+   leaks — whatever it is).
 
 We reply within 24 hours. We say no to most candidates. The ones we say yes
-to get the first six months of Cloud free **when Cloud ships**, the
-founding engineer paired with their team for the first Core integration, and
-a direct line to the roadmap.
+to get the first six months of Cloud free **when Cloud ships**, the founding
+engineer paired with their team for the first Core integration, and a direct
+line to the roadmap.
 
 ## Enterprise — roadmap
 
@@ -72,14 +73,13 @@ The self-hosted, hardened distribution. This is where the trust plane lives:
 the things AppSec, CISO, and Compliance teams sign off on.
 
 - **Price:** annual contract; tier based on number of agent products and
-  ingested write volume. Mid-five to mid-six figures for typical mid-market
-  customers. Contact sales for a quote.
+  ingested write volume. Contact sales for a quote.
 - **License:** commercial enterprise agreement.
 - **Status:** roadmap. Not in development yet. First contracts ship after
   Cloud has been in design-partner hands for at least two quarters.
-- **Best for:** enterprise companies that cannot put a third party between
-  their agent and their memory layer, that need attestation evidence for
-  regulators, or that need premium adapters for regulated environments.
+- **Best for:** enterprises that cannot put a third party between their agent
+  and their memory layer, that need attestation evidence for regulators, or
+  that need premium adapters for regulated environments.
 
 **What's included beyond Cloud:**
 
@@ -110,7 +110,7 @@ the things AppSec, CISO, and Compliance teams sign off on.
 
 **Will the license ever change again?**
 Not without 90 days' notice and an explicit tagged release. Every BSL version
-already converts to Apache 2.0 automatically after three years, so the
+already converts to Apache 2.0 automatically after four years, so the
 community's long-term access is guaranteed in the license itself. See
 LICENSING.md.
 
@@ -120,21 +120,21 @@ SaaS by definition. The Core engine is, of course, self-hostable for free
 under BSL.
 
 **Can I use Core in production for free?**
-Yes. Running Ferryte to verify your own agents — in CI or production — is
-explicitly permitted by the BSL Additional Use Grant. The only thing you
-can't do is resell it as a competing hosted/embedded verification service.
+Yes. Running Ferryte to debug and verify your own agents — in CI or
+production — is a Permitted Purpose named in the license text. The only thing
+you can't do is resell Ferryte itself as a competing product or service.
 
 **Can I contribute to the closed-source bits?**
 No. Contributions are accepted into the source-available Core only. The
 contributor license (in LICENSING.md) covers our right to incorporate
-contributions into the closed-source tiers.
+contributions into the commercial tiers.
 
 **What happens if Ferryte (the company) is acquired or shuts down?**
-Every published BSL version converts to Apache 2.0 three years after its
+Every published BSL version converts to Apache 2.0 four years after its
 release, and that conversion is irrevocable and baked into the license. You
-can always fork and maintain your own copy. The closed-source tiers are
-subject to their commercial agreements; we will publish a public commitment to
-a reasonable wind-down or escrow path before taking customer money for them.
+can always fork and maintain your own copy. The commercial tiers are subject
+to their agreements; we will publish a public commitment to a reasonable
+wind-down or escrow path before taking customer money for them.
 
 **Do you offer non-commercial / academic discounts?**
 Yes for Cloud. Email us. Core is already free under BSL.

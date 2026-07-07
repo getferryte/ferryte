@@ -276,8 +276,8 @@ function Quote() {
       </footer>
       <p className="mt-12 max-w-2xl text-lede text-ink-2">
         That sentence is true of nearly every agent-memory backend in production.
-        Ferryte is the layer that proves whether forgetting actually happened —
-        and is honest about what it cannot see.
+        This report is Ferryte&rsquo;s fix-and-verify surface: proof that a
+        deleted memory is really gone — honest about what it cannot see.
       </p>
     </section>
   );

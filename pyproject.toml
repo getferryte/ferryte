@@ -4,8 +4,8 @@ build-backend = "hatchling.build"
 
 [project]
 name = "ferryte"
-version = "0.2.1"
-description = "Verification for agent forgetting: prove your AI agent stops acting on revoked, stale, poisoned, or cross-tenant data."
+version = "0.2.3"
+description = "Memory debugging for AI agents: trace a wrong answer back to the exact memory that caused it, replay without it, and prove the fix."
 readme = "README.md"
 license = { file = "LICENSE" }
 requires-python = ">=3.9"
@@ -14,18 +14,17 @@ keywords = [
     "ai",
     "agents",
     "memory",
-    "testing",
-    "verification",
-    "owasp",
+    "debugging",
+    "observability",
+    "attribution",
     "lineage",
     "provenance",
-    "deletion",
-    "forgetting",
+    "verification",
+    "testing",
 ]
 classifiers = [
     "Development Status :: 3 - Alpha",
     "Intended Audience :: Developers",
-    "License :: Other/Proprietary License",
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3 :: Only",
     "Programming Language :: Python :: 3.9",

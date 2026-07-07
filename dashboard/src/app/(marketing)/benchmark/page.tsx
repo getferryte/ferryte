@@ -65,8 +65,8 @@ function Hero() {
             for it back.</span> We plant a canary, call each stack&rsquo;s real
             delete API, and check whether the agent can still surface it.{" "}
             <span className="text-ink">Some forget cleanly. Some don&rsquo;t.</span>{" "}
-            Deletion is just one way memory goes wrong — but it&rsquo;s the one you
-            can measure without arguing, so we name both, cleanly and provably.
+            Deletion is just one way memory goes wrong — but it&rsquo;s the one
+            you can measure without arguing.
           </p>
         </RevealOnScroll>
 
@@ -189,7 +189,6 @@ function Leaderboard() {
           <Legend v="fail" text="leaked the revoked data" />
           <Legend v="warn" text="partial / outranked" />
           <Legend v="blind" text="couldn't verify" />
-          <Legend v="pending" text="run in progress" />
         </RevealOnScroll>
 
         <p className="mt-8 max-w-2xl text-[12.5px] leading-relaxed text-ink-3/80">
@@ -392,7 +391,7 @@ python -m benchmark.run --backends inmemory,qdrant,lancedb --scenarios all --wit
 # Full run — real embeddings + summaries (needs OpenAI key + Docker):
 cd benchmark && cp .env.example .env && docker compose up -d
 python -m benchmark.run --scenarios all \\
-  --backends mem0,qdrant,chroma,pgvector,agentcore \\
+  --backends qdrant,chroma,pgvector,agentcore \\
   --embedder openai --summarizer openai   # add --with-ferryte for the 'after'`}</code>
           </pre>
         </RevealOnScroll>
@@ -410,7 +409,7 @@ python -m benchmark.run --scenarios all \\
 const FAQ = [
   {
     q: "“You sell the fix — of course you found leaks.”",
-    a: "Fair to ask, so here's the strongest counter-evidence: Mem0 forgets cleanly when you delete by the id it returns — 10/10 live runs — and we report it as PASS, not a leak. We didn't manufacture a failure to sell a fix. Cross-tenant isolation also holds on every stack we've tested. The whole harness is open, the versions are pinned, and you can falsify any cell yourself.",
+    a: "Fair to ask, so look at the cells we don't move: cross-tenant isolation PASSes on every stack we've tested, and stale-fact still FAILs even with Ferryte on — because it needs versioning, not a deletion cascade, and we say so instead of claiming credit. The whole harness is open, the versions are pinned, and you can falsify any cell yourself.",
   },
   {
     q: "Did you rig the configs?",

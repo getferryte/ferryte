@@ -2,6 +2,38 @@
 
 All notable changes to Ferryte will be documented in this file.
 
+## [0.2.3] — 2026-07-08
+
+### Changed
+
+- **License: BSL 1.1 grant updated.** The "competing offering" definition now
+  matches what Ferryte actually is (memory debugging, observability,
+  attribution, and verification for AI agents — not just deletion
+  verification), and the Change Date moves to the BSL maximum of four years
+  per version. v0.2.0–v0.2.2 keep their original 3-year terms (see
+  `LICENSE-BSL.txt`); v0.1.0 remains MIT.
+- Package metadata, README, and site updated to the memory-debugging
+  positioning ("trace a wrong answer back to the exact memory that caused it")
+  language.
+
+## [0.2.2] — 2026-07-07
+
+### Added
+
+- **Answer lineage** — `ferryte.record_answer()` records the exact memories in
+  context when an answer was produced, making `ferryte why` attribution exact
+  instead of inferential.
+- **Supersession edges** — `ferryte.record_supersession()` marks a fact as
+  replaced, making stale-belief diagnosis structurally provable.
+- **Counterfactual replay** — `ferryte why --replay` ablates the top suspect
+  from live retrieval and shows what would have entered the context instead.
+- **Attribution v2** — IDF-weighted content overlap, quote-level shared-span
+  evidence, zombie-memory and hub-memory (poisoning-pattern) diagnoses.
+- **FTS5 candidate prefiltering** — attribution stays fast on large memory
+  corpora (20k memories: ~178ms → ~0.5ms candidate selection).
+- `--since` time-window filter on `ferryte why`; `/api/why` endpoint for the
+  dashboard.
+
 ## [0.2.1] — 2026-06-05
 
 ### Fixed
