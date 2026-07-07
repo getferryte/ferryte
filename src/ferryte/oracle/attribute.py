@@ -54,15 +54,17 @@ from .detect import Embedder, _cosine, _tokens, normalize, token_embedder
 # Very common words carry no attribution signal — a memory and an answer sharing
 # only "the"/"is" tell us nothing. We ignore these when measuring content overlap
 # so generic phrasing can't manufacture a false root cause.
-_STOP: frozenset[str] = frozenset(
-    """
-    a an the this that these those and or but if then else of in on at to from by
-    for with without into onto is are was were be been being am do does did done
-    have has had having i you he she it we they them us me my your his her its our
-    their what which who whom whose when where why how not no yes as so than too
-    very can could should would will shall may might must about over under again
-    """.split()
-)
+_STOP: frozenset[str] = frozenset((
+    "a", "an", "the", "this", "that", "these", "those", "and", "or", "but", "if",
+    "then", "else", "of", "in", "on", "at", "to", "from", "by", "for", "with",
+    "without", "into", "onto", "is", "are", "was", "were", "be", "been", "being",
+    "am", "do", "does", "did", "done", "have", "has", "had", "having", "i", "you",
+    "he", "she", "it", "we", "they", "them", "us", "me", "my", "your", "his", "her",
+    "its", "our", "their", "what", "which", "who", "whom", "whose", "when", "where",
+    "why", "how", "not", "no", "yes", "as", "so", "than", "too", "very", "can",
+    "could", "should", "would", "will", "shall", "may", "might", "must", "about",
+    "over", "under", "again",
+))
 
 # Below this many stored memories a full scan is cheaper than the FTS round-trip.
 _PREFILTER_THRESHOLD = 512
@@ -487,9 +489,9 @@ def _diagnose(
     # tenant who saw the answer (or from the tenant that retrieved it).
     origin = artifact.get("tenant_id")
     requesters = {r.get("tenant_id") for r in retrievals if r.get("tenant_id")}
-    if viewer_tenant and origin and origin != viewer_tenant:
-        out.append("cross-tenant")
-    elif origin and any(req != origin for req in requesters):
+    if (viewer_tenant and origin and origin != viewer_tenant) or (
+        origin and any(req != origin for req in requesters)
+    ):
         out.append("cross-tenant")
 
     # Stale belief, structural rung — a supersession edge says a newer memory

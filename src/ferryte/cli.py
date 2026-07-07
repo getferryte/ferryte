@@ -21,7 +21,7 @@ import re
 import sys
 import time
 from pathlib import Path
-from typing import List, Optional
+from typing import Any, List, Optional
 
 import typer
 from rich.console import Console
@@ -340,7 +340,7 @@ def why(
     )
 
 
-def _render_replay(r: "Any") -> None:  # noqa: F821 - ReplayReport
+def _render_replay(r: Any) -> None:  # ReplayReport
     lines: list[str] = []
     if r.verdict == "no-clients":
         lines.append(
@@ -384,7 +384,7 @@ def _render_replay(r: "Any") -> None:  # noqa: F821 - ReplayReport
     )
 
 
-def _render_candidate(index: int, c: "Any") -> None:  # noqa: F821 - MemoryCandidate
+def _render_candidate(index: int, c: Any) -> None:  # MemoryCandidate
     import time as _time
 
     diags = ", ".join(
