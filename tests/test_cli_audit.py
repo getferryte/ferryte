@@ -3,6 +3,7 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
+from click import unstyle
 from typer.testing import CliRunner
 
 from ferryte.cli import app
@@ -64,7 +65,9 @@ def test_audit_rejects_unpaired_answer_query(tmp_path: Path) -> None:
     result = runner.invoke(
         app,
         ["audit", "--answer-query", "Question without an answer", "--out", str(tmp_path)],
+        color=True,
     )
 
     assert result.exit_code == 2
-    assert "--answer-query cannot be given more times than --answer" in result.output
+    output = " ".join(unstyle(result.output).split())
+    assert "--answer-query cannot be given more times than --answer" in output
