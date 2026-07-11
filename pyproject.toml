@@ -48,7 +48,9 @@ dev = [
     "pytest>=8.0",
     "pytest-cov>=5.0",
     "ruff>=0.4",
-    "mypy>=1.10",
+    # mypy 1.19 dropped Python 3.9 as a type-check target; Ferryte still
+    # supports 3.9, so stay on the final compatible series.
+    "mypy>=1.10,<1.19",
 ]
 
 [project.scripts]
@@ -90,3 +92,4 @@ addopts = "-ra -q"
 python_version = "3.9"
 strict_optional = true
 ignore_missing_imports = true
+follow_imports = "skip"

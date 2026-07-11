@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 
-import { sans, mono } from "./fonts";
+import { fraunces, mono, sans, serif } from "./fonts";
 import "./globals.css";
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://ferryte.dev";
@@ -69,9 +69,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html
       lang="en"
-      className={`${sans.variable} ${mono.variable} scroll-smooth`}
+      className={`${sans.variable} ${mono.variable} ${serif.variable} ${fraunces.variable} scroll-smooth`}
     >
-      <body className="min-h-screen bg-black font-sans text-ink antialiased">
+      <body className="grain min-h-screen bg-canvas font-sans text-ink antialiased">
         {children}
       </body>
     </html>

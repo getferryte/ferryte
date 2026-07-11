@@ -3,6 +3,7 @@
 Commands:
 
     ferryte why "<bad answer>"         # trace a wrong answer to the memory that caused it
+    ferryte audit                      # run the client-facing audit battery + report
     ferryte init                       # create local state dir, write ferryte.toml stub
     ferryte test [--scenario NAME]     # run scenarios, write reports/latest.{json,html}
     ferryte coverage                   # render the coverage + blind-spot map
@@ -65,6 +66,18 @@ def _maybe_load_user_module(module: Optional[str]) -> None:
         return
     sys.path.insert(0, str(Path.cwd()))
     importlib.import_module(module)
+
+
+def _bootstrap_vector_client(handle: Any) -> Any:
+    """Create and retain the built-in demo store for the current CLI command."""
+    from .adapters.vector import InMemoryVectorStore
+
+    client = InMemoryVectorStore()
+    if handle.adapter_for(client) is None:
+        adapter = next((a for a in handle.adapters if a.name == "vector"), None)
+        if adapter is not None:
+            handle.track(client, adapter)
+    return client
 
 
 def _version_callback(value: bool) -> None:
@@ -178,9 +191,9 @@ def test(
     _maybe_load_user_module(module)
 
     if not handle.list_clients() and bootstrap:
-        from .adapters.vector import InMemoryVectorStore
-
-        InMemoryVectorStore()
+        # Keep a strong reference for the duration of the command. Instrumentation
+        # intentionally stores clients weakly so it does not own application state.
+        _bootstrap_client = _bootstrap_vector_client(handle)
         console.print(
             "[yellow]No instrumented memory clients found — bootstrapped a self-contained "
             "InMemoryVectorStore for this run.[/yellow]"
@@ -459,6 +472,135 @@ def _render_candidate(index: int, c: Any) -> None:  # MemoryCandidate
             border_style=tone,
         )
     )
+
+
+@app.command()
+def audit(
+    client_name: str = typer.Option(
+        "Client", "--client", "-c", help="Client/company name stamped on the report."
+    ),
+    answer: List[str] = typer.Option(
+        [], "--answer", "-a", help="A wrong answer to attribute (repeatable, up to 5)."
+    ),
+    answer_query: List[str] = typer.Option(
+        [],
+        "--answer-query",
+        help="Question paired with the Nth --answer (repeat in the same order; optional).",
+    ),
+    tenant: Optional[str] = typer.Option(
+        None, "--tenant", "-t", help="Tenant/user scope for attribution."
+    ),
+    module: Optional[str] = typer.Option(
+        None, "--module", "-m", help="Import your app module so its memory clients exist."
+    ),
+    scenario: List[str] = typer.Option(
+        ["all"], "--scenario", "-s", help="Scenario names to run (or 'all')."
+    ),
+    bootstrap: bool = typer.Option(
+        True,
+        "--bootstrap/--no-bootstrap",
+        help="If no clients are detected, build a self-contained vector store (demo mode).",
+    ),
+    environment: str = typer.Option(
+        "", "--environment", help="Environment label for the report (e.g. staging, prod)."
+    ),
+    auditor: str = typer.Option("Ferryte", "--auditor", help="Who prepared the report."),
+    engagement_id: str = typer.Option("", "--engagement", help="Engagement/SOW reference."),
+    notes: str = typer.Option("", "--notes", help="Auditor notes appended to the report."),
+    out_dir: Optional[Path] = typer.Option(
+        None, "--out", help="Output directory (default: <state>/reports/audit)."
+    ),
+) -> None:
+    """Run the full Agent Memory Audit and write the client-facing deliverable.
+
+    One command = the paid audit: runs every scenario, attributes each provided
+    wrong answer, and writes audit.json plus a print-ready audit.html
+    (print to PDF for delivery).
+    """
+    from .oracle.attribute import attribute_answer
+    from .reports import AuditMeta, write_audit_report
+
+    if len(answer) > 5:
+        raise typer.BadParameter("--answer can be given at most 5 times per audit")
+    if len(answer_query) > len(answer):
+        raise typer.BadParameter("--answer-query cannot be given more times than --answer")
+
+    cfg = get_config()
+    handle = current_instrumentation() or instrument()
+    _maybe_load_user_module(module)
+
+    if not handle.list_clients() and bootstrap:
+        # Keep a strong reference for the duration of the command. Instrumentation
+        # intentionally stores clients weakly so it does not own application state.
+        _bootstrap_client = _bootstrap_vector_client(handle)
+        console.print(
+            "[yellow]No instrumented memory clients found — bootstrapped a self-contained "
+            "InMemoryVectorStore (demo mode; findings describe the toy store, not your stack).[/yellow]"
+        )
+    if not handle.list_clients():
+        console.print(
+            "[red]No instrumented clients to audit. Pass --module to import your app.[/red]"
+        )
+        raise typer.Exit(code=2)
+
+    console.print(_BANNER)
+    console.print(f"[bold]Agent Memory Audit[/bold] · {client_name}\n")
+
+    results = run_scenarios(instrumentation=handle, names=list(scenario))
+    render_results_table(results, console)
+
+    lineage = get_lineage()
+    report = build_coverage_report(instrumentation=handle, lineage=lineage, results=results)
+
+    attributions = []
+    for i, ans in enumerate(answer):
+        q = answer_query[i] if i < len(answer_query) else None
+        console.print(f"\n[bold]Attributing answer {i + 1}:[/bold] “{ans}”")
+        result = attribute_answer(ans, lineage=lineage, query=q, tenant_id=tenant, limit=5)
+        if result.candidates:
+            for j, c in enumerate(result.candidates, start=1):
+                _render_candidate(j, c)
+        else:
+            console.print("  [dim]no memory matched this answer[/dim]")
+        attributions.append(result)
+
+    out = (out_dir or (cfg.state_dir / "reports" / "audit")).expanduser().resolve()
+    meta = AuditMeta(
+        client_name=client_name,
+        auditor=auditor,
+        engagement_id=engagement_id,
+        environment=environment,
+        notes=notes,
+    )
+    write_audit_report(
+        path=out / "audit.html",
+        meta=meta,
+        report=report,
+        results=results,
+        attributions=attributions,
+    )
+    payload = {
+        "meta": {
+            "client_name": meta.client_name,
+            "auditor": meta.auditor,
+            "engagement_id": meta.engagement_id,
+            "environment": meta.environment,
+            "notes": meta.notes,
+            "generated_at": meta.generated_at,
+        },
+        "coverage": report.to_dict(),
+        "results": [r.to_dict() for r in results],
+        "attributions": [a.to_dict() for a in attributions],
+    }
+    (out / "audit.json").write_text(json.dumps(payload, indent=2, sort_keys=True), encoding="utf-8")
+
+    console.print(
+        f"\nDeliverable written to [bold]{out / 'audit.html'}[/bold] (print to PDF) "
+        "and audit.json."
+    )
+    fail = any(r.severity == Severity.FAIL for r in results)
+    if fail:
+        console.print("[red]Audit surfaced FAIL-severity issues — see the fix list in the report.[/red]")
 
 
 @app.command()

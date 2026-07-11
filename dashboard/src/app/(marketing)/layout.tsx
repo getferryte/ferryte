@@ -1,6 +1,7 @@
 import Link from "next/link";
 
 import { BrandLink } from "@/components/Brand";
+import { FooterWhy } from "@/components/FooterWhy";
 import { MarketingNav } from "@/components/MarketingNav";
 
 export default function MarketingLayout({
@@ -35,6 +36,7 @@ export default function MarketingLayout({
               <FooterCol title="Product">
                 <FooterLink href="/manifesto">Manifesto</FooterLink>
                 <FooterLink href="/product">How it works</FooterLink>
+                <FooterLink href="/audit">Memory Audit</FooterLink>
                 <FooterLink href="/pricing">Pricing</FooterLink>
                 <FooterLink href="/app">Dashboard</FooterLink>
               </FooterCol>
@@ -58,6 +60,7 @@ export default function MarketingLayout({
               Designed for the engineer debugging their agent&rsquo;s memory at 2am.
             </span>
           </div>
+          <FooterWhy />
         </div>
       </footer>
     </>

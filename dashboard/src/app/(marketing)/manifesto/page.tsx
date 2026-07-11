@@ -270,6 +270,12 @@ function Close() {
           </Link>
         </Magnetic>
         <Link
+          href="/audit"
+          className="text-[14px] text-ink-2 transition-colors duration-fast ease-out hover:text-ink"
+        >
+          Book the $500 audit →
+        </Link>
+        <Link
           href="/pricing"
           className="text-[14px] text-ink-2 transition-colors duration-fast ease-out hover:text-ink"
         >

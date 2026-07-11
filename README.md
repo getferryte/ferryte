@@ -3,7 +3,7 @@
 **Memory debugging for AI agents.**
 **Source-available (BSL 1.1 → Apache 2.0) · commercial Cloud + Enterprise tiers.**
 
-[Marketing site](https://ferryte.dev) · [Live dashboard demo](https://ferryte.dev/app) · [LICENSING](LICENSING.md) · [COMMERCIAL](COMMERCIAL.md)
+[Marketing site](https://ferryte.dev) · [Live dashboard demo](https://ferryte.dev/app) · [**$500 Memory Audit**](https://ferryte.dev/audit) · [LICENSING](LICENSING.md) · [COMMERCIAL](COMMERCIAL.md)
 
 Your agent gave a wrong, stale, or leaked answer. Somewhere in its memory is
 the artifact that caused it. Ferryte finds that artifact, shows you the
@@ -81,8 +81,11 @@ Scenarios: `source-revocation`, `cross-tenant-isolation`, `stale-fact`,
 
 ## Supported backends
 
-Mem0, generic vector stores (pgvector / Chroma / in-memory), AWS Bedrock
-AgentCore, Letta, Cloudflare Agents. Zep / Graphiti in progress.
+Core ships runtime adapters for Mem0; Zep, Letta, and Cloudflare Agents
+(beta); plus the instrumented `InMemoryVectorStore` reference adapter. Custom
+vector stores such as pgvector, Chroma, and Qdrant need a thin adapter around
+their write/search/delete surface. AWS Bedrock AgentCore is live-validated in
+the public benchmark harness; a Core runtime adapter is not shipped yet.
 
 ## Project layout
 
@@ -114,6 +117,15 @@ Same model as MariaDB, CockroachDB, and HashiCorp.
 
 Details, contributor license, and trademark policy: [LICENSING.md](LICENSING.md).
 Commercial tiers (Cloud, Enterprise): [COMMERCIAL.md](COMMERCIAL.md).
+
+## Want us to run this on your stack?
+
+The **[Agent Memory Audit](https://ferryte.dev/audit)** — fixed $500,
+48-hour turnaround, runs entirely in your infrastructure. We instrument your
+agent with you, run the full forgetting battery, trace your worst wrong
+answers to the memories that caused them, and hand you the evidence and the
+fix list. Money back if we find nothing actionable.
+Email `hello@ferryte.dev` with subject `Audit`.
 
 ## Status
 

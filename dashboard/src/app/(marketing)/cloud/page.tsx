@@ -57,7 +57,8 @@ function Header() {
           history and pinging you the moment one starts misbehaving — and
           Enterprise will hand your compliance team the signed receipt a
           regulator accepts. Neither is launched yet. We&rsquo;re building them
-          with five design partners. Get in early.
+          with five design partners — that&rsquo;s not a caveat, that&rsquo;s
+          the offer. Get in early enough to shape it.
         </p>
       </Reveal>
 

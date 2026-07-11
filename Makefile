@@ -1,4 +1,4 @@
-.PHONY: install test lint demo report dashboard-dev dashboard-build sample-report all
+.PHONY: install test lint typecheck demo report dashboard-dev dashboard-build sample-report all
 
 VENV ?= .venv
 PY   ?= $(VENV)/bin/python
@@ -14,6 +14,9 @@ test:
 
 lint:
 	$(VENV)/bin/ruff check src tests
+
+typecheck:
+	$(VENV)/bin/mypy src/ferryte
 
 demo:
 	$(PY) demo/multi_tenant_leak.py

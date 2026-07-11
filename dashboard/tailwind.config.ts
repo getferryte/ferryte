@@ -17,10 +17,12 @@ const config: Config = {
     extend: {
       colors: {
         black: "#000000",
-        canvas: "#000000",
-        surface: "#0a0a0a",
-        "surface-2": "#101010",
-        "surface-3": "#161616",
+        // Canvas is no longer a void: near-black with a breath of the brand's
+        // cyan-slate in it. Atmosphere layers (fog, grain) sit on top.
+        canvas: "#050607",
+        surface: "#0a0b0c",
+        "surface-2": "#101112",
+        "surface-3": "#161718",
         ink: "#fafafa",
         "ink-2": "#a0a0a0",
         "ink-3": "#666666",
@@ -44,6 +46,15 @@ const config: Config = {
       fontFamily: {
         sans: ["var(--font-geist-sans)", "ui-sans-serif", "system-ui", "sans-serif"],
         mono: ["var(--font-geist-mono)", "ui-monospace", "SFMono-Regular", "monospace"],
+        // The story voice — narrative moments only.
+        serif: ["var(--font-serif)", "Georgia", "serif"],
+      },
+      boxShadow: {
+        // Severity glows — light is meaning.
+        "glow-royal": "0 0 24px -6px rgba(90, 138, 150, 0.5)",
+        "glow-issue": "0 0 24px -6px rgba(220, 38, 38, 0.4)",
+        "glow-pending": "0 0 24px -6px rgba(217, 119, 6, 0.4)",
+        "glow-ok": "0 0 24px -6px rgba(16, 185, 129, 0.4)",
       },
       fontSize: {
         // Apple-ish scale: huge display, generous body, tiny labels.

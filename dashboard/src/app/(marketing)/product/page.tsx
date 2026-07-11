@@ -19,7 +19,10 @@ export default function ProductPage() {
         <HowItWorks />
         <BeforeAfter />
         <WhatItProves />
+        <EvidenceLadder />
         <Stack />
+        <TrustArchitecture />
+        <Personas />
         <Close />
       </div>
     </main>
@@ -70,7 +73,7 @@ const STEPS = [
   {
     num: "01",
     title: "Instrument",
-    body: "One line — ferryte.instrument(). Auto-patches the memory client you already use: vector stores, AgentCore, Zep, Letta, Cloudflare, Mem0. Your agent code does not change.",
+    body: "Start with one line — ferryte.instrument(). Mem0 and Zep clients created afterward are detected automatically; shipped adapters cover Letta, Cloudflare, and Ferryte's vector reference store, while custom stores plug into the same small adapter protocol.",
     code: `import ferryte
 ferryte.instrument()
 
@@ -347,13 +350,13 @@ function WhatItProves() {
 /* ----------------------------------------------- Stack */
 
 const STACK = [
-  { name: "Vector stores", status: "stable", body: "Generic vector base ships today. Subclass for pgvector, Chroma, Qdrant." },
+  { name: "Vector stores", status: "stable", body: "Instrumented reference store + adapter base ship today. pgvector, Chroma, and Qdrant need a thin store-specific adapter." },
   { name: "Mem0", status: "stable", body: "Auto-patch on construction. Full lineage across its LLM-extracted facts." },
-  { name: "AWS AgentCore", status: "beta", body: "Traces semantic long-term memory. Verified live: derived records survive DeleteEvent — Ferryte surfaces them." },
+  { name: "AWS AgentCore", status: "benchmark", body: "Verified live in the public benchmark harness. A Core runtime adapter is not shipped yet." },
   { name: "Zep", status: "beta", body: "Captures episodes + graph facts; traces shared-node summaries back to source." },
-  { name: "Letta", status: "beta", body: "Archival passages + derived summaries. Shipped in Core." },
-  { name: "Cloudflare Agents", status: "beta", body: "Vectorize-backed memory. Shipped in Core." },
-  { name: "Custom stores", status: "stable", body: "Implement the 80-line MemoryAdapter protocol." },
+  { name: "Letta", status: "beta", body: "Archival passages + derived summaries. Shipped in Core; pass the client explicitly." },
+  { name: "Cloudflare Agents", status: "beta", body: "Vectorize-backed memory. Shipped in Core; pass the client explicitly." },
+  { name: "Custom stores", status: "stable", body: "Implement the small Adapter protocol for your write, search, and delete surface." },
   { name: "LangGraph", status: "planned", body: "Tracing hooks on the roadmap." },
 ];
 
@@ -412,6 +415,193 @@ function StatusBadge({ status }: { status: "stable" | "beta" | "planned" }) {
       <span className={["dot", dot].join(" ")} />
       {status}
     </span>
+  );
+}
+
+
+/* ----------------------------------------------- Evidence ladder */
+
+const LADDER = [
+  {
+    rank: "strongest",
+    name: "Recorded answer edge",
+    body: "Your app called record_answer() — we know exactly which memories were in context when this answer was produced. Anchored, not inferred.",
+    method: "method: exact",
+  },
+  {
+    rank: "strong",
+    name: "Retrieval trace",
+    body: "The memory demonstrably entered the prompt for a matching query. The difference between a plausible suspect and a live one.",
+    method: "retrieved into context",
+  },
+  {
+    rank: "good",
+    name: "IDF-weighted span overlap",
+    body: "Rare shared terms count, common ones don't. Contiguous shared spans of three or more meaningful tokens are quoted back as evidence.",
+    method: "shared span",
+  },
+  {
+    rank: "fallback",
+    name: "Semantic residue",
+    body: "A pluggable embedder catches paraphrase when the exact words differ. Token-bag by default, neural drop-in when you want it.",
+    method: "method: semantic",
+  },
+];
+
+function EvidenceLadder() {
+  return (
+    <section className="border-t border-rule/60 py-20 lg:py-28">
+      <RevealOnScroll>
+        <span className="font-mono text-[10.5px] uppercase tracking-[0.22em] text-ink-3">
+          How attribution earns your trust
+        </span>
+      </RevealOnScroll>
+
+      <RevealOnScroll delay={0.1} className="mt-8 max-w-3xl">
+        <h2 className="font-display text-[34px] font-light leading-[1.06] tracking-[-0.028em] text-ink sm:text-[44px]">
+          Four signals, strongest first.
+          <br />
+          <span className="text-ink-3">And it never pretends.</span>
+        </h2>
+      </RevealOnScroll>
+
+      <Stagger className="mt-12 flex flex-col gap-4" staggerDelay={0.08}>
+        {LADDER.map((l, i) => (
+          <StaggerItem key={l.name}>
+            <article className="flex flex-col gap-3 rounded-lg border border-rule bg-surface px-7 py-6 transition-colors duration-base ease-out hover:border-rule-2 sm:flex-row sm:items-baseline sm:gap-8">
+              <span className="w-24 shrink-0 font-mono text-[10.5px] uppercase tracking-[0.18em] text-royal">
+                {i + 1} · {l.rank}
+              </span>
+              <div className="flex-1">
+                <h3 className="font-display text-[19px] font-light tracking-[-0.014em] text-ink">
+                  {l.name}
+                </h3>
+                <p className="mt-2 text-body text-ink-2">{l.body}</p>
+              </div>
+              <span className="shrink-0 font-mono text-[11px] text-ink-3">{l.method}</span>
+            </article>
+          </StaggerItem>
+        ))}
+      </Stagger>
+
+      <RevealOnScroll delay={0.3} className="mt-8 max-w-2xl">
+        <p className="text-caption text-ink-3">
+          No recorded edge? The report says <span className="font-mono">method: overlap</span>,
+          never <span className="font-mono">exact</span>. Ferryte labels the strength of its own
+          evidence — the same honesty that powers the blind-spot map.
+        </p>
+      </RevealOnScroll>
+    </section>
+  );
+}
+
+/* ----------------------------------------------- Trust architecture */
+
+const TRUST = [
+  {
+    q: "What does instrument() actually touch?",
+    a: "It patches the write/search/delete methods of detected memory clients (plus a constructor hook for clients built later). Your agent code is unchanged; remove the line and Ferryte is gone.",
+  },
+  {
+    q: "Where does the data live?",
+    a: "A local SQLite file (.ferryte/lineage.db) in your environment. No telemetry, no phone-home, no external service. The optional dashboard reads a local API you start yourself.",
+  },
+  {
+    q: "What leaves my machine?",
+    a: "Nothing. Reports are files you generate and choose to share. A hash-only fingerprint mode exists for teams that don't want raw content even in the local store.",
+  },
+  {
+    q: "Can my security team read the code first?",
+    a: "Every line. The engine is source-available (BSL 1.1) — auditability is the whole reason the license keeps the source open.",
+  },
+];
+
+function TrustArchitecture() {
+  return (
+    <section className="border-t border-rule/60 py-20 lg:py-28">
+      <RevealOnScroll>
+        <span className="font-mono text-[10.5px] uppercase tracking-[0.22em] text-ink-3">
+          For the pre-integration security review
+        </span>
+      </RevealOnScroll>
+
+      <RevealOnScroll delay={0.1} className="mt-8 max-w-3xl">
+        <h2 className="font-display text-[34px] font-light leading-[1.06] tracking-[-0.028em] text-ink sm:text-[44px]">
+          The questions your security team
+          <br />
+          <span className="text-ink-3">will ask. Answered now.</span>
+        </h2>
+      </RevealOnScroll>
+
+      <Stagger className="mt-12 grid gap-10 sm:grid-cols-2" staggerDelay={0.08}>
+        {TRUST.map((t) => (
+          <StaggerItem key={t.q}>
+            <article className="grid gap-3 border-l-2 border-rule pl-6 transition-colors duration-base ease-out hover:border-royal">
+              <h3 className="font-display text-[19px] font-light tracking-[-0.014em] text-ink sm:text-[22px]">
+                {t.q}
+              </h3>
+              <p className="text-body text-ink-2">{t.a}</p>
+            </article>
+          </StaggerItem>
+        ))}
+      </Stagger>
+    </section>
+  );
+}
+
+/* ----------------------------------------------- Personas */
+
+const PERSONAS = [
+  {
+    tag: "engineering",
+    title: "The lead who owns the agent.",
+    body: "Stop grepping traces at midnight. One command to the memory that caused it.",
+  },
+  {
+    tag: "support & ops",
+    title: "The team fielding \u201cthe AI is confused about me.\u201d",
+    body: "See exactly what the agent remembers about a user — and correct it.",
+  },
+  {
+    tag: "compliance",
+    title: "The team that signs the receipt.",
+    body: "Prove a deleted memory — and everything derived from it — is really gone.",
+  },
+];
+
+function Personas() {
+  return (
+    <section className="border-t border-rule/60 py-20 lg:py-28">
+      <RevealOnScroll>
+        <span className="font-mono text-[10.5px] uppercase tracking-[0.22em] text-ink-3">
+          Built for
+        </span>
+      </RevealOnScroll>
+
+      <RevealOnScroll delay={0.1} className="mt-8 max-w-3xl">
+        <h2 className="font-display text-[34px] font-light leading-[1.06] tracking-[-0.028em] text-ink sm:text-[44px]">
+          Three teams.
+          <br />
+          <span className="text-ink-3">One view of the memory.</span>
+        </h2>
+      </RevealOnScroll>
+
+      <Stagger className="mt-12 grid gap-12 md:grid-cols-3" staggerDelay={0.1}>
+        {PERSONAS.map((p) => (
+          <StaggerItem key={p.tag}>
+            <article className="border-l-2 border-rule pl-6 transition-colors duration-base ease-out hover:border-royal">
+              <span className="font-mono text-[10.5px] uppercase tracking-[0.22em] text-royal">
+                {p.tag}
+              </span>
+              <h3 className="mt-4 font-display text-[22px] font-light leading-[1.22] tracking-[-0.016em] text-ink sm:text-[26px]">
+                {p.title}
+              </h3>
+              <p className="mt-4 text-body text-ink-2">{p.body}</p>
+            </article>
+          </StaggerItem>
+        ))}
+      </Stagger>
+    </section>
   );
 }
 

@@ -39,11 +39,18 @@ export function Terminal({
   return (
     <div
       ref={ref}
-      className="rounded-lg border border-rule bg-surface p-6 transition-colors duration-base ease-out hover:border-rule-2 sm:p-7"
+      className={["term p-6 sm:p-7", tone === "bad" ? "opacity-[0.94]" : "term-glow"].join(" ")}
     >
       <header className="mb-5 flex items-center justify-between">
-        <span className="font-mono text-[10.5px] uppercase tracking-[0.22em] text-ink-3">
-          {title}
+        <span className="flex items-center gap-3">
+          <span className="term-dots" aria-hidden>
+            <i />
+            <i />
+            <i />
+          </span>
+          <span className="font-mono text-[10.5px] uppercase tracking-[0.22em] text-ink-3">
+            {title}
+          </span>
         </span>
         <span
           className={[
@@ -91,9 +98,9 @@ function Line({
     line.kind === "command"
       ? "text-ink"
       : tone === "issue"
-        ? "text-issue"
+        ? "ph-issue"
         : tone === "brand"
-          ? "text-royal"
+          ? "ph-royal"
           : tone === "muted"
             ? "text-ink-3"
             : "text-ink-2";

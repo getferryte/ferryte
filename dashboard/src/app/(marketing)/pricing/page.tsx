@@ -16,12 +16,41 @@ export default function PricingPage() {
     <main className="px-8 sm:px-12 lg:px-20">
       <div className="mx-auto max-w-6xl">
         <Header />
+        <AuditRibbon />
         <Tiers />
         <Compare />
         <Waitlist />
         <FAQ />
       </div>
     </main>
+  );
+}
+
+/* ---------------------------------------------------------- Audit ribbon */
+
+function AuditRibbon() {
+  return (
+    <RevealOnScroll className="pb-10">
+      <Link
+        href="/audit"
+        className="group flex flex-col gap-3 rounded-xl border border-royal/30 bg-surface px-7 py-6 transition-colors duration-base ease-out hover:border-royal/60 sm:flex-row sm:items-center sm:justify-between"
+      >
+        <div>
+          <span className="font-mono text-[10.5px] uppercase tracking-[0.22em] text-royal">
+            The only thing with a price today · $500 · 48 hours
+          </span>
+          <p className="mt-2 max-w-2xl text-body text-ink-2">
+            Not ready to self-serve? Start with the{" "}
+            <span className="text-ink">Agent Memory Audit</span> — we instrument
+            your agent with you, run the full battery in your infra, and hand you
+            the evidence. Money back if we find nothing actionable.
+          </p>
+        </div>
+        <span className="shrink-0 text-[14px] font-medium text-ink transition-transform duration-fast ease-out group-hover:translate-x-1">
+          Book it →
+        </span>
+      </Link>
+    </RevealOnScroll>
   );
 }
 

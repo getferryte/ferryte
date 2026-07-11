@@ -7,6 +7,7 @@ const ITEMS = [
   { href: "/product", label: "Product" },
   { href: "/benchmark", label: "Report" },
   { href: "/manifesto", label: "Manifesto" },
+  { href: "/audit", label: "Audit" },
   { href: "/pricing", label: "Pricing" },
   { href: "/cloud", label: "Cloud" },
 ];
@@ -27,7 +28,7 @@ export function MarketingNav() {
             href={item.href}
             aria-current={active ? "page" : undefined}
             className={[
-              "hidden transition-colors duration-fast ease-out sm:inline",
+              "nav-thread hidden transition-colors duration-fast ease-out sm:inline",
               active ? "text-ink" : "text-ink-2 hover:text-ink",
             ].join(" ")}
           >

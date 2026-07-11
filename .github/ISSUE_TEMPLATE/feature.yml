@@ -7,9 +7,9 @@ body:
     attributes:
       label: What problem does this solve?
       description: |
-        Lead with the user/customer pain. We are deliberately narrow — Ferryte is for agent
-        memory forgetting, not generic AI security. If the request is "make Ferryte do X",
-        explain why X is in scope for forgetting verification.
+        Lead with the user/customer pain. We are deliberately narrow — Ferryte is for
+        debugging and verifying AI-agent memory, not generic AI security. If the request is
+        "make Ferryte do X", explain which memory-debugging workflow it improves.
     validations:
       required: true
 
@@ -22,12 +22,12 @@ body:
   - type: dropdown
     id: scope
     attributes:
-      label: Is this Core (FSL-1.1) or Cloud / Enterprise scope?
+      label: Is this Core (BSL 1.1) or Cloud / Enterprise scope?
       description: |
         See LICENSING.md. Premium adapters, runtime enforcement, hosted features, and
         compliance attestations are commercial scope.
       options:
-        - Core (FSL-1.1)
+        - Core (BSL 1.1)
         - Cloud
         - Enterprise
         - Not sure — needs discussion

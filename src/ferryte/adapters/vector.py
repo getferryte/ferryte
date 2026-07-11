@@ -70,6 +70,11 @@ class InMemoryVectorStore:
     the exact failure both AWS AgentCore and Zep document.
     """
 
+    _ferryte_patched: bool
+    _ferryte_original_add: Any
+    _ferryte_original_search: Any
+    _ferryte_original_delete: Any
+
     def __init__(self, *, leak_summaries: bool = True, dim: int = 64) -> None:
         self._items: dict[str, _StoredItem] = {}
         self._source_index: dict[str, set[str]] = {}
@@ -302,9 +307,9 @@ class VectorAdapter:
     def unpatch(self, client: InMemoryVectorStore) -> None:
         if not getattr(client, "_ferryte_patched", False):
             return
-        client.add = client._ferryte_original_add  # type: ignore[assignment]
-        client.search = client._ferryte_original_search  # type: ignore[assignment]
-        client.delete_by_source = client._ferryte_original_delete  # type: ignore[assignment]
+        client.add = client._ferryte_original_add  # type: ignore[method-assign]
+        client.search = client._ferryte_original_search  # type: ignore[method-assign]
+        client.delete_by_source = client._ferryte_original_delete  # type: ignore[method-assign]
         client._ferryte_patched = False
 
     def delete_source(

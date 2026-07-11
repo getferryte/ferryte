@@ -35,7 +35,8 @@ body:
         - Chroma
         - Pinecone
         - Zep
-        - AWS Bedrock AgentCore
+        - Letta
+        - Cloudflare Agents / Vectorize
         - generic in-memory vector store
         - other (please describe in "Steps to reproduce")
     validations:

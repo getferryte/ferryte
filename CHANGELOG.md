@@ -2,6 +2,28 @@
 
 All notable changes to Ferryte will be documented in this file.
 
+## [Unreleased]
+
+### Added
+
+- **`ferryte audit`** — one command that runs the full scenario battery,
+  attributes up to five wrong answers (`--answer`, optionally paired with
+  `--answer-query`), and writes a client-facing deliverable: `audit.json`
+  plus a print-ready `audit.html` (executive summary, prioritized fix list,
+  evidence chains, honest blind-spot map). Powers the paid Agent Memory
+  Audit at ferryte.dev/audit.
+- `write_audit_report()` / `AuditMeta` in `ferryte.reports` for programmatic
+  audit-report generation.
+- Marketing site: `/audit` page (fixed-price Agent Memory Audit offer) with
+  a servable sample report at `/sample-audit.html`; nav + sitemap entries.
+- Dashboard toolchain upgraded to Next.js 16 / React 19 with committed ESLint
+  configuration and CI coverage for linting and production builds.
+
+### Fixed
+
+- CLI demo bootstrap now retains the temporary vector client long enough for
+  `ferryte test` and `ferryte audit` to run their scenario batteries.
+
 ## [0.2.3] — 2026-07-08
 
 ### Changed
