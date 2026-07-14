@@ -55,7 +55,7 @@ integrate with the rest of your incident-response stack.
 - Per-tenant memory dashboards for incident triage.
 - Org-level RBAC, projects, and environments.
 
-**How to get in:** email `hello@ferryte.dev` with:
+**How to get in:** email `pranav@ferryte.dev` with:
 
 1. Your stack (memory backends, agent framework, hosting).
 2. Roughly how many tenants you serve and how sensitive their data is.
@@ -102,7 +102,7 @@ the things AppSec, CISO, and Compliance teams sign off on.
 - Dedicated engineering point of contact, dedicated Slack channel, SLA on
   response and resolution.
 
-**How to get in:** email `hello@ferryte.dev` with subject `Ferryte Enterprise`.
+**How to get in:** email `pranav@ferryte.dev` with subject `Ferryte Enterprise`.
 
 ---
 

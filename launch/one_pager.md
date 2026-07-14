@@ -52,4 +52,4 @@ B2B SaaS shipping multi-tenant AI agents with persistent memory to enterprise cu
 Five design partners. Eight weeks each. We'll publish what we learn.
 Paired with the founding engineer for the Core integration; six months of
 Cloud free when Cloud ships.
-**hello@ferryte.dev** · github.com/getferryte/ferryte
+**pranav@ferryte.dev** · github.com/getferryte/ferryte

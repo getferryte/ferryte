@@ -236,7 +236,7 @@ ferryte test --scenario source-revocation
 ```
 
 Free audit for teams running multi-tenant agents in production:
-**hello@ferryte.dev**.
+**pranav@ferryte.dev**.
 
 ---
 

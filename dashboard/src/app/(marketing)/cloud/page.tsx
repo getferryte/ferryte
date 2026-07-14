@@ -13,7 +13,7 @@ import { WaitlistForm } from "@/components/WaitlistForm";
 
 const BOOKING_URL =
   process.env.NEXT_PUBLIC_BOOKING_URL ||
-  "mailto:hello@ferryte.dev?subject=Ferryte%20design-partner%20call&body=Stack%3A%20%0ATenants%3A%20%0AMemory%20backend(s)%3A%20%0AMemory%20bug%20you%E2%80%99re%20fighting%3A%20%0APreferred%20times%3A%20";
+  "mailto:pranav@ferryte.dev?subject=Ferryte%20design-partner%20call&body=Stack%3A%20%0ATenants%3A%20%0AMemory%20backend(s)%3A%20%0AMemory%20bug%20you%E2%80%99re%20fighting%3A%20%0APreferred%20times%3A%20";
 
 export default function CloudPage() {
   return (

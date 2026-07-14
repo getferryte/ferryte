@@ -10,7 +10,7 @@ Instead, use one of:
 
 1. **GitHub Security Advisories** — preferred. Open a private advisory at
    <https://github.com/getferryte/ferryte/security/advisories/new>.
-2. **Email** — `security@ferryte.dev`. Encrypt with our PGP key if the
+2. **Email** — `hello@ferryte.dev`. Encrypt with our PGP key if the
    disclosure is sensitive (key fingerprint published at ferryte.dev/.well-known
    once we ship it).
 

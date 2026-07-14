@@ -11,7 +11,7 @@ In short:
 - This applies in the repo, in issues, in pull requests, in discussions, on
   the Ferryte X account, and at any in-person event.
 
-Report violations to `conduct@ferryte.dev`. Reports are private and handled
+Report violations to `hello@ferryte.dev`. Reports are private and handled
 by a maintainer not involved in the dispute.
 
 We will warn first, then mute, then ban. Repeat offenders are removed

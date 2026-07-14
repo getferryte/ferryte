@@ -62,7 +62,7 @@ python demo/multi_tenant_leak.py
 
 Code: github.com/getferryte/ferryte
 Marketing: ferryte.dev
-Design partners (first 5, six months of Cloud free when it ships, paired with the founder): hello@ferryte.dev
+Design partners (first 5, six months of Cloud free when it ships, paired with the founder): pranav@ferryte.dev
 
 ## Topics (pick 3, max)
 

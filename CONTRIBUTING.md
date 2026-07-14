@@ -87,5 +87,5 @@ other contributors. Be the kind of person you would want to ship code with.
 
 - **Discussions:** GitHub Discussions tab
 - **Bug reports:** issue template
-- **Design-partner applications / commercial questions:** hello@ferryte.dev
+- **Design-partner applications / commercial questions:** pranav@ferryte.dev
 - **Security disclosures:** see [SECURITY.md](SECURITY.md)

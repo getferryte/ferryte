@@ -479,7 +479,7 @@ function CTA() {
           <CopyableCommand command="pip install ferryte" />
           <Magnetic>
             <a
-              href="mailto:hello@ferryte.dev?subject=Ferryte%20benchmark%20on%20our%20stack"
+              href="mailto:pranav@ferryte.dev?subject=Ferryte%20benchmark%20on%20our%20stack"
               className="inline-flex items-center gap-1.5 rounded-full bg-royal px-5 py-3 text-[14px] font-medium text-white shadow-[0_8px_36px_-12px_rgba(90,138,150,0.55)] transition-colors duration-fast ease-out hover:bg-royal-2"
             >
               Request a free audit

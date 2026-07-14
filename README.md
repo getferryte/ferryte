@@ -125,7 +125,7 @@ The **[Agent Memory Audit](https://ferryte.dev/audit)** — fixed $500,
 agent with you, run the full forgetting battery, trace your worst wrong
 answers to the memories that caused them, and hand you the evidence and the
 fix list. Money back if we find nothing actionable.
-Email `hello@ferryte.dev` with subject `Audit`.
+Email `pranav@ferryte.dev` with subject `Audit`.
 
 ## Status
 
@@ -133,5 +133,5 @@ Pre-launch. The source-available engine ships now; Cloud and Enterprise gate
 behind design partners. Looking for teams running AI agents with persistent
 memory in production who are fighting wrong answers they can't explain.
 
-If that is you: open an issue, email `hello@ferryte.dev`, or reach out via
+If that is you: open an issue, email `pranav@ferryte.dev`, or reach out via
 the site.

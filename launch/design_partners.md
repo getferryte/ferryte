@@ -77,7 +77,7 @@ What gets built in the design-partner cohort:
 > Best,
 > ${YOUR_NAME}
 >
-> ferryte.dev · github.com/getferryte/ferryte · hello@ferryte.dev
+> ferryte.dev · github.com/getferryte/ferryte · pranav@ferryte.dev
 
 ## Follow-up cadence
 

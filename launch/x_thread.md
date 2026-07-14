@@ -147,7 +147,7 @@ that works in the tweet.
 
 > Star: github.com/getferryte/ferryte
 > Read: ferryte.dev
-> Design partners (first 5, six months of Cloud free when it ships, paired with the founder): hello@ferryte.dev
+> Design partners (first 5, six months of Cloud free when it ships, paired with the founder): pranav@ferryte.dev
 >
 > If you find a real leak with Ferryte in the next two weeks, I'll add you to the launch board and ship the next adapter you ask for. Reply or DM.
 
@@ -161,7 +161,7 @@ that works in the tweet.
 2. Attach the screencast .mp4. Add alt text.
 3. Hit "Add another tweet" 9 times.
 4. Paste tweets 2–10 in order.
-5. **Double-check tweet 10** has the ferryte.dev link and `hello@ferryte.dev`.
+5. **Double-check tweet 10** has the ferryte.dev link and `pranav@ferryte.dev`.
 6. Post.
 7. Pin tweet 1 to the profile.
 8. Cross-post link to relevant Discords (r/AI_Agents, LangChain Slack, Mem0

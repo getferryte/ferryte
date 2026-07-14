@@ -59,7 +59,7 @@ way — swap the adapter, the demo is identical.
 We're looking for five design partners running multi-tenant AI memory in
 production. First six months of Cloud free (when it ships), paired with the
 founding engineer for the Core integration, and you shape the roadmap.
-hello@ferryte.dev.
+pranav@ferryte.dev.
 
 I'd love feedback on:
 
