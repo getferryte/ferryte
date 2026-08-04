@@ -31,10 +31,12 @@ export const metadata: Metadata = {
   authors: [{ name: "Ferryte" }],
   creator: "Ferryte",
   applicationName: "Ferryte",
+  category: "technology",
   openGraph: {
     type: "website",
     url: siteUrl,
     siteName: "Ferryte",
+    locale: "en_US",
     title: "Ferryte — memory debugging for AI agents",
     description:
       "When your agent gets something wrong, Ferryte shows which memory caused it, whether it was actually in context, and what would have happened without it. Source-available (BSL 1.1) engine.",
@@ -59,7 +61,17 @@ export const metadata: Metadata = {
   robots: {
     index: true,
     follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
   },
+  verification: process.env.GOOGLE_SITE_VERIFICATION
+    ? { google: process.env.GOOGLE_SITE_VERIFICATION }
+    : undefined,
   alternates: {
     canonical: "/",
   },

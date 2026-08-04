@@ -1,4 +1,5 @@
 import Link from "next/link";
+import type { Metadata } from "next";
 
 import { BrandLink } from "@/components/Brand";
 
@@ -7,6 +8,16 @@ const NAV: { href: string; label: string }[] = [
   { href: "/app/lineage", label: "Lineage" },
   { href: "/app/blindspots", label: "Blind spots" },
 ];
+
+export const metadata: Metadata = {
+  robots: {
+    index: false,
+    follow: true,
+    noarchive: true,
+    nosnippet: true,
+    noimageindex: true,
+  },
+};
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
   return (

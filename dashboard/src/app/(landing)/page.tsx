@@ -12,8 +12,14 @@
 
 import { EvidenceOrbit } from "@/components/EvidenceOrbit";
 import { InstallTerminal } from "@/components/InstallTerminal";
+import { JsonLd } from "@/components/JsonLd";
 import { MemoryBloom } from "@/components/MemoryBloom";
 import { Reveal } from "@/components/motion/Motion";
+import {
+  organizationJsonLd,
+  schemaGraph,
+  websiteJsonLd,
+} from "@/lib/seo";
 import Image from "next/image";
 import Link from "next/link";
 import { useRef } from "react";
@@ -32,6 +38,7 @@ export default function Landing() {
 
   return (
     <main className="relative flex min-h-screen flex-col overflow-hidden [font-family:var(--font-fraunces),Georgia,serif]">
+      <JsonLd data={schemaGraph(websiteJsonLd, organizationJsonLd)} />
       <div className="aurora" aria-hidden />
 
       <a

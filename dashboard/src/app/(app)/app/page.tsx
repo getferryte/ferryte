@@ -1,9 +1,15 @@
 import Link from "next/link";
+import type { Metadata } from "next";
 
 import { Chip, Dot, StatusLabel, type Tone } from "@/components/Pill";
 import { ScenarioRow } from "@/components/ScenarioRow";
 import { Stat, StatRow } from "@/components/Stat";
 import { loadReport } from "@/lib/report";
+
+export const metadata: Metadata = {
+  title: "Local Memory Inspector",
+  alternates: { canonical: "/app" },
+};
 
 type Verdict = "pass" | "warn" | "fail";
 

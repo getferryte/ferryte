@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Product",
+  title: "AI Agent Memory Debugger",
   description:
     "How Ferryte works: one line to instrument, write-time lineage for every memory, causal attribution by replay, and a fix-and-verify loop. Trace any answer back to the memory that caused it.",
   openGraph: {
@@ -9,12 +9,22 @@ export const metadata: Metadata = {
     description:
       "Four steps from install to root cause. One line, full memory provenance.",
     type: "article",
+    url: "/product",
+    images: [
+      {
+        url: "/og",
+        width: 1200,
+        height: 630,
+        alt: "Ferryte AI agent memory debugger",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
     title: "Product — Ferryte",
     description:
       "Four steps from install to root cause.",
+    images: ["/og"],
   },
   alternates: { canonical: "/product" },
 };

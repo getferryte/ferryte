@@ -1,5 +1,12 @@
+import type { Metadata } from "next";
+
 import { Chip, Dot, type Tone } from "@/components/Pill";
 import { loadReport } from "@/lib/report";
+
+export const metadata: Metadata = {
+  title: "Memory Lineage · Local Inspector",
+  alternates: { canonical: "/app/lineage" },
+};
 
 export default async function LineagePage() {
   const report = await loadReport();

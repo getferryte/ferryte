@@ -3,6 +3,7 @@
 import Link from "next/link";
 
 import { CopyableCommand } from "@/components/CopyableCommand";
+import { JsonLd } from "@/components/JsonLd";
 import {
   Magnetic,
   Reveal,
@@ -10,10 +11,12 @@ import {
   Stagger,
   StaggerItem,
 } from "@/components/motion/Motion";
+import { faqPageJsonLd, schemaGraph } from "@/lib/seo";
 
 export default function PricingPage() {
   return (
     <main className="px-8 sm:px-12 lg:px-20">
+      <JsonLd data={schemaGraph(faqPageJsonLd("/pricing", FAQ_ITEMS))} />
       <div className="mx-auto max-w-6xl">
         <Header />
         <AuditRibbon />

@@ -18,6 +18,9 @@ All notable changes to Ferryte will be documented in this file.
   a servable sample report at `/sample-audit.html`; nav + sitemap entries.
 - Dashboard toolchain upgraded to Next.js 16 / React 19 with committed ESLint
   configuration and CI coverage for linting and production builds.
+- Technical SEO for ferryte.dev: unique route metadata and canonicals,
+  structured product/service/benchmark data, crawl-safe dashboard no-indexing,
+  a deterministic sitemap, and a machine-readable benchmark feed.
 
 ### Fixed
 

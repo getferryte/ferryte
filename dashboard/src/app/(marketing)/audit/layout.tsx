@@ -9,12 +9,22 @@ export const metadata: Metadata = {
     description:
       "Your agent's memory has bugs you can't see. In 48 hours we'll show you every one we can find — and prove it.",
     type: "website",
+    url: "/audit",
+    images: [
+      {
+        url: "/og",
+        width: 1200,
+        height: 630,
+        alt: "Ferryte Agent Memory Audit",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
     title: "Agent Memory Audit — Ferryte",
     description:
       "Fixed price. 48-hour turnaround. Runs in your infra. Money back if we find nothing actionable.",
+    images: ["/og"],
   },
   alternates: { canonical: "/audit" },
 };

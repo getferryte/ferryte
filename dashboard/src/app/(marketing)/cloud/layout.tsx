@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Cloud + Enterprise · Join the waitlist",
+  title: "AI Agent Memory Observability · Cloud + Enterprise",
   description:
     "Ferryte Cloud watches your agent in production and alerts you the moment its memory starts misbehaving; Enterprise hands compliance teams signed GDPR/CCPA deletion attestations. In private development — join the waitlist or book a design-partner call.",
   openGraph: {
@@ -9,12 +9,22 @@ export const metadata: Metadata = {
     description:
       "You caught it once. We'll watch for the next one. Join the design-partner waitlist.",
     type: "website",
+    url: "/cloud",
+    images: [
+      {
+        url: "/og",
+        width: 1200,
+        height: 630,
+        alt: "Ferryte Cloud and Enterprise",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
     title: "Ferryte Cloud + Enterprise",
     description:
       "You caught it once. We'll watch for the next one. Join the design-partner waitlist.",
+    images: ["/og"],
   },
   alternates: { canonical: "/cloud" },
 };

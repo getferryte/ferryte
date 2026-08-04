@@ -3,6 +3,7 @@
 import Link from "next/link";
 
 import { CopyableCommand } from "@/components/CopyableCommand";
+import { JsonLd } from "@/components/JsonLd";
 import {
   Magnetic,
   Reveal,
@@ -10,10 +11,18 @@ import {
   Stagger,
   StaggerItem,
 } from "@/components/motion/Motion";
+import {
+  organizationJsonLd,
+  schemaGraph,
+  softwareApplicationJsonLd,
+} from "@/lib/seo";
 
 export default function ProductPage() {
   return (
     <main className="px-8 sm:px-12 lg:px-20">
+      <JsonLd
+        data={schemaGraph(softwareApplicationJsonLd, organizationJsonLd)}
+      />
       <div className="mx-auto max-w-6xl">
         <Header />
         <HowItWorks />

@@ -7,6 +7,14 @@ import {
   Stagger,
   StaggerItem,
 } from "@/components/motion/Motion";
+import { JsonLd } from "@/components/JsonLd";
+import {
+  absoluteUrl,
+  faqPageJsonLd,
+  ORGANIZATION_ID,
+  organizationJsonLd,
+  schemaGraph,
+} from "@/lib/seo";
 
 const MAILTO =
   "mailto:pranav@ferryte.dev?subject=Agent%20Memory%20Audit&body=Stack%20(framework%2C%20memory%20backend%2C%20hosting)%3A%20%0ATenants%20served%3A%20%0AWorst%20memory%20bug%20you're%20fighting%3A%20%0APreferred%20kickoff%20window%3A%20";
@@ -14,6 +22,7 @@ const MAILTO =
 export default function AuditPage() {
   return (
     <main className="px-8 sm:px-12 lg:px-20">
+      <JsonLd data={auditJsonLd()} />
       <div className="mx-auto max-w-6xl">
         <Header />
         <Deliverables />
@@ -293,6 +302,30 @@ const FAQ_ITEMS = [
     a: "The audit hands you the fix list and proves each fix when you apply it. If you want us to implement the fixes with you, that's the Fix Sprint — $1,500, scoped on the readout call.",
   },
 ];
+
+function auditJsonLd() {
+  return schemaGraph(
+    {
+      "@type": "Service",
+      "@id": `${absoluteUrl("/audit")}#service`,
+      name: "Agent Memory Audit",
+      url: absoluteUrl("/audit"),
+      description:
+        "A fixed-price audit of your AI agent's memory: instrumentation, five structural verification scenarios, wrong-answer attribution, an evidence report, and a prioritized fix list.",
+      serviceType: "AI agent memory audit",
+      provider: { "@id": ORGANIZATION_ID },
+      offers: {
+        "@type": "Offer",
+        price: "500",
+        priceCurrency: "USD",
+        availability: "https://schema.org/InStock",
+        url: absoluteUrl("/audit"),
+      },
+    },
+    faqPageJsonLd("/audit", FAQ_ITEMS),
+    organizationJsonLd,
+  );
+}
 
 function FAQ() {
   return (

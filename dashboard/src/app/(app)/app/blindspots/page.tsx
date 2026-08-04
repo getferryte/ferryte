@@ -1,5 +1,12 @@
+import type { Metadata } from "next";
+
 import { Dot, type Tone } from "@/components/Pill";
 import { loadReport } from "@/lib/report";
+
+export const metadata: Metadata = {
+  title: "Memory Blind Spots · Local Inspector",
+  alternates: { canonical: "/app/blindspots" },
+};
 
 export default async function BlindspotsPage() {
   const report = await loadReport();

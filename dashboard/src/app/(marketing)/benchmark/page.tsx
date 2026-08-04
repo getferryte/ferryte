@@ -3,6 +3,7 @@
 import Link from "next/link";
 
 import { CopyableCommand } from "@/components/CopyableCommand";
+import { JsonLd } from "@/components/JsonLd";
 import {
   Magnetic,
   RevealOnScroll,
@@ -16,10 +17,18 @@ import {
   SCENARIOS,
   type Verdict,
 } from "@/data/benchmark";
+import {
+  absoluteUrl,
+  ORGANIZATION_ID,
+  organizationJsonLd,
+  faqPageJsonLd,
+  schemaGraph,
+} from "@/lib/seo";
 
 export default function Benchmark() {
   return (
     <main>
+      <JsonLd data={benchmarkJsonLd()} />
       <Hero />
       <Leaderboard />
       <HowScored />
@@ -44,19 +53,21 @@ function Hero() {
           </span>
         </RevealOnScroll>
 
-        <WordReveal
-          as="h1"
-          text="We deleted the data."
-          staggerDelay={0.06}
-          className="font-display block text-[44px] font-light leading-[1.0] tracking-tightest text-ink sm:text-[76px] lg:text-[92px]"
-        />
-        <WordReveal
-          as="h1"
-          text="The memory kept it."
-          delay={0.5}
-          staggerDelay={0.06}
-          className="font-display -mt-1 block text-[44px] font-light leading-[1.0] tracking-tightest text-royal sm:text-[76px] lg:text-[92px]"
-        />
+        <h1>
+          <WordReveal
+            as="span"
+            text="We deleted the data."
+            staggerDelay={0.06}
+            className="font-display block text-[44px] font-light leading-[1.0] tracking-tightest text-ink sm:text-[76px] lg:text-[92px]"
+          />
+          <WordReveal
+            as="span"
+            text="The memory kept it."
+            delay={0.5}
+            staggerDelay={0.06}
+            className="font-display -mt-1 block text-[44px] font-light leading-[1.0] tracking-tightest text-royal sm:text-[76px] lg:text-[92px]"
+          />
+        </h1>
 
         <RevealOnScroll delay={0.2} className="mt-9 max-w-2xl">
           <p className="text-lede text-ink-2 sm:text-[20px]">
@@ -424,6 +435,44 @@ const FAQ = [
     a: "For the raw row, yes. The leak is the derived layer — summaries and graph nodes that absorbed the fact. The vendors document this themselves.",
   },
 ];
+
+function benchmarkJsonLd() {
+  return schemaGraph(
+    {
+      "@type": "Dataset",
+      "@id": `${absoluteUrl("/benchmark")}#dataset`,
+      name: "The Memory Report",
+      alternateName: "AI Agent Memory Security Benchmark",
+      description:
+        "An open, reproducible benchmark of whether AI agent memory stacks forget revoked data and resist stale, cross-tenant, and poisoned memory failures.",
+      url: absoluteUrl("/benchmark"),
+      dateModified: META.updated,
+      creator: { "@id": ORGANIZATION_ID },
+      license: "https://github.com/getferryte/ferryte/blob/main/LICENSE",
+      isAccessibleForFree: true,
+      keywords: [
+        "AI agent memory",
+        "memory security",
+        "memory deletion",
+        "cross-tenant isolation",
+        "stale memory",
+        "memory poisoning",
+      ],
+      variableMeasured: SCENARIOS.map((scenario) => ({
+        "@type": "PropertyValue",
+        name: scenario.label,
+        description: scenario.blurb,
+      })),
+      distribution: {
+        "@type": "DataDownload",
+        encodingFormat: "application/json",
+        contentUrl: absoluteUrl("/benchmark/data"),
+      },
+    },
+    faqPageJsonLd("/benchmark", FAQ),
+    organizationJsonLd,
+  );
+}
 
 function Honest() {
   return (
