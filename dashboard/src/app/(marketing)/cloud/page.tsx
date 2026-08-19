@@ -11,9 +11,11 @@ import {
 } from "@/components/motion/Motion";
 import { WaitlistForm } from "@/components/WaitlistForm";
 
-const BOOKING_URL =
+const MAILTO =
   process.env.NEXT_PUBLIC_BOOKING_URL ||
   "mailto:pranav@ferryte.dev?subject=Ferryte%20design-partner%20call&body=Stack%3A%20%0ATenants%3A%20%0AMemory%20backend(s)%3A%20%0AMemory%20bug%20you%E2%80%99re%20fighting%3A%20%0APreferred%20times%3A%20";
+
+const BOOKING_URL = "https://cal.com/pranav-chahal-v8xhmt/30min";
 
 export default function CloudPage() {
   return (
@@ -250,13 +252,27 @@ function BookCall() {
           </RevealOnScroll>
         </div>
 
-        <RevealOnScroll delay={0.22}>
+        <RevealOnScroll
+          delay={0.22}
+          className="flex flex-wrap items-center gap-4"
+        >
+          <Magnetic>
+            <a
+              href={MAILTO}
+              className="inline-flex items-center gap-1.5 rounded-full border border-rule-2 px-6 py-3.5 text-[14px] font-medium text-ink transition-colors duration-fast ease-out hover:bg-surface-2"
+            >
+              Email us
+              <span aria-hidden>→</span>
+            </a>
+          </Magnetic>
           <Magnetic>
             <a
               href={BOOKING_URL}
-              className="inline-flex items-center gap-1.5 rounded-full border border-rule-2 px-6 py-3.5 text-[14px] font-medium text-ink transition-colors duration-fast ease-out hover:bg-surface-2"
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex items-center gap-1.5 rounded-full bg-royal px-6 py-3.5 text-[14px] font-medium text-white shadow-[0_8px_36px_-12px_rgba(90,138,150,0.55)] transition-colors duration-fast ease-out hover:bg-royal-2"
             >
-              Book a call
+              Or book a 30-min call
               <span aria-hidden>→</span>
             </a>
           </Magnetic>

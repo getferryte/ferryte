@@ -205,7 +205,9 @@ The **[Agent Memory Audit](https://ferryte.dev/audit)** — fixed $3,000,
 agent with you, run the full forgetting battery, trace your worst wrong
 answers to the memories that caused them, and hand you the evidence and the
 fix list. Money back if we find nothing actionable.
-Email `pranav@ferryte.dev` with subject `Audit`.
+
+**[Book a 30-minute call](https://cal.com/pranav-chahal-v8xhmt/30min)**, or email
+`pranav@ferryte.dev` with subject `Audit`.
 
 ## Status
 

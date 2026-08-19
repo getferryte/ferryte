@@ -535,6 +535,17 @@ function CTA() {
               <span aria-hidden>→</span>
             </a>
           </Magnetic>
+          <Magnetic>
+            <a
+              href="https://cal.com/pranav-chahal-v8xhmt/30min"
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex items-center gap-1.5 rounded-full border border-rule-2/80 bg-black/20 px-5 py-3 text-[14px] font-medium text-ink-2 backdrop-blur transition-colors duration-fast ease-out hover:border-royal/40 hover:text-ink"
+            >
+              Or book a 30-min call
+              <span aria-hidden>→</span>
+            </a>
+          </Magnetic>
           <Link
             href="/product"
             className="text-[14px] text-ink-2 transition-colors duration-fast ease-out hover:text-ink"

@@ -16,6 +16,8 @@ import {
   schemaGraph,
 } from "@/lib/seo";
 
+const BOOKING = "https://cal.com/pranav-chahal-v8xhmt/30min";
+
 const MAILTO =
   "mailto:pranav@ferryte.dev?subject=Agent%20Memory%20Audit&body=Stack%20(framework%2C%20memory%20backend%2C%20hosting)%3A%20%0ATenants%20served%3A%20%0AWorst%20memory%20bug%20you're%20fighting%3A%20%0APreferred%20kickoff%20window%3A%20";
 
@@ -72,6 +74,17 @@ function Header() {
             className="inline-flex items-center gap-1.5 rounded-full bg-royal px-5 py-3 text-[14px] font-medium text-white shadow-[0_8px_36px_-12px_rgba(90,138,150,0.55)] transition-colors duration-fast ease-out hover:bg-royal-2"
           >
             Book the audit — $3,000
+            <span aria-hidden>→</span>
+          </a>
+        </Magnetic>
+        <Magnetic>
+          <a
+            href={BOOKING}
+            target="_blank"
+            rel="noreferrer"
+            className="inline-flex items-center gap-1.5 rounded-full border border-rule-2/80 bg-black/20 px-5 py-3 text-[14px] font-medium text-ink-2 backdrop-blur transition-colors duration-fast ease-out hover:border-royal/40 hover:text-ink"
+          >
+            Or book a 30-min call
             <span aria-hidden>→</span>
           </a>
         </Magnetic>
@@ -272,6 +285,14 @@ function Guarantee() {
             <span aria-hidden>→</span>
           </a>
         </Magnetic>
+        <a
+          href={BOOKING}
+          target="_blank"
+          rel="noreferrer"
+          className="text-[14px] text-ink-2 transition-colors duration-fast ease-out hover:text-ink"
+        >
+          Or book a 30-min call →
+        </a>
         <span className="text-caption text-ink-3">
           Two audit slots per week. First reply within 24 hours.
         </span>
