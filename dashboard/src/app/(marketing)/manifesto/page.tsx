@@ -273,7 +273,7 @@ function Close() {
           href="/audit"
           className="text-[14px] text-ink-2 transition-colors duration-fast ease-out hover:text-ink"
         >
-          Book the $500 audit →
+          Book the $3,000 audit →
         </Link>
         <Link
           href="/pricing"

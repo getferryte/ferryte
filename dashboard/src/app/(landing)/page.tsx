@@ -28,7 +28,7 @@ const LINKS = [
   { label: "Why it exists", href: "/manifesto" },
   { label: "How it works", href: "/product" },
   { label: "The Memory Report", href: "/benchmark" },
-  { label: "$500 Audit", href: "/audit" },
+  { label: "$3,000 Audit", href: "/audit" },
   { label: "Pricing", href: "/pricing" },
   { label: "GitHub", href: "https://github.com/getferryte/ferryte" },
 ];

@@ -40,7 +40,7 @@ function AuditRibbon() {
       >
         <div>
           <span className="font-mono text-[10.5px] uppercase tracking-[0.22em] text-royal">
-            The only thing with a price today · $500 · 48 hours
+            The only thing with a price today · $3,000 · 48 hours
           </span>
           <p className="mt-2 max-w-2xl text-body text-ink-2">
             Not ready to self-serve? Start with the{" "}

@@ -61,7 +61,7 @@ function Header() {
           forgetting battery against your real memory backend, trace your
           worst wrong answers to the exact memories that caused them — and
           hand you the evidence, the blind-spot map, and the fix list. In 48
-          hours, for a fixed <span className="text-ink">$500</span>.
+          hours, for a fixed <span className="text-ink">$3,000</span>.
         </p>
       </Reveal>
 
@@ -71,7 +71,7 @@ function Header() {
             href={MAILTO}
             className="inline-flex items-center gap-1.5 rounded-full bg-royal px-5 py-3 text-[14px] font-medium text-white shadow-[0_8px_36px_-12px_rgba(90,138,150,0.55)] transition-colors duration-fast ease-out hover:bg-royal-2"
           >
-            Book the audit — $500
+            Book the audit — $3,000
             <span aria-hidden>→</span>
           </a>
         </Magnetic>
@@ -316,7 +316,7 @@ function auditJsonLd() {
       provider: { "@id": ORGANIZATION_ID },
       offers: {
         "@type": "Offer",
-        price: "500",
+        price: "3000",
         priceCurrency: "USD",
         availability: "https://schema.org/InStock",
         url: absoluteUrl("/audit"),

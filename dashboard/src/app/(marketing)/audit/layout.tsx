@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Agent Memory Audit · $500, 48 hours",
+  title: "Agent Memory Audit · $3,000, 48 hours",
   description:
     "A fixed-price audit of your AI agent's memory: we instrument it, run the full forgetting battery, trace your worst wrong answers to the memories that caused them, and hand you the evidence. Runs entirely in your infrastructure.",
   openGraph: {

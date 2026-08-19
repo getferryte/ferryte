@@ -3,7 +3,7 @@
 **Memory debugging for AI agents.**
 **Source-available (BSL 1.1 → Apache 2.0) · commercial Cloud + Enterprise tiers.**
 
-[Marketing site](https://ferryte.dev) · [Live dashboard demo](https://ferryte.dev/app) · [**$500 Memory Audit**](https://ferryte.dev/audit) · [LICENSING](LICENSING.md) · [COMMERCIAL](COMMERCIAL.md)
+[Marketing site](https://ferryte.dev) · [Live dashboard demo](https://ferryte.dev/app) · [**$3,000 Memory Audit**](https://ferryte.dev/audit) · [LICENSING](LICENSING.md) · [COMMERCIAL](COMMERCIAL.md)
 
 Your agent gave a wrong, stale, or leaked answer. Somewhere in its memory is
 the artifact that caused it. Ferryte finds that artifact, shows you the
@@ -200,7 +200,7 @@ Commercial tiers (Cloud, Enterprise): [COMMERCIAL.md](COMMERCIAL.md).
 
 ## Want us to run this on your stack?
 
-The **[Agent Memory Audit](https://ferryte.dev/audit)** — fixed $500,
+The **[Agent Memory Audit](https://ferryte.dev/audit)** — fixed $3,000,
 48-hour turnaround, runs entirely in your infrastructure. We instrument your
 agent with you, run the full forgetting battery, trace your worst wrong
 answers to the memories that caused them, and hand you the evidence and the
