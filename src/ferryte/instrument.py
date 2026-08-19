@@ -33,6 +33,12 @@ _BUILTIN_ADAPTERS: list[str] = [
     "ferryte.adapters.zep:ZepAdapter",
     "ferryte.adapters.letta:LettaAdapter",
     "ferryte.adapters.cloudflare:CloudflareAdapter",
+    # Real external vector stores. Each module imports its driver lazily, so
+    # these register even when the driver is absent — the ImportError only
+    # surfaces if you actually try to connect.
+    "ferryte.adapters.pgvector:PgVectorAdapter",
+    "ferryte.adapters.chroma:ChromaAdapter",
+    "ferryte.adapters.qdrant:QdrantAdapter",
 ]
 
 _lock = threading.RLock()

@@ -4,7 +4,65 @@ All notable changes to Ferryte will be documented in this file.
 
 ## [Unreleased]
 
-### Added
+### Added — real vector-store backends
+
+- **pgvector adapter** (`ferryte[pgvector]`). Schema-configurable handle over an
+  existing Postgres table — you name the table and the content / embedding /
+  tenant / source columns, and Ferryte speaks SQL against them. Works read-only
+  against a production table it has never seen. Identifiers are validated
+  against a strict pattern and quoted before they reach SQL.
+- **Chroma adapter** (`ferryte[chroma]`). Wraps a collection; tenant scoping via
+  the metadata `where` filter. Chroma embeds queries itself, so semantic
+  probing is meaningful out of the box.
+- **Qdrant adapter** (`ferryte[qdrant]`). Payload-filter tenant scoping, scroll
+  based enumeration.
+- `ferryte.connect.open_store()` — resolve any backend from a URI
+  (`postgres://`, `chroma://`, `chroma+http://`, `qdrant://`, `memory://`) so the
+  CLI, Cloud and notebooks share one code path.
+- `documents_for_tenant()` on every store, which is what makes the
+  semantic-neighbour probe possible.
+
+> On embeddings, stated plainly: pgvector and Qdrant hold vectors from *your*
+> model, which Ferryte cannot reproduce. Pass an `embedder` for true vector
+> similarity; omit it and probes fall back to a lexical scan that still catches
+> exact-token leaks but can miss paraphrased ones — and records a blind spot
+> saying so. Previous releases listed these three stores as supported when only
+> an in-memory reference store shipped; that claim is now true.
+
+### Added — isolation and attestation
+
+- **`ferryte isolation-check <uri>`** — three probes against a live store:
+  *filtered* (a foreign document with the tenant filter applied is a hard fail),
+  *unfiltered blast radius* (what one forgotten predicate would expose, reported
+  as exposure rather than a defect), and *semantic neighbours* (queries derived
+  from one tenant's own documents run as another tenant — reach through
+  similarity, which produces no error in any log). Exits non-zero on a real
+  leak. JSON and Markdown output.
+- **`ferryte attest-deletion <uri> --source ... --sign`** — deletes, re-probes to
+  verify, and emits a dated, hash-chained, Ed25519-signed record covering what
+  was deleted, what was probed, and what could not be verified. `--dry-run`
+  verifies without deleting.
+- **`ferryte verify-attestation <file>`** — recomputes the canonical hash and
+  checks the signature; detects post-hoc edits.
+- Every attestation carries a named scope-limitations section (backups,
+  replicas, downstream exports, model weights, point-in-time validity) and
+  states that it is **not** a certificate of regulatory compliance.
+- `ferryte[attest]` extra for Ed25519 signing. Without it, records still carry a
+  SHA-256 content hash and say plainly that they are unsigned.
+
+### Added — CI and Cloud
+
+- **GitHub Action** (`action.yml`): runs the isolation check and, optionally, the
+  forgetting battery on every PR; writes a job summary and uploads reports.
+  `fail-on-blind-spots` is off by default, because a blind spot is an honest gap
+  in coverage rather than evidence of a defect.
+- **Cloud `POST /v1/scan` + `GET /v1/scan/{id}`** — hosted, read-only isolation
+  scan. Credentials are never persisted, results are excerpt-bounded and expire
+  after an hour, jobs are scoped to the requesting org/project, and loopback and
+  private addresses are refused by default so the endpoint cannot be used as an
+  SSRF primitive.
+
+### Added — prior release
 
 - **`ferryte audit`** — one command that runs the full scenario battery,
   attributes up to five wrong answers (`--answer`, optionally paired with

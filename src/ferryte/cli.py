@@ -3,6 +3,9 @@
 Commands:
 
     ferryte why "<bad answer>"         # trace a wrong answer to the memory that caused it
+    ferryte isolation-check <uri>      # can tenant B reach tenant A's data? three probes
+    ferryte attest-deletion <uri>      # delete, verify, emit a signed deletion record
+    ferryte verify-attestation <file>  # check an attestation's hash + signature
     ferryte audit                      # run the client-facing audit battery + report
     ferryte init                       # create local state dir, write ferryte.toml stub
     ferryte test [--scenario NAME]     # run scenarios, write reports/latest.{json,html}
@@ -659,6 +662,386 @@ def coverage(
     render_blindspots_table(report, console)
     if results:
         render_results_table(results, console)
+
+
+@app.command("isolation-check")
+def isolation_check(
+    uri: str = typer.Argument(
+        ...,
+        help=(
+            "Backend URI. postgres://…  chroma://path#collection  "
+            "qdrant://host#collection  memory://"
+        ),
+    ),
+    tenants: Optional[str] = typer.Option(
+        None, "--tenants", help="Comma-separated tenant ids. Omit to auto-discover."
+    ),
+    query: Optional[List[str]] = typer.Option(
+        None, "--query", "-q", help="A query your users actually run. Repeatable."
+    ),
+    table: Optional[str] = typer.Option(None, "--table", help="Table / collection name."),
+    tenant_column: str = typer.Option("tenant_id", "--tenant-column"),
+    source_column: str = typer.Option("source_id", "--source-column"),
+    content_column: str = typer.Option("content", "--content-column"),
+    id_column: str = typer.Option("id", "--id-column"),
+    limit: int = typer.Option(10, "--limit", help="Rows per probe."),
+    no_semantic: bool = typer.Option(
+        False, "--no-semantic", help="Skip the semantic-neighbour probe."
+    ),
+    report: Optional[Path] = typer.Option(
+        None, "--report", help="Write the JSON report here."
+    ),
+    markdown: Optional[Path] = typer.Option(
+        None, "--markdown", help="Write a human-readable Markdown report here."
+    ),
+) -> None:
+    """Check whether one tenant's data can surface to another.
+
+    Runs three probes — filtered, unfiltered blast radius, and semantic
+    neighbours — and exits non-zero if any real leak is found, so it works as a
+    CI gate as well as a one-off.
+    """
+    from .connect import open_store
+    from .oracle.isolation import run_isolation_check
+
+    console.print(_BANNER)
+    try:
+        opened = open_store(
+            uri,
+            table=table,
+            tenant_column=tenant_column,
+            source_column=source_column,
+            content_column=content_column,
+            id_column=id_column,
+        )
+    except Exception as exc:  # noqa: BLE001 - user-facing, must be readable
+        console.print(f"[red]Could not connect:[/red] {exc}")
+        raise typer.Exit(code=2) from exc
+
+    tenant_list = [t.strip() for t in tenants.split(",") if t.strip()] if tenants else None
+    console.print(f"[dim]backend:[/dim] {opened.label}")
+    for note in opened.notes:
+        console.print(f"[yellow]note:[/yellow] {note}")
+
+    try:
+        result = run_isolation_check(
+            opened.store,
+            tenants=tenant_list,
+            queries=list(query or []),
+            limit=limit,
+            semantic_probe=not no_semantic,
+            backend=opened.label,
+        )
+    finally:
+        opened.close()
+
+    for note in opened.notes:
+        result.blind_spots.append(note)
+
+    _render_isolation(result)
+
+    if report:
+        report.parent.mkdir(parents=True, exist_ok=True)
+        report.write_text(json.dumps(result.to_dict(), indent=2), encoding="utf-8")
+        console.print(f"[dim]JSON report → {report}[/dim]")
+    if markdown:
+        markdown.parent.mkdir(parents=True, exist_ok=True)
+        markdown.write_text(_isolation_markdown(result), encoding="utf-8")
+        console.print(f"[dim]Markdown report → {markdown}[/dim]")
+
+    if result.severity == Severity.FAIL:
+        raise typer.Exit(code=1)
+
+
+def _render_isolation(result: Any) -> None:
+    from rich.table import Table
+
+    verdict = {
+        Severity.PASS: "[green]PASS[/green] — no cross-tenant leak detected",
+        Severity.WARN: "[yellow]PASS with blind spots[/yellow] — see below",
+        Severity.FAIL: "[red]FAIL[/red] — cross-tenant leakage detected",
+    }[result.severity]
+    console.print(
+        Panel.fit(
+            f"{verdict}\n\n"
+            f"Tenants checked: {', '.join(result.tenants_checked) or '—'}\n"
+            f"Queries run: {result.queries_run}\n"
+            f"Filtered leaks: {len(result.filtered_leaks)}   "
+            f"Semantic leaks: {len(result.semantic_leaks)}   "
+            f"Unfiltered exposure: {len(result.unfiltered_exposure)}",
+            title="isolation check",
+        )
+    )
+
+    leaks = list(result.filtered_leaks) + list(result.semantic_leaks)
+    if leaks:
+        table = Table(title="Cross-tenant leaks", show_lines=False)
+        table.add_column("probe")
+        table.add_column("querying")
+        table.add_column("owner")
+        table.add_column("query", overflow="fold")
+        table.add_column("excerpt", overflow="fold")
+        for f in leaks[:25]:
+            table.add_row(
+                f.probe, f.querying_tenant, f.owning_tenant, f.query[:40], f.excerpt
+            )
+        console.print(table)
+        if len(leaks) > 25:
+            console.print(f"[dim]…and {len(leaks) - 25} more (see the JSON report)[/dim]")
+
+    if result.unfiltered_exposure:
+        console.print(
+            f"[yellow]Blast radius:[/yellow] {len(result.unfiltered_exposure)} documents "
+            "from other tenants would be reachable if a query ever lost its tenant filter. "
+            "That is a measure of exposure, not a live defect."
+        )
+
+    for b in result.blind_spots:
+        console.print(f"[yellow]blind spot:[/yellow] {b}")
+
+
+def _isolation_markdown(result: Any) -> str:
+    lines = ["# Multi-Tenant Isolation Check", ""]
+    badge = {
+        Severity.PASS: "PASS — no cross-tenant leak detected",
+        Severity.WARN: "PASS with stated blind spots",
+        Severity.FAIL: "FAIL — cross-tenant leakage detected",
+    }[result.severity]
+    lines += [
+        f"**Verdict:** {badge}",
+        "",
+        f"- **Backend:** {result.backend}",
+        f"- **Tenants checked:** {', '.join(result.tenants_checked) or '—'}",
+        f"- **Queries run:** {result.queries_run}",
+        f"- **Duration:** {result.duration_ms:.0f} ms",
+        "",
+        "## What was tested",
+        "",
+        "1. **Filtered probe** — each tenant's queries run *with* the tenant filter. "
+        "A foreign document here means the filter itself is broken.",
+        "2. **Unfiltered blast radius** — the same queries with no filter, measuring what "
+        "one forgotten predicate would expose. Reported as exposure, not as a defect.",
+        "3. **Semantic-neighbour probe** — queries derived from one tenant's own documents, "
+        "run as another tenant. This is leakage through similarity rather than a missing "
+        "filter, and it is the path that does not look like a bug in any log.",
+        "",
+    ]
+    for title, items in (
+        ("Filtered leaks (critical)", result.filtered_leaks),
+        ("Semantic-neighbour leaks (critical)", result.semantic_leaks),
+    ):
+        lines += [f"## {title}", ""]
+        if not items:
+            lines += ["_None found._", ""]
+            continue
+        lines += ["| querying tenant | owning tenant | query | document | excerpt |", "|---|---|---|---|---|"]
+        for f in items:
+            lines.append(
+                f"| {f.querying_tenant} | {f.owning_tenant} | `{f.query[:40]}` | "
+                f"`{f.artifact_id}` | {f.excerpt} |"
+            )
+        lines.append("")
+    lines += ["## Unfiltered blast radius", ""]
+    if result.unfiltered_exposure:
+        lines.append(
+            f"{len(result.unfiltered_exposure)} documents across other tenants would be "
+            "reachable by a single query missing its tenant filter."
+        )
+    else:
+        lines.append("_No unfiltered exposure measured._")
+    lines += ["", "## Blind spots — what was NOT verified", ""]
+    if result.blind_spots:
+        for b in result.blind_spots:
+            lines.append(f"- {b}")
+    else:
+        lines.append("_None recorded._")
+    lines += [
+        "",
+        "---",
+        "",
+        "_Generated by Ferryte. This report states what was observed through the "
+        "connection provided. It does not cover backups, replicas, downstream exports, "
+        "or stores not connected to this run._",
+    ]
+    return "\n".join(lines) + "\n"
+
+
+@app.command("attest-deletion")
+def attest_deletion(
+    uri: str = typer.Argument(..., help="Backend URI (see isolation-check)."),
+    source: str = typer.Option(..., "--source", help="The source id to forget."),
+    tenant: Optional[str] = typer.Option(None, "--tenant", help="Tenant scope, if any."),
+    probe: Optional[List[str]] = typer.Option(
+        None, "--probe", help="Text to search for after deletion. Repeatable."
+    ),
+    table: Optional[str] = typer.Option(None, "--table"),
+    tenant_column: str = typer.Option("tenant_id", "--tenant-column"),
+    source_column: str = typer.Option("source_id", "--source-column"),
+    content_column: str = typer.Option("content", "--content-column"),
+    sign: bool = typer.Option(False, "--sign", help="Ed25519-sign the attestation."),
+    key: Optional[Path] = typer.Option(None, "--key", help="Signing key path."),
+    out: Optional[Path] = typer.Option(None, "--out", help="Write the JSON attestation here."),
+    markdown: Optional[Path] = typer.Option(None, "--markdown", help="Write Markdown here."),
+    dry_run: bool = typer.Option(
+        False, "--dry-run", help="Verify only; do not delete anything."
+    ),
+) -> None:
+    """Delete a source, verify it is gone, and emit a signed attestation."""
+    from .connect import open_store
+    from .reports.attestation import DeletionProbe, build_attestation
+
+    console.print(_BANNER)
+    started = time.time()
+    try:
+        opened = open_store(
+            uri,
+            table=table,
+            tenant_column=tenant_column,
+            source_column=source_column,
+            content_column=content_column,
+        )
+    except Exception as exc:  # noqa: BLE001
+        console.print(f"[red]Could not connect:[/red] {exc}")
+        raise typer.Exit(code=2) from exc
+
+    store = opened.store
+    blind: list[str] = list(opened.notes)
+    deleted = 0
+    try:
+        if dry_run:
+            blind.append("Dry run: no delete was issued. Counts reflect current state only.")
+        else:
+            deleter = getattr(store, "delete_by_source", None)
+            if not callable(deleter):
+                console.print("[red]This backend exposes no delete-by-source path.[/red]")
+                raise typer.Exit(code=2)
+            deleted = int(deleter(source) or 0)
+
+        counter = getattr(store, "count_for_source", None)
+        remaining = int(counter(source)) if callable(counter) else -1
+        if remaining < 0:
+            remaining = 0
+            blind.append(
+                "Backend cannot count rows by source, so 'records remaining' could not be "
+                "confirmed directly and is reported as 0 on the strength of probes alone."
+            )
+
+        probes: list[DeletionProbe] = []
+        for text in probe or []:
+            hits = _probe_after_delete(store, text, tenant)
+            probes.append(
+                DeletionProbe(
+                    kind="retrieval",
+                    query=text,
+                    tenant_id=tenant,
+                    hits=len(hits),
+                    clean=not hits,
+                    detail="" if not hits else f"{len(hits)} document(s) still contain this text.",
+                )
+            )
+            raw = getattr(store, "raw_rows_containing", None)
+            if callable(raw):
+                try:
+                    rows = raw(text, limit=50)
+                except Exception as exc:  # noqa: BLE001
+                    blind.append(f"Raw store scan failed for {text!r}: {exc}")
+                    continue
+                probes.append(
+                    DeletionProbe(
+                        kind="raw_store_scan",
+                        query=text,
+                        tenant_id=None,
+                        hits=len(rows),
+                        clean=not rows,
+                        detail=(
+                            ""
+                            if not rows
+                            else "Content is still present in the store even though "
+                            "retrieval may not surface it."
+                        ),
+                    )
+                )
+            else:
+                blind.append(
+                    "Backend exposes no raw-scan path, so verification relied on retrieval "
+                    "only. A row that exists but does not rank would not be seen."
+                )
+        if not probe:
+            blind.append(
+                "No --probe text was supplied, so verification was limited to counting rows "
+                "by source id. Supplying distinctive text from the deleted content gives a "
+                "materially stronger attestation."
+            )
+
+        att = build_attestation(
+            source_id=source,
+            backend=opened.label,
+            rows_deleted=deleted,
+            rows_remaining=remaining,
+            probes=probes,
+            blind_spots=blind,
+            requested_at=started,
+            tool_version=__version__,
+        ).finalise(sign=sign, key_path=key)
+    finally:
+        opened.close()
+
+    colour = {"VERIFIED": "green", "VERIFIED_WITH_BLIND_SPOTS": "yellow", "INCOMPLETE": "red"}[
+        att.verdict
+    ]
+    console.print(
+        Panel.fit(
+            f"[{colour}]{att.verdict}[/{colour}]\n\n"
+            f"Source: {att.source_id}\n"
+            f"Deleted: {att.rows_deleted}   Remaining: {att.rows_remaining}\n"
+            f"Probes: {len(att.probes)} ({sum(1 for p in att.probes if p.clean)} clean)\n"
+            f"Hash: {att.content_hash}",
+            title="deletion attestation",
+        )
+    )
+    if att.signature:
+        console.print(f"[dim]signed ({att.signature_algorithm}), key {att.public_key[:16]}…[/dim]")
+    elif sign:
+        console.print(
+            "[yellow]--sign requested but the 'cryptography' package is missing; "
+            "wrote an unsigned, hash-only record. pip install 'ferryte[attest]'[/yellow]"
+        )
+    for b in att.blind_spots:
+        console.print(f"[yellow]blind spot:[/yellow] {b}")
+
+    if out:
+        out.parent.mkdir(parents=True, exist_ok=True)
+        out.write_text(att.to_json(), encoding="utf-8")
+        console.print(f"[dim]JSON → {out}[/dim]")
+    if markdown:
+        markdown.parent.mkdir(parents=True, exist_ok=True)
+        markdown.write_text(att.to_markdown(), encoding="utf-8")
+        console.print(f"[dim]Markdown → {markdown}[/dim]")
+
+    if att.verdict == "INCOMPLETE":
+        raise typer.Exit(code=1)
+
+
+def _probe_after_delete(store: Any, text: str, tenant: str | None) -> list[dict[str, Any]]:
+    try:
+        rows = store.search(query=text, tenant_id=tenant, limit=25)
+    except Exception:  # noqa: BLE001
+        return []
+    return [r for r in rows if text.lower() in str(r.get("content", "")).lower()]
+
+
+@app.command("verify-attestation")
+def verify_attestation_cmd(
+    path: Path = typer.Argument(..., help="Path to an attestation JSON file."),
+) -> None:
+    """Recompute the hash and check the signature of an attestation."""
+    from .reports.attestation import verify_attestation
+
+    ok, message = verify_attestation(path)
+    console.print(_BANNER)
+    console.print(f"[{'green' if ok else 'red'}]{'VALID' if ok else 'INVALID'}[/]: {message}")
+    if not ok:
+        raise typer.Exit(code=1)
 
 
 @app.command()

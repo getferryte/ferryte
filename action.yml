@@ -1,0 +1,170 @@
+name: "Ferryte memory checks"
+description: >-
+  Fail the build when a change lets one tenant's data reach another, or when a
+  deletion cannot be verified. Runs Ferryte's isolation check and forgetting
+  battery against a store you point it at.
+author: "Ferryte"
+
+branding:
+  icon: "shield"
+  color: "purple"
+
+inputs:
+  uri:
+    description: >-
+      Backend URI to check. postgres://…  chroma://path#collection
+      qdrant://host#collection  memory://
+    required: true
+  tenants:
+    description: "Comma-separated tenant ids. Omit to auto-discover."
+    required: false
+    default: ""
+  queries:
+    description: "Newline-separated queries your users actually run."
+    required: false
+    default: ""
+  table:
+    description: "Table or collection name."
+    required: false
+    default: ""
+  tenant-column:
+    description: "Column/metadata key holding the tenant id."
+    required: false
+    default: "tenant_id"
+  source-column:
+    description: "Column/metadata key holding the source id."
+    required: false
+    default: "source_id"
+  content-column:
+    description: "Column/metadata key holding the document text."
+    required: false
+    default: "content"
+  scenarios:
+    description: >-
+      Also run the forgetting battery with these scenarios (comma-separated, or
+      'all'). Leave empty to run the isolation check only.
+    required: false
+    default: ""
+  fail-on-blind-spots:
+    description: >-
+      Treat "could not verify" as a failure. Off by default: a blind spot is an
+      honest gap in coverage, not evidence of a defect. Turn it on once your
+      coverage is good and you want it to stay that way.
+    required: false
+    default: "false"
+  report-path:
+    description: "Where to write the JSON report."
+    required: false
+    default: "ferryte-isolation.json"
+  markdown-path:
+    description: "Where to write the Markdown report (also used for the job summary)."
+    required: false
+    default: "ferryte-isolation.md"
+  ferryte-version:
+    description: "Version spec to install, e.g. 'ferryte[all]==0.3.0'."
+    required: false
+    default: "ferryte[all]"
+  python-version:
+    description: "Python to run on."
+    required: false
+    default: "3.11"
+
+outputs:
+  passed:
+    description: "'true' when no cross-tenant leak was found."
+    value: ${{ steps.isolation.outputs.passed }}
+  filtered-leaks:
+    description: "Count of leaks found with the tenant filter applied."
+    value: ${{ steps.isolation.outputs.filtered_leaks }}
+  semantic-leaks:
+    description: "Count of leaks found via semantic-neighbour probing."
+    value: ${{ steps.isolation.outputs.semantic_leaks }}
+  report:
+    description: "Path to the JSON report."
+    value: ${{ inputs.report-path }}
+
+runs:
+  using: "composite"
+  steps:
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: ${{ inputs.python-version }}
+
+    - name: Install Ferryte
+      shell: bash
+      run: python -m pip install --quiet --upgrade "${{ inputs.ferryte-version }}"
+
+    - name: Isolation check
+      id: isolation
+      shell: bash
+      run: |
+        set -o pipefail
+        args=( "${{ inputs.uri }}" )
+        [ -n "${{ inputs.tenants }}" ] && args+=( --tenants "${{ inputs.tenants }}" )
+        [ -n "${{ inputs.table }}" ] && args+=( --table "${{ inputs.table }}" )
+        args+=( --tenant-column "${{ inputs.tenant-column }}" )
+        args+=( --source-column "${{ inputs.source-column }}" )
+        args+=( --content-column "${{ inputs.content-column }}" )
+        args+=( --report "${{ inputs.report-path }}" )
+        args+=( --markdown "${{ inputs.markdown-path }}" )
+
+        # Each non-empty line of `queries` becomes one -q flag.
+        while IFS= read -r line; do
+          [ -n "$line" ] && args+=( -q "$line" )
+        done <<< "${{ inputs.queries }}"
+
+        set +e
+        ferryte isolation-check "${args[@]}"
+        code=$?
+        set -e
+
+        # Read structured results rather than scraping stdout.
+        python - "$code" <<'PY'
+        import json, os, sys
+        code = int(sys.argv[1])
+        path = os.environ.get("FERRYTE_REPORT", "ferryte-isolation.json")
+        try:
+            data = json.load(open(path))
+        except Exception:
+            data = {}
+        out = os.environ["GITHUB_OUTPUT"]
+        with open(out, "a") as fh:
+            fh.write(f"passed={'true' if data.get('passed') else 'false'}\n")
+            fh.write(f"filtered_leaks={len(data.get('filtered_leaks', []))}\n")
+            fh.write(f"semantic_leaks={len(data.get('semantic_leaks', []))}\n")
+            fh.write(f"blind_spots={len(data.get('blind_spots', []))}\n")
+        PY
+        exit $code
+      env:
+        FERRYTE_REPORT: ${{ inputs.report-path }}
+
+    - name: Forgetting battery
+      if: ${{ inputs.scenarios != '' }}
+      shell: bash
+      run: ferryte test --scenario "${{ inputs.scenarios }}"
+
+    - name: Fail on blind spots
+      if: ${{ inputs.fail-on-blind-spots == 'true' && steps.isolation.outputs.blind_spots != '0' }}
+      shell: bash
+      run: |
+        echo "::error::Ferryte recorded ${{ steps.isolation.outputs.blind_spots }} blind spot(s) and fail-on-blind-spots is enabled."
+        exit 1
+
+    - name: Job summary
+      if: always()
+      shell: bash
+      run: |
+        if [ -f "${{ inputs.markdown-path }}" ]; then
+          cat "${{ inputs.markdown-path }}" >> "$GITHUB_STEP_SUMMARY"
+        fi
+
+    - name: Upload reports
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: ferryte-reports
+        path: |
+          ${{ inputs.report-path }}
+          ${{ inputs.markdown-path }}
+        if-no-files-found: ignore

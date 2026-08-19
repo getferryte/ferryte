@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "ferryte"
-version = "0.2.3"
+version = "0.3.0"
 description = "Memory debugging for AI agents: trace a wrong answer back to the exact memory that caused it, replay without it, and prove the fix."
 readme = "README.md"
 license = { file = "LICENSE" }
@@ -44,6 +44,22 @@ dependencies = [
 [project.optional-dependencies]
 mem0 = ["mem0ai>=0.1.0"]
 api = ["fastapi>=0.110", "uvicorn>=0.29"]
+# Real vector-store backends. Kept optional so `pip install ferryte` stays
+# dependency-light — the adapters import their driver lazily and only raise if
+# you actually connect.
+pgvector = ["psycopg[binary]>=3.1"]
+chroma = ["chromadb>=0.5"]
+qdrant = ["qdrant-client>=1.9"]
+# Ed25519 signing for deletion attestations. Without it, attestations still
+# carry a SHA-256 content hash and say plainly that they are unsigned.
+attest = ["cryptography>=42.0"]
+# Everything a normal production user wants in one go.
+all = [
+    "psycopg[binary]>=3.1",
+    "chromadb>=0.5",
+    "qdrant-client>=1.9",
+    "cryptography>=42.0",
+]
 dev = [
     "pytest>=8.0",
     "pytest-cov>=5.0",

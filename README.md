@@ -64,11 +64,76 @@ ferryte why "the bad answer text" --tenant acme --since 2h
 ferryte why "the bad answer text" --tenant acme --query "original user query" --replay
 ```
 
+## Can one tenant reach another's data?
+
+Published measurements put cross-tenant leakage at **83%** in multi-tenant RAG
+built on logical isolation without access control at the retrieval layer — which
+is the default shape of most AI SaaS, because per-tenant indexes are expensive.
+Most teams have no instrument that would tell them either way.
+
+One command, no instrumentation, read-only:
+
+```bash
+ferryte isolation-check "postgres://user:pass@host/db" \
+  --table memories \
+  --tenants acme,globex \
+  -q "what are our renewal terms?" \
+  --markdown isolation.md
+```
+
+Three probes, in increasing order of what they prove:
+
+1. **Filtered** — each tenant's queries run *with* the tenant filter. A foreign
+   document here means the filter itself is broken. Hard fail.
+2. **Unfiltered blast radius** — the same queries with no filter, measuring what
+   a single forgotten `WHERE` clause would expose. Reported as exposure, never
+   as a defect, because an unfiltered query is not by itself a bug.
+3. **Semantic neighbours** — queries derived from one tenant's own documents,
+   run as another tenant. This is reach through *similarity* rather than a
+   missing predicate, and it is the path that produces no error in any log.
+
+Exits non-zero on a real leak, so it works as a CI gate as well as a one-off.
+
+## Proving a deletion actually happened
+
+GDPR's accountability principle means it is not enough to delete — you have to be
+able to demonstrate it. The EDPB's 2025 coordinated enforcement action on the
+right to erasure found most organisations cannot.
+
+```bash
+ferryte attest-deletion "postgres://…" \
+  --source user_8813 \
+  --probe "the distinctive phrase that should now be gone" \
+  --sign --markdown attestation.md
+
+ferryte verify-attestation attestation.json
+```
+
+You get a dated, hash-chained, Ed25519-signed record of what was deleted, what
+was probed afterwards, what those probes returned — and, printed as prominently
+as the successes, **what could not be verified**.
+
+> This attests to what Ferryte observed through the connections it was given. It
+> is **not** a certificate of regulatory compliance, and it does not claim to be.
+> Backups, replicas, downstream exports and model weights are outside its reach,
+> and every generated attestation says so on its face.
+
 ## CI gate
 
-The same lineage engine powers a deletion-verification gate. Seed canaries,
-revoke through the backend's real delete API, and fail the build if a revoked
-marker re-enters retrieval:
+Fail the build when a change lets one tenant reach another, or when a deletion
+cannot be verified:
+
+```yaml
+- uses: getferryte/ferryte@v1
+  with:
+    uri: postgres://…
+    tenants: acme,globex
+    queries: |
+      what are our renewal terms?
+      summarise last quarter
+```
+
+Or drive the forgetting battery directly:
 
 ```bash
 ferryte init
@@ -77,15 +142,29 @@ ferryte coverage        # what was verified + the honest blind-spot map
 ```
 
 Scenarios: `source-revocation`, `cross-tenant-isolation`, `stale-fact`,
-`memory-poisoning`.
+`memory-poisoning`, `mosaic`.
 
 ## Supported backends
 
-Core ships runtime adapters for Mem0; Zep, Letta, and Cloudflare Agents
-(beta); plus the instrumented `InMemoryVectorStore` reference adapter. Custom
-vector stores such as pgvector, Chroma, and Qdrant need a thin adapter around
-their write/search/delete surface. AWS Bedrock AgentCore is live-validated in
-the public benchmark harness; a Core runtime adapter is not shipped yet.
+| Backend | State | Install |
+|---|---|---|
+| **pgvector** (PostgreSQL) | shipped | `pip install 'ferryte[pgvector]'` |
+| **Chroma** | shipped | `pip install 'ferryte[chroma]'` |
+| **Qdrant** | shipped | `pip install 'ferryte[qdrant]'` |
+| Mem0 | shipped | `pip install 'ferryte[mem0]'` |
+| In-memory reference store | shipped | included |
+| Zep · Letta · Cloudflare Agents | beta | included |
+| AWS Bedrock AgentCore | benchmark-only — no runtime adapter yet | — |
+
+`pip install 'ferryte[all]'` gets every backend plus attestation signing.
+
+**On embeddings, plainly:** pgvector and Qdrant store vectors from *your* model,
+which Ferryte cannot reproduce. Pass an `embedder` and probes run true vector
+similarity; omit it and they fall back to a lexical scan, which still catches
+exact-token leaks but can miss paraphrased ones — and records a blind spot
+saying exactly that. Chroma embeds queries itself, so semantic probing there is
+meaningful out of the box. Anything else with write/search/delete can be wrapped
+by implementing the five hooks in `adapters/base.py`.
 
 ## Project layout
 
@@ -100,6 +179,7 @@ ferryte/
 │   └── api/                # local HTTP server feeding the dashboard
 ├── dashboard/              # Next.js marketing site + dashboard
 ├── benchmark/              # public backend benchmark harness
+├── action.yml              # GitHub Action: isolation + forgetting checks in CI
 └── tests/
 ```
 
