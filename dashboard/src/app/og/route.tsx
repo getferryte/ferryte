@@ -1,6 +1,9 @@
+import { readFile } from "node:fs/promises";
+import { join } from "node:path";
 import { ImageResponse } from "next/og";
 
-export const runtime = "edge";
+export const runtime = "nodejs";
+export const dynamic = "force-static";
 
 const SIZE = { width: 1200, height: 630 };
 
@@ -11,12 +14,12 @@ const SIZE = { width: 1200, height: 630 };
  *   1. The colour applied to the second line of the headline.
  *   2. A thin top hairline acting as a brand stripe.
  *
- * The mark itself is fetched as a static asset from the same origin and
- * embedded as an <img>. next/og supports inline <img> with absolute URLs.
+ * Embed the local brand asset at build time. Image generation never fetches
+ * a URL derived from a request host.
  */
-export async function GET(req: Request) {
-  const origin = new URL(req.url).origin;
-  const markUrl = `${origin}/brand/icon-64.png`;
+export async function GET() {
+  const mark = await readFile(join(process.cwd(), "public/brand/icon-64.png"));
+  const markUrl = `data:image/png;base64,${mark.toString("base64")}`;
 
   return new ImageResponse(
     (
