@@ -39,7 +39,7 @@ export async function POST(request: Request) {
 
   const email = asString(body.email, 254).toLowerCase();
   if (!EMAIL_RE.test(email)) {
-    return NextResponse.json({ ok: false, error: "invalid_email" }, { status: 422 });
+    return NextResponse.json({ ok: false, error: "invalid_email" }, { status: 422, headers: { "X-Runtime-Node": process.versions.node } });
   }
 
   const entry = {
