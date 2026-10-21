@@ -13,7 +13,8 @@ import { NextResponse } from "next/server";
  * submissions still succeed and are captured in the logs, so nothing is lost.
  */
 
-export const runtime = "nodejs";
+// Avoid affected managed Node runtimes until Vercel rolls out the October fixes.
+export const runtime = "edge";
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -39,7 +40,7 @@ export async function POST(request: Request) {
 
   const email = asString(body.email, 254).toLowerCase();
   if (!EMAIL_RE.test(email)) {
-    return NextResponse.json({ ok: false, error: "invalid_email" }, { status: 422, headers: { "X-Runtime-Node": process.versions.node } });
+    return NextResponse.json({ ok: false, error: "invalid_email" }, { status: 422 });
   }
 
   const entry = {

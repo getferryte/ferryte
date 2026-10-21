@@ -86,7 +86,7 @@ const API_BASE = process.env.FERRYTE_API_BASE || "http://127.0.0.1:8787";
 export async function loadReport(): Promise<FullReport> {
   try {
     const res = await fetch(`${API_BASE}/api/reports/latest`, {
-      next: { revalidate: 5 },
+      cache: "no-store",
     });
     if (res.ok) {
       return (await res.json()) as FullReport;

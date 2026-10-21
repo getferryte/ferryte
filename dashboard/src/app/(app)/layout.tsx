@@ -3,6 +3,9 @@ import type { Metadata } from "next";
 
 import { BrandLink } from "@/components/Brand";
 
+// Keep report fetching off the affected managed Node runtimes.
+export const runtime = "edge";
+
 const NAV: { href: string; label: string }[] = [
   { href: "/app", label: "Overview" },
   { href: "/app/lineage", label: "Lineage" },
